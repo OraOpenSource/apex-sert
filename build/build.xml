@@ -22,7 +22,7 @@
         <property name="wd" value="./work" />
         <property name="sv_version" value="000000"/>
         <property name="sv_parse_as" value="SV_SERT_APEX"/>
-        <property name="svn_root" value="source"/>
+        <property name="svn_root" value="trunk/source"/>
         <property name="svn_release" value=""/>
         <property name="sv_target" value=""/>
     </target>
@@ -33,7 +33,7 @@
         <if>
             <equals arg1="${svn_release}" arg2="" />
             <then>
-                <property name="trunk" value="trunk" />
+                <property name="trunk" value="source" />
             </then>
             <else>
                 <property name="trunk" value="${svn_release}" />
@@ -92,18 +92,6 @@
                 <exclude name="workspace_content.sql" />
             </fileset>
         </delete>
-        <!-- Promote the version specific docs to the top level -->
-        <move todir="${wd}/${trunk}/doc">
-          <fileset dir="${wd}/${trunk}/doc/${sv_target}">
-             <exclude name="*.pages" />
-          </fileset>
-        </move>
-        <delete verbose="true" includeemptydirs="true" >
-            <fileset dir="${wd}/${trunk}/doc" defaultexcludes="false" >
-                <include name="**/*" />
-                <exclude name="*.pdf" />
-            </fileset>
-        </delete>
         <!-- Promote the version specific metadata file to the top level -->
         <move file="${wd}/${trunk}/cfg/${sv_target}/sv_sec_data.sql" tofile="${wd}/${trunk}/cfg/sv_sec_data.sql"/>
         <delete verbose="true" includeemptydirs="true" >
@@ -137,18 +125,6 @@
                 <exclude name="workspace_content.sql" />
             </fileset>
         </delete>
-        <!-- Promote the version specific docs to the top level -->
-        <move todir="${wd}/${trunk}/doc">
-          <fileset dir="${wd}/${trunk}/doc/${sv_target}">
-             <exclude name="*.pages" />
-          </fileset>
-        </move>
-        <delete verbose="true" includeemptydirs="true" >
-            <fileset dir="${wd}/${trunk}/doc" defaultexcludes="false" >
-                <include name="**/*" />
-                <exclude name="*.pdf" />
-            </fileset>
-        </delete>
         <!-- Promote the version specific metadata file to the top level -->
         <move file="${wd}/${trunk}/cfg/${sv_target}/sv_sec_data.sql" tofile="${wd}/${trunk}/cfg/sv_sec_data.sql"/>
         <delete verbose="true" includeemptydirs="true" >
@@ -178,7 +154,7 @@
             <zipfileset dir="${wd}/${trunk}/syn" prefix="sert/syn" />
             <zipfileset dir="${wd}/${trunk}/tbl" prefix="sert/tbl" />
             <zipfileset dir="${wd}/${trunk}/vw" prefix="sert/vw" />
-            <zipfileset dir="${wd}/${trunk}/doc" includes="*.pdf" prefix="sert/doc" />
+            <!-- <zipfileset dir="${wd}/${trunk}/doc" includes="*.pdf" prefix="sert/doc" /> -->
             <zipfileset dir="${wd}/${trunk}" includes="ins.sql" prefix="sert" />
             <zipfileset dir="${wd}/${trunk}" includes="ins_beta.sql" prefix="sert" />
             <zipfileset dir="${wd}/${trunk}" includes="ins_admin.sql" prefix="sert" />
