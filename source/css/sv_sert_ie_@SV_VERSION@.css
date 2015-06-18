@@ -1,0 +1,1899 @@
+/** sv_sert_ie_020101.css **/
+/**
+ * Horizontal CSS Drop-Down Menu Module
+ *
+ * @file		dropdown.css
+ * @package		Dropdown
+ * @version		0.7.1
+ * @type		Transitional
+ * @stacks		597-599
+ * @browsers	Windows: IE6+, Opera7+, Firefox1+
+ *				Mac OS: Safari2+, Firefox2+
+ *
+ * @link		http://www.lwis.net/
+ * @copyright	2006-2008 Live Web Institute. All Rights Reserved.
+ *
+ */
+
+@charset "UTF-8";
+
+ul.dropdown,
+ul.dropdown li,
+ul.dropdown ul {
+ list-style: none;
+ margin: 0;
+ padding: 0;
+}
+
+ul.dropdown {
+ position: relative;
+ z-index: 597;
+ float: left;
+}
+
+ul.dropdown li {
+ float: left;
+ line-height: 1.3em;
+ vertical-align: middle;
+ zoom: 1;
+}
+
+ul.dropdown li.hover,
+ul.dropdown li:hover {
+ position: relative;
+ z-index: 599;
+ cursor: default;
+}
+
+ul.dropdown ul {
+ visibility: hidden;
+ position: absolute;
+ top: 100%;
+ left: 0;
+ z-index: 1;
+ width: 100%;
+}
+
+ul.dropdown ul li {
+ float: none;
+	z-index:1;
+}
+
+ul.dropdown ul ul {
+ top: 1px;
+ left: 99%;
+z-index:100;
+}
+
+ul.dropdown li:hover > ul {
+ visibility: visible;
+}
+
+
+ul.dropdown 
+	{
+	margin: 0px;								/* Margin for All Tabs */
+	}
+
+ul.dropdown li
+	{
+	border-style: solid;						/* Tab Border Style - all sides */
+	border-width: 1px 1px 1px 1px;				/* Tab Border Width - TOP RIGHT BOTTOM LEFT */
+	border-color: #aaa;					  		/* Tab Border Color - TOP RIGHT BOTTOM LEFT */
+	background-color: #ddd;         			/* Tab Background Color */
+	width: 12%;		       						/* Tab Width */
+	text-align: center;							/* Tab Text Alignment */
+	margin: 0 0 0 0;						/* Used for Border Collapse */
+	}
+
+ul.dropdown li.hover,
+ul.dropdown li:hover 
+	{
+	background-color: #697888;						/* Highlighted Tab Background Color */
+	}
+
+ul.dropdown a:link,
+ul.dropdown a:visited	
+	{ 
+	color: #333; 								/* Tab Text Color */
+	text-decoration: none; 						/* Tab Text Decoration */
+	font-size:10px; 							/* Tab Text Font Size */
+	}
+
+ul.dropdown a:hover		
+	{ 
+	color: #fff; 								/* Highlighted Tab Text Color */
+	font-weight: bold; 							/* Highlighted Tab Font Weight */
+	text-decoration: none;						/* Highlighted Tab Text Decoration */
+	}
+	
+ul.dropdown a:active	
+	{ 
+	color: #ffa500;								/* Highlighted Tab Active Link Color */ 
+	}
+
+ul.dropdown ul 
+	{
+	width: 150px;						/* Should be set to same as ul.dropdown ul li below */
+								/* Fixes issue with WebKit-based browsers */
+	}
+ul.dropdown ul li 
+	{
+	font-weight: normal;						/* Drop-Down Tab Font Weight */			
+	text-align:left;							/* Drop-Down Tab Text Alignment */
+	width: 175px;								/* Drop-Down Tab Width */
+	}
+
+ul.dropdown li .currentTab 
+	{
+	background-color: #697888;						/* Current Tab Background Color */
+	color: #fff;								/* Current Tab Font Color */
+	font-weight: bold;							/* Current Tab Font Weight */
+	}
+
+
+ul.dropdown li .currentSubTab
+	{
+	font-weight: bold;							/* Current Tab Font Weight */
+	}
+
+/*-------------------------------------------------/
+ * @section		Base Style Extension
+ */
+
+ul.dropdown li a {
+ display: block;
+ padding: 7px 5px;
+}
+
+
+/*-------------------------------------------------/
+ * @section		Base Style Override
+ */
+
+ul.dropdown li {
+ padding: 0;
+}
+
+
+/*-------------------------------------------------/
+ * @section		Base Style Reinitiate: post-override activities
+ */
+
+ul.dropdown li.dir {
+ padding: 7px 20px 7px 10px;
+}
+
+ul.dropdown ul li.dir {
+ padding-right: 15px;
+}
+
+
+/*-------------------------------------------------/
+ * @section		Custom
+ */
+
+ul.dropdown ul a {
+ width: 175px;
+}
+
+ul.dropdown ul a:hover {}
+
+ul.dropdown ul a.dir {
+ width: 120px;
+}
+
+/* DOC >>--------------------------------------------------------------- */
+
+a {
+	color: black;
+}
+
+a:hover {
+	color: orange;
+}
+
+/* PAGE >>--------------------------------------------------------------- */
+body {
+	background: #FFF;
+	margin: 0;
+	padding: 0;
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	height: 100%;
+	position: relative;
+}
+
+html {
+}
+
+#main {
+	float: left;
+	width: 820px;
+	padding-top:10px; 
+	color:#1c1c1c; 
+	margin-left:0px;
+	border-right: 1px solid #ddd;
+	height: 1s0%;
+}
+
+#main-sb-left {
+}
+
+#two-col-sb-left {
+	position: absolute;
+	height: 100%;
+	padding-left: 200px;
+}
+
+#two-col {
+}
+
+#two-col-tbl {
+}
+
+#sidebar {
+}
+
+#left-sidebar {
+        position:fixed;
+        left:0;
+        top:0;
+        padding:0;
+        height: 100%;
+        width:200px;
+        overflow: hidden;
+        background-color: #ddd;
+}
+
+#menu {
+        background-color: white;
+        z-index:1;
+        padding-bottom: 0px;
+        width: 820px;
+        top: 0;
+	position: fixed;
+	display: block;
+        }
+
+#box-body {
+	padding-top: 40px;
+
+        }
+	
+#right-sidebar {
+}
+
+/**
+#hidePanel {
+	position:fixed;
+	left:200;
+	top:0;
+	padding:0;
+	height: 100%;
+	width:7px;
+	background-color: #ddd;
+	border-right: 1px solid #666;
+	z-index: 0;
+	display: inline-block;
+	cursor:pointer;
+}
+
+#hidePanel:hover {
+	background-color: #ccc;
+}
+
+#showPanel { 
+	position:fixed; 
+	z-index:2;
+	left:0; 
+	padding-top:0px; 
+	width:7px; 
+	display: none;
+	height:100%; 
+	cursor:pointer;
+	background-color: #ddd;
+	border-right: 1px solid #666;
+	}
+	
+#showPanel:hover {
+	background-color: #ccc;
+	}
+**/
+
+
+/* HEADER >>--------------------------------------------------------------- */
+
+#header {
+	overflow: hidden;
+	padding: 10px;
+	position: relative;
+}
+
+#logo {
+	display: block;
+	overflow: visible;
+	min-height: 10px;
+	height: 90px;
+	text-align: center;
+}
+
+#logo a, #logo a span {
+	font: normal 14px/20px Verdana, sans-serif;
+	color: #666;
+	font-weight: bold;
+	text-decoration: none;
+	text-shadow: 0 1px 0px rgba(0,0,0,.05);
+	overflow: visible;
+}
+
+#logo img {
+	vertical-align: bottom;
+}
+
+#nav {
+	width: 790px;
+	padding: none;
+}
+
+#nav_tab {
+	position: relative;
+	padding-top: 55px;
+        width: 815px;
+        padding: none;
+}
+
+#tab {
+	width: 12%;
+}
+
+/* NAVBAR >>--------------------------------------------------------------- */
+
+#navbar {
+	position: relative;
+	top: 5px;
+	margin-bottom: 5px;
+	right: 0;
+	display: block;
+	overflow: hidden;
+	font: normal 9px/12px Verdana, sans-serif;
+	color: #333;
+	padding-right: 10px;
+	height: 15px;
+}
+
+.navbar-entry {
+	padding: 0 0 0 10px;
+	float: right;
+}
+
+.navbar-entry a {
+	text-decoration: none;
+	color: #333;
+}
+
+.navbar-entry a:hover {
+	text-decoration: underline;
+}
+
+.app-user {
+	padding: 0 0 0 10px;
+	color: #888;
+	float: right;
+}
+
+
+
+/* SUBTABS >>--------------------------------------------------------------- */
+
+#subtab-holder {
+	padding: none;
+	display: block;
+	overflow: hidden;
+}
+
+#subtabs {
+	position: relative;
+	right: 0;
+	display: block;
+	overflow: hidden;
+	font: normal 9px/12px Verdana, sans-serif;
+	background: #ddd;
+	width: 820px;
+	height: 15px;
+	}
+
+ul#subtabs {
+	margin-left: 0px;
+}
+
+ul#subtabs li {
+	font-size: 10px;
+	color: #fff;
+	display: block;
+	float: left;
+	padding-right: 10px;
+	padding-left: 10px;
+	padding-bottom: 2px;
+	margin-top: 2px;
+}
+
+ul#subtabs li.subfirst-current, li.subcurrent {
+	padding: none;
+	color: red;
+}
+
+ul#subtabs li.subfirst-current a, li.subcurrent a {
+	color: #666;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+ul#subtabs li.subnon-current a, li.subfirst-non-current a {
+	color: #999;
+	text-decoration: none;
+}
+
+ul#subtabs li a:hover {
+	color: white;
+}
+
+/* TABS >>--------------------------------------------------------------- */
+
+#tab-holder {
+	padding: none;
+	display: block;
+	overflow: hidden;
+}
+
+#region-tab-holder {
+	padding: none;
+	display: block;
+	overflow: hidden;
+	width: 820px;
+	position: relative;
+}
+
+#region-subtab-holder {
+	padding: none;
+	display: block;
+	overflow: hidden;
+	width: 820px;
+	position: relative;
+}
+
+#tabs {
+	position: relative;
+	right: 0;
+	display: block;
+	overflow: hidden;
+	font: normal 9px/12px Verdana, sans-serif;
+	height: 20px;
+}
+
+ul#tabs {
+	margin-left: 0px;
+}
+
+ul#tabs li {
+	font-size: 12px;
+	color: #fff;
+	display: block;
+	float: left;
+	padding-top: 3px;
+	height: 20px;
+	padding-right: 12px;
+	padding-left: 12px;
+}
+
+ul#tabs li.first-current, li.current {
+	padding: none;
+}
+
+ul#tabs li.first-current a, li.current a {
+	color: white;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+ul#tabs li.non-current a, li.first-non-current a {
+	color: #ddd;
+	text-decoration: none;
+}
+
+ul#tabs li a:hover {
+	color: white;
+}
+
+/* LIST-TABS >>----------------------------------------------------------------- */
+#list-tabs {
+	position: relative;
+	right: 0;
+	display: block;
+	padding: none;
+	height: 0px;
+	border-bottom:  none;
+	}
+
+
+/* REGION-TABS >>--------------------------------------------------------------- */
+#region-tabs {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	font: normal 9px/12px Verdana, sans-serif;
+	height: 20px;
+	border-top: 1px solid #999;
+	border-collapse: collapse;
+    	left: 4;
+}
+
+ul#region-tabs {
+	margin-left: 0px;
+}
+
+ul#region-tabs li {
+	font-size: 10px;
+	color: #fff;
+	display: block;
+	float: left;
+	padding-top: 3px;
+	height: 20px;
+	padding-right: 7px;
+	padding-left: 7px;
+}
+
+ul#region-tabs li.rt-current {
+	padding: none;
+}
+
+ul#region-tabs li.rt-current a {
+	color: white;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+ul#region-tabs li.rt-non-current a {
+	color: #666;
+	text-decoration: none;
+}
+
+ul#region-tabs li a:hover {
+	color: orange;
+}
+
+
+/* BREADCRUMBS >>--------------------------------------------------------------- */
+
+#breadcrumbs {
+	position: relative;
+	top: 3px;
+	right: 0;
+	display: block;
+	overflow: display;
+	font: normal 9px/12px Verdana, sans-serif;
+	height: 12px;
+	padding-bottom: 2px;
+	border-bottom: 1px solid #ccc;
+        -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.1);
+        -moz-box-shadow: 0 1px 1px rgba(0,0,0,.1);
+}
+
+#breadcrumb_container {
+	position: relative;
+	right: 0;
+	display: block;
+	overflow: hidden;
+}
+
+#breadcrumb_container {
+	margin-left: -5px;
+}
+
+#breadcrumb_container li {
+	display: block;
+	float: left;
+	padding-right: 5px;
+}
+
+#breadcrumb_container li a {
+	text-decoration: none;
+	color: #666;
+}
+
+#breadcrumb_container li a:hover {
+	text-decoration: underline;
+}
+
+#breadcrumb_container li.sep {
+	color: #666;
+}
+
+
+/* LOGIN  >>------------------------------------------------------------- */
+
+#login {
+	overflow: hidden;
+	margin: 10px;
+	text-align: left;
+}
+
+#login-main {
+	width: 395px;
+	min-height: 400px;
+	margin: 100px auto 100px auto;
+}
+
+/* FOOTER >>--------------------------------------------------------------- */
+
+#footer {
+	height: 1%;
+	margin: 10px 0;
+	padding: 6px 0;
+	bottom: 20;
+	display: block;
+	width: 810px;
+	text-align: center;
+}
+
+#footer .content {
+	min-height: 20px;
+	color: #666;
+	font-size: 9px;
+}
+
+#footer .content a {
+	color: #666;
+	font-size: 9px;
+}
+
+#footer .content a:hover {
+	color: #000;
+	text-decoration: underline;
+}
+
+#topbar {
+	padding: 0;
+}
+
+/* MESSAGES >>--------------------------------------------------------------- */
+
+div#messages {
+}
+
+#success-message {
+	margin: 10px;
+	font: bold 12px/20px Verdana, sans-serif;
+	text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+	color: #333;
+	width: 800px;
+	padding: 5px;
+	border: 1px solid #green;
+	border: 1px solid rgba(0,0,0,.4);
+	background-color: #99FF99;
+}
+
+#notification-message {
+	margin: 10px;
+	font: bold 12px/20px Verdana, sans-serif;
+	text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+	color: #B5002D;
+	background-color: #FFD6E0;
+	padding: 5px;
+	width: 800px;
+	border: 1px solid #999;
+	border: 1px solid rgba(0,0,0,.4);
+	position: relative;
+	
+}
+
+ul.htmldbUlErr {
+	font-weight: normal;
+	padding: 5px 0 0 10px;
+	margin: 0 0 0 10px;
+}
+
+ul.htmldbUlErr li {
+	color: #000;
+}
+
+.exceptionLink {
+	color: #fff;
+}
+
+/* REGIONS >>--------------------------------------------------------------- */
+
+
+.tipTabs {
+	width: 795px;
+}
+
+/* NODATAFOUND >>----------------------------------------------------------- */
+.nodatafound {
+	font-size: 11px;
+}
+
+/* APP INFO >>-------------------------------------------------------------- */
+.appInfo {
+	width: 770px;	
+}
+.appInfo th {
+	font-size:  11px;
+	text-align: right;
+}
+
+
+/* SCOREBOARD >>------------------------------------------------------------ */
+#scoreBoard {
+	width: 800px;
+}
+
+.scoreBoard {
+	width: 800px;
+	position: fixed;
+}
+.scoreBoardApp {
+	font-size:18px;
+	font-weight:bold;
+	padding-left:5px;
+	float: left;
+}
+.scoreBoardWho {
+	font-size: 10px;
+	text-align: right;
+	color: #666;
+}
+.scoreBoardPct {	
+}
+.scoreBoardPct td {
+	text-align:center;
+	background-color:red;
+	color:#fff;
+	font-weight:normal;
+	padding-left:4px;
+	padding-right:4px;
+	font-size: 16px;
+}
+.scoreBoardPct .th {
+	background-color: none;
+	text-align: center;
+}
+
+.scoreTypeToggle {
+	width: 100%;
+    float: right;
+    height: 20px;
+    display: inline;
+}
+
+.scoreBoardInfo {
+	font-size: 10px;
+	text-align: left;
+	color: #666;
+	vertical-align:bottom;
+	padding-left: 5px;
+}
+.scoreBoardPts {
+	font-size:14px;
+	text-align:right;
+	padding-right:10px;
+	font-weight:bold;
+	color:#666;
+}
+.scoreBoardLstUpd {
+	font-size:9px;
+	font-weight:normal;
+}
+
+.summaryScoreBoard {
+	float:right;
+	padding-right:15px;
+	padding-bottom: 5px;
+	font-weight: bold;
+	color: #666;
+}
+.summaryScoreBoardTitle {
+	float: left;
+	font-size: 18px;
+	font-weight: bold;
+	padding-left: 10px;
+	padding-top: 5px;
+	width: 400px;
+}
+
+.summaryScoreBoardIcon {
+        padding-left:5px;
+}
+
+.summaryScoreBoard2 {
+	float: right;
+	font-weight: bold;
+	color: #666;
+	font-size:10px;
+	text-align:right;
+	padding-top: 5px;
+	width: 350px;
+	height: 30px;
+}
+
+.summaryScoreBoardPct {
+	padding-left:5px;
+	padding-right: 5px;
+	margin-bottom: 2px;
+	color: white;
+	font-size:16px;
+}
+
+/* SUMMARY REGION >>-------------------------------------------------------- */
+.summaryRegion {
+	font-size: 11px;
+	font-weight: bold;
+	padding: 3px;
+}
+.summaryRegion a {
+	font-size: 12px;
+	font-weight: bold;
+	text-decoration: none;
+ }
+.summaryRegionChart {
+	float:left;
+}
+.summaryRegionPct {
+	float:right;
+	padding-right: 10px;
+}
+.summaryRegionDetails {
+	font-size: 9px;
+	color: #666;
+}
+
+/* NARROW REGION >>-------------------------------------------------------- */
+.narrowRegion {
+	width: 400px;
+}
+.narrowRegionTitle {
+	font-size: 18px;
+	font-weight: bold;
+	text-align: left;
+	padding-left: 10px;
+	padding-top: 10px;
+}
+
+
+/* TITLE ONLY >>------------------------------------------------------------ */
+.titleOnlyRegion {
+	margin: 10px;
+}
+
+.titleOnlyRegionHeader {
+	height: 30px;
+	border-bottom: 1px solid #999;
+}
+	
+
+.titleOnlyRegionTitle {
+	float: left;
+	padding: 5px;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.titleOnlyRegionButtons {
+	float: right;
+	padding-right: 3px;
+	padding-bottom: 2px;
+}
+
+/* FORM REGION >>----------------------------------------------------------- */
+
+.exceptionRegion {
+	height: 275px;
+	width: 700px;
+	border: 1px solid #666;
+	background-color: #eee;
+	margin: 10px;
+}
+
+.exceptionRegionHeader {
+        height: 30px;
+	width: 100%;
+	min-width: 705px;
+        background-color: #5b798a;
+}
+
+
+/* FORM REGION DASHBOARD >>----------------------------------------------------- */
+
+.formRegionDashboard {
+	border: 1px solid #666;
+	background-color: #eee;
+	margin: 10px;
+	width: 780px;
+}
+
+.formRegionDashboard2Up {
+	border: 1px solid #666;
+	background-color: #eee;
+	margin: 10px;
+	width: 390px;
+	height: 200px;
+}
+
+.formRegionDashboard23 {
+        border: 1px solid #666;
+        background-color: #eee;
+        margin: 10px;
+        width: 510px;
+}
+
+.formRegionSubform {
+	border: 1px solid #666;
+	background-color: #eee;
+	margin: 10px;
+	width: 770px;
+}
+
+.formRegionHeaderDashboard {
+}
+
+.formRegionTitleDashboard {
+	padding: 5px;
+	color: #666;
+	font-size: 14px;
+	font-weight: bold;
+	height:10px;
+}
+
+.formRegionButtonsDashboard {
+	float: right;
+	padding-right:5px;
+	padding-top: 5px;
+}
+
+/* FORM REGION NARROW >>----------------------------------------------------- */
+
+.formRegionNarrow {
+	border: 1px solid #666;
+	background-color: #eee;
+	margin: 10px;
+	min-width: 385px;
+}
+
+
+.formRegionHeaderNarrow {
+	height: 30px;
+
+}
+
+.formRegionTitleNarrow {
+	float: left;
+	padding: 5px;
+	color: #fff;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.formRegionButtonsNarrow {
+	float: right;
+	padding-right:5px;
+	padding-top: 5px;
+}
+
+
+
+/* FORM REGION >>----------------------------------------------------------- */
+
+.formRegion {
+	border: 1px solid #666;
+	background-color: #eee;
+	margin: 10px;
+	width: 800px;
+	z-index:-10;
+}
+
+.formRegionHeader {
+	height: 30px;
+	width: 800px;
+	background-color: #5b798a;
+}
+
+.formRegionTitle {
+	text-align: left;
+	color: #fff;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.formRegionTitleNoHelp {
+        float: left;
+        padding: 5px;
+        color: #fff;
+        font-size: 14px;
+      	font-weight: bold;
+}
+
+.formRegionButtons {
+	float: right;
+	text-align: right;
+	padding-right:3px;
+	padding-top: 2px;
+}
+
+.formRegionDashboardButtons {
+	position: absolute;
+	right: 40px;
+	padding-top: 18px;
+}
+
+.formRegionHelpIcon {
+	padding-top:7px;
+	padding-right:5px;	
+}
+
+
+.formRegionIRHelp1 {
+	float:right;
+        padding-right: 5px;
+        padding-top: 10px;
+}
+.formRegionIRHelp2 {
+	float: right;
+	padding-right: 5px;
+        padding-top: 10px;
+}
+.formRegionIRHelp3 {
+        float:right;
+	padding-right: 5px;
+	padding-top: 10px;
+}
+
+.formRegionContent { 
+	padding: 2px;
+	display: block;
+	width:  100%; 
+}
+
+.formRegionContent td {
+	 font-size: 11px;
+}
+.formRegionContent p {
+	 padding: 3px;
+}
+
+.regionContent {
+        padding: 5px;
+        width:  100%; 
+}       
+
+
+/* DIFF SUPPORT >>---------------------------------------------------------- */
+table.diff_text { border:1px solid #bbb; width:900px; }
+table.diff_text td.lineno {
+  border-style:solid; border-color:#bbb; border-width:0 1px;
+  background:#fff;
+  color:#999;
+  width:10px;
+  text-align: right;
+}
+table.diff_text td { border:none; background:#FFFAFA; font-family: Courier; }
+table.diff_text .add td.difftext { background:#DDFFDD; }
+table.diff_text .del td.difftext { background:#FFDDDD; }
+
+/* VIEW SCORECARD REGION >>-------------------------------------------------- */
+.viewScorecard a {
+	width: 200px;
+	font-size: 12px;
+	float: center;
+}
+
+
+/* DASHBOARD REGION >>------------------------------------------------------- */
+.dashboardRegion {
+        border: 1px solid #666;
+        min-width: 490px;
+        background-color: #efefef;
+        margin: 10px;
+        -moz-border-radius: 6px;
+        -webkit-border-radius: 6px;
+        -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.3);
+        -moz-box-shadow: 0 1px 1px rgba(0,0,0,.3);
+}       
+        
+.dashboardRegionHeader {
+        height: 22px;
+        -moz-border-radius-topleft: 6px;
+        -moz-border-radius-topright: 6px;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+}
+
+.dashboardRegionTitle {
+        float: left;
+        padding: 5px;
+        color: #666;
+        font-size: 12px;
+        font-weight: bold;
+}
+
+.dashboardRegionButtons {
+        float: right;
+        padding-right:5px;
+}
+
+.dashboardRegionContent {
+        padding: 10px;
+        width:  100%;
+}
+
+.dashboardRegionContent td {
+         font-size: 11px;
+}
+.dashboardRegionContent p {
+         padding: 3px;
+}
+
+/* DASHBOARD TABLE >>------------------------------------------------------- */
+.dashboardTableTitle {
+	font-size:16px;
+	color: #000;
+	font-weight: bold;
+}
+.dashboardTable {	
+  width: 795px;
+}
+.dashboardTable .dashboardTablePoints {
+	color: #666;
+	padding-left: 10px;
+}
+.dashboardTable th {
+	text-align: right;
+	font-size: 10px;
+	color: #666;
+}
+.dashboardTableChartBackground {
+	
+	width:225px;height:14px;background:#cccccc;border-top:1px solid #aaaaaa;border-left:1px solid #aaaaaa;border-bottom:1p
+x solid #ffffff;border-right:1px solid #ffffff;
+}
+
+/* SIDEBAR REGION >>------------------------------------------------------- */
+.sidebarRegion {
+	width: 200px;
+	display: block;
+	border-collapse: collapse;
+	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	padding-top: 5px;
+}
+
+.appTitle {
+	font-size: 16px;
+	font-weight: bold;
+	color: #666;
+	text-align: center;
+	padding: 10px;
+	border-bottom: 1px solid #ccc;
+}
+
+/* SIDEBAR SCORECARD REGION >>------------------------------------------------------- */
+.sidebarScorecard {
+	width: 200px;
+	display: block;
+	border-collapse: collapse;
+	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+	padding: 5px;
+}
+
+.sidebarScorecard th {
+	font-size:  14px;
+	font-weight: bold;
+	text-align: right;
+	padding: 2px;
+	margin: 2px;
+	color: #666;
+	padding-right: 5px;
+}
+.scoreBoardPct {
+	padding-right:5px;
+	padding-left: 5px;
+	font-size:20px;
+	font-weight:bold;
+	color: white;
+}
+.scoreBoardPoints {
+	font-size:  11px;
+	color: #666;
+	padding-bottom: 5px;
+}
+.scoreBoardHelp {
+	text-align: center;
+	}
+.scoreBoardHelp a {
+	font-size: 9px;
+	text-decoration: none;
+}
+/* LABELS >>--------------------------------------------------------------- */
+
+.label, label a {
+	white-space: nowrap;
+	font-weight: bold;
+	font-size: 11px;
+	color: #666;
+	text-decoration: none;
+}
+
+.radiogroup {
+	white-space: nowrap;
+	font-size: 11px;
+	text-decoration: none;
+}
+
+.display_only {
+	font-size:  11px;
+}
+
+/* ERROR MESSAGE >>-------------------------------------------------------- */
+
+div.t1InlineError {
+	font: normal 10px/16px Verdana, sans-serif;
+	color: #B5002D;
+}
+
+div.error_container, div.ErrorPageMessage {
+	width: 600px;
+	margin: 30px auto 0;
+}
+
+div.error_container div.sErrorText {
+	padding-left: 58px;
+}
+
+div.error_container div.sErrorText strong {
+	display: block;
+	padding: 5px 0;
+}
+
+div.error_container div.sErrorText p {
+	text-align: right;
+	margin: 10px 0 0 0;
+}
+
+/* BUTTONS >>--------------------------------------------------------------- */
+button {
+	border: 0;
+	cursor: pointer;
+	font-weight: normal;
+	padding: 0 9px 0 0;
+	text-align: center;
+}
+
+button:focus, button:active {
+	outline: 1px dotted #000;
+}
+
+button span {
+	position: relative;
+	display: block;
+	white-space: nowrap;
+	font-size: 13px;
+	padding: 0 4px 0 15px;
+}
+
+button.button-default {
+	position: relative;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+	overflow: visible;  /*removes extra side padding in IE */
+}
+
+button.button-recalc {
+	width: 180px;
+}
+
+button.button-default::-moz-focus-inner {
+	border: none;
+    /* overrides extra padding in Firefox */
+	padding: 0;
+}
+
+button.button-default span {
+	position: relative;
+	display: block;
+	white-space: nowrap;
+}
+
+.rc-buttons {
+	margin-top: 4px;
+}
+
+button.button-default span {
+	margin-top: 1px;
+	padding-top: 6px !important;
+}
+
+button.button-default {
+	padding: 0 11px 0 0;
+	margin-left: 5px;
+	margin-top: 1px;
+}
+
+button.button-default span {
+	padding: 6px 4px 0 15px;
+	height: 26px;
+	color: #111;
+	font: normal 12px/12px Verdana, sans-serif !important;
+	margin-top: 1px;
+}
+
+
+button.button-default {
+	text-shadow: 0 1px 0 rgba(255,255,255, 0.75);
+}
+
+button.button-default span {
+}
+
+button.button-default:hover {
+	background-position: right -149px;
+}
+
+button.button-default:hover span {
+	background-position: 0 -100px;
+}
+
+
+/* LISTS >>------------------------------------------------------ */
+
+/* BULLET LIST >>------------------------------------------------ */
+.currentListItem { font-weight: bold; }
+
+/* REPORTS >>---------------------------------------------------- */
+/* GENERAL >>---------------------------------------------------- */
+th.reportHeader {
+}
+
+th.reportHeader a:link, th.reportHeader a:visited
+{
+        font-weight:bold;
+        color:#FFF;
+        font-size:10px;
+        letter-spacing:1;
+        text-transform:capitalize;
+		text-decoration: none;
+}
+
+td.data a{empty-cells:show;border-collapse:collapse;color: #666;font-size:10px;}
+td.dataAlt a{empty-cells:show;border-collapse:collapse;color: #666;font-size:10px;}
+
+/* SERT >>------- */
+.aboutReport
+	{
+	padding: 2px;
+	margin: 1px;
+    width: 100%;
+	}
+.aboutReport th
+	{
+	color: #666;
+	text-align: left;
+	font-size: 12px;
+    border: none;
+	}
+.aboutReport td
+	{
+	color: #666;
+	font-size:10px;
+	}
+
+
+.infoReport
+	{
+	border-collapse: separate;
+	}
+.infoReport th
+	{
+	vertical-align:top;
+	text-align: right;
+	}
+.infoReport td
+	{
+	padding-right: 5px;
+	background-color: white;
+	width: 800px;
+	}
+
+.percentBackground
+	{
+	border-style: solid; 
+	border-color: #999 #fff #fff #999; 
+	border-width: 1px; 
+	background: #ccc none repeat scroll 0% 0%; 
+	width: 100px; 
+	height: 14px;
+	font-size:10px;
+	-moz-background-clip: border;
+	-moz-background-origin: padding; 
+	-moz-background-inline-policy: continuous;
+	}
+.percentBar
+	{
+	background: #ec9236 none repeat scroll 0% 0%; 
+	-moz-background-clip: border; 
+	-moz-background-origin: padding; 
+	-moz-background-inline-policy: continuous;
+	}
+
+
+
+
+
+
+/* DASHBOARD REPORT >>------------------------------------------- */
+.dashboardReportContainer {
+	display: inline-block;
+}
+.dashboardReport thead  
+{       
+        background-color: #999;
+}
+
+table.dashboardReport {
+	border:1px #aaa solid; 
+	width: 480px;
+	min-width:480px;
+        -moz-border-radius-topleft: 3px;
+        -moz-border-radius-topright: 3px;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+
+}
+.dashboardReport tfoot tr td, table.dashboardReport tfoot, table.dashboardReport tfoot tr {
+	background-color:#efefef;
+	border:0;
+
+}
+table.dashboardReport th.reportHeader {
+	border-bottom:1px #aaa solid; 
+	color: #fff;
+	font-size: 10px;
+}
+table.dashboardReport td.data {
+	background: #e1f3fd;
+	border-top:1px #fff solid;
+	border-bottom:1px #ccc solid;
+	font-size:10px;
+	padding:3px 9px;
+	empty-cells:show;
+}
+table.dashboardReport td.dataAlt {
+	background:#fff;
+	border-top:1px #fff solid;
+	border-bottom:1px #ccc solid;
+	font-size:10px;
+	padding:3px 9px;i
+	empty-cells:show;
+}
+
+/* WIDE REPORT >>------------------------------------------------ */
+.wideReportContainer {
+	display: inline-block;
+	padding-left: 5px;
+}
+
+.wideRepmrt thead 
+{
+	background-color: #999;
+}
+
+table.wideReport {
+	margin: 5px;
+	border:1px #aaa solid;
+	border-collapse: collapse;
+	width: 98%;
+	min-width: 770px;
+}
+.wideReport tfoot tr td, table.wideReport tfoot, table.wideReport tfoot tr{background-color:#efefef;border:0;}
+table.wideReport th.reportHeader {border-bottom:1px #aaa solid; color: #fff;font-size: 10px;}
+table.wideReport td.data{background:#e1f3fd;border-top:1px #fff solid;border-bottom:1px #ccc solid;font-size:10px;padding:3px 
+9px;empty-cells:show;
+}
+table.wideReport td.dataAlt{background:#fff;border-top:1px #fff solid;border-bottom:1px #ccc solid;font-size:10px;padding:3px 
+9px;empty-cells:show;
+}
+
+
+.pagination
+{
+	font-size: 9px;
+	color: #666;
+	padding-right: 4px;
+}
+
+/* SIDEBAR REPORT >>--------------------------------------------- */
+.sidebarReport {
+	margin: 5px;
+	border-collapse: collapse;
+}
+
+.sidebarReport th {
+	font-size: 10px;
+	text-align: left;
+	font-weight: normal;
+	padding-top: 3px;
+	float: left;
+	padding-left: 3px;
+}
+
+.sidebarReport td {
+	font-size: 9px;
+	border-bottom:  1px solid #ccc;
+	padding-right: 3px;
+	padding-bottom: 5px;
+	width: 200px;
+}
+
+.sidebarReport td a {
+	text-decoration: none;
+	font-size: 10px;
+}
+.sidebarReport td a:hover { 
+	color: orange; 
+	text-decoration: underline;
+	font-size: 10px;
+}
+
+/* -------------------- Interactive Reports -------------------- */
+
+/* APEX IR Buttons Theme 17*/
+
+#apexir_DATA_PANEL { 
+	overflow: auto;
+	padding-left: 5px; 
+	margin-right: 5px;
+}
+#apexir_TOOLBAR { padding: 5px; }
+
+#apexir_TOOLBAR_OPEN {
+    overflow: hidden;
+}
+
+button.apexir-button, button.apexir-go-button,
+#apexir_TOOLBAR button.dhtmlMenu,
+#apexir_TOOLBAR button.dhtmlMenuOn {
+	position: relative;
+	border: 0;
+	cursor: pointer;
+	overflow: visible;
+	/* removes extra side padding in IE */
+	padding: 0 11px 0 0;
+	margin-left: 5px;
+	font: normal 11px/13px Verdana, sans-serif !important;
+	margin: 0;
+}
+
+#apexir_TOOLBAR button.dhtmlMenu,
+#apexir_TOOLBAR button.dhtmlMenuOn {
+	padding: 0 22px 0 0;
+}
+
+button.apexir-go-button {
+	padding: 0 15px 0 0;
+}
+
+button.apexir-button::-moz-focus-inner, button.apexir-go-button::-moz-focus-inner,
+#apexir_TOOLBAR button.dhtmlMenu::-moz-focus-inner, #apexir_TOOLBAR button.dhtmlMenuOn::-moz-focus-inner {
+	border: none;
+	
+
+/* overrides extra padding in Firefox */
+	padding: 0 !important;
+}
+
+button.apexir-button span, button.apexir-go-button span,
+#apexir_TOOLBAR button.dhtmlMenu span, #apexir_TOOLBAR button.dhtmlMenuOn span {
+	padding: 4px 4px 0 15px;
+	height: 22px;
+	color: #000;
+	text-shadow: 0 1px 0 rgba(255,255,255,.5);
+}
+
+#apexir_TOOLBAR button.dhtmlMenu span, #apexir_TOOLBAR button.dhtmlMenuOn span {
+	padding: 4px 8px 0 15px;
+}
+
+button.apexir-go-button span {
+	padding: 4px 0 0 15px;
+	text-shadow: 0 1px 0 rgba(255,255,255,.75);
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+
+/* Safari and Google Chrome only - fix margins */
+
+button.apexir-button, button.apexir-go-button, #apexir_TOOLBAR button.dhtmlMenu, #apexir_TOOLBAR button.dhtmlMenuOn, {
+	margin-top: -1px;
+	padding-top: 4px !important;
+}
+
+}
+
+div.apexir_ACTION_MENU {
+	padding: 3px 0 1px 0;
+}
+
+div#apexir_SEARCH_BAR_OPTIONS {
+	padding: 6px 8px 0 0;
+}
+
+.apexir_ROW_SELECT_LIST {
+	padding: 9px 4px 9px 2px;
+}
+
+div.apexir_COLUMN_SELECTOR {
+	padding: 4px 0 4px 4px;
+}
+
+div.apexir_COLUMN_SELECTOR a.apexir_SEARCHICON {
+	display: block;
+	float: left;
+	height: 28px;
+	width: 28px;
+/*outline: none;*/
+}
+
+#apexir_GROUP_BY {
+	clear: both !important;
+}
+
+#apexir_TOOLBAR_CLOSE {
+	padding-right: 10px;
+}
+
+.apexir_BUTTONS {
+	padding: 8px 4px 0;
+}
+
+.apexir_SAVED_REPORTS {
+	padding: 8px 8px 8px 0;
+}
+
+.apexir_SAVED_REPORTS label {
+	font: bold 11px/16px Arial, sans-serif;
+	color: #444;
+	padding: 0 4px 0 8px;
+}
+
+.apexir_ROW_SELECT_LIST {
+	padding: 8px 0;
+}
+
+.apexir_ROW_SELECT_LIST label {
+	font: bold 11px/16px Arial, sans-serif;
+	color: #444;
+	padding: 0 4px;
+}
+
+.apexir_ROW_SELECT_LIST select {
+	margin-right: 4px;
+}
+
+#apexir_SEARCH_COLUMN_DROP {
+	padding-top: 11px;
+}
+
+#apexir_DATA_PANEL .pagination span.fielddata {
+	color: #222;
+	font-size: 12px;
+}
+
+#apexir_CONTROL_PANEL_DROP {
+	background: #F8F8F8;
+	z-index: 1;
+	padding: 10px;
+	margin-bottom: 10px;
+	clear: both;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border: 1px solid #AAA;
+}
+
+#apexir_CONTROL_PANEL, table.apex_finderbar, table.worksheet_detail {
+	z-index: 1;
+	padding: 0;
+	margin-bottom: 10px;
+	clear: both;
+	float: left;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border: none;
+}
+
+table.apex_finderbar {
+	padding: 0 10px 0 0;
+}
+
+table.apex_finderbar .apex_finderbar_left_top,
+	table.apex_finderbar .apex_finderbar_left_top img,
+	table.apex_finderbar .apex_finderbar_left,
+	table.apex_finderbar .apex_finderbar_left_bottom,
+	table.apex_finderbar .apex_finderbar_left_bottom img,
+	table.apex_finderbar .apex_finderbar_middle {
+	background: none;
+	border: none;
+}
+
+table.apex_finderbar .fielddata {
+	font-size: 12px;
+}
+
+
+#apexir_DATA_PANEL table,
+.apexir_WORKSHEET_DATA {
+	width:780px;
+}
+
+div#apexir_DATA_PANEL {
+	padding-bottom: 10px;
+	padding-right:  0px;
+}
+
+div#apexir_DATA_PANEL .apexir_WORKSHEET_DATA td a {
+	color: white;
+}
+
+div#apexir_DATA_PANEL .apexir_WORKSHEET_DATA td a:hover {
+	
+}
+
+div#apexir_DATA_PANEL table:first-child {
+	border-spacing: 0 0 !important;
+}
+
+.apexir_WORKSHEET_DATA {
+	empty-cells: show;
+	border-collapse: separate;
+	font: normal 10px/10px Verdana, sans-serif;
+	border: 1px solid #999;
+	padding: 0 0 6px 0;
+	background: #ccc;
+}
+
+table.apexir_WORKSHEET_ICONS {
+	padding: 6px 0;
+}
+
+table.apexir_WORKSHEET_ICONS td {
+	padding: 10px;
+	border-bottom: none;
+}
+
+table.apexir_WORKSHEET_ICONS td a {
+	color: #444;
+}
+
+table.apexir_WORKSHEET_CUSTOM, 
+table.apexir_WORKSHEET_ICONS {
+	background: none !important;
+}
+
+table.apexir_WORKSHEET_CUSTOM table th {
+	border-bottom: none;
+	text-align: left;
+}
+
+table.apexir_WORKSHEET_CUSTOM table td {
+	border-bottom: none;
+}
+
+.apexir_WORKSHEET_DATA tbody tr:last-child td {
+	border-bottom: none;
+}
+
+.apexir_WORKSHEET_DATA tfoot tr td {
+	background: #efefef;
+}
+
+#apexir_WORKSHEET .apexir_REPEAT_HEADING {
+	padding: 10px;
+	width:  100%;
+	background-color: #fff;
+}
+
+.apexir_WORKSHEET_DATA th {
+	font: bold 11px/12px Verdana, sans-serif;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
+	padding: 2px 3px 2px;
+	background: none transparent;
+	border-bottom: 1px solid #999;
+	border-top: none !important;
+	white-space: nowrap;
+	vertical-align: center;
+}
+
+.apexir_WORKSHEET_DATA th div {
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
+	font: bold 11px/12px Verdana, sans-serif;
+	text-decoration: underline;
+	cursor: pointer;
+	color:white;
+}
+
+.apexir_WORKSHEET_DATA th.current {
+	border-left: none !important;
+	border-right: none !important;
+}
+
+.apexir_WORKSHEET_DATA th.current div {
+	color: #333;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.apexir_WORKSHEET_DATA td {
+	border-bottom: 1px #AAA solid;
+	font-size: 10px;
+	padding: 4px 10px;
+	empty-cells: show !important;
+	border-top: none;
+}
+
+.apexir_WORKSHEET_DATA tr.even td {
+	background: #fff;
+	line-height: 12px;
+}
+
+.apexir_WORKSHEET_DATA tr.even:hover td {
+	background-color: red !important;
+	background-color: #fed0a1 !important;
+}
+
+.apexir_WORKSHEET_DATA tr.odd td {
+	background: #e1f3fd;
+	line-height: 12px;
+}
+
+.apexir_WORKSHEET_DATA tr.odd:hover td {
+	background-color: #fed0a1 !important;
+}
+
+div.apexir_SEARCH {
+	padding: 3px 0 6px 2px;
+}
+
+input#apexir_SEARCH {
+	border: 1px solid #999;
+	border: 1px solid rgba(0,0,0,.4);
+	padding: 2px 4px 2px 4px;
+	font: normal 14px/14px Arial, sans-serif;
+	background-color: #FFF;
+	color: #222;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	margin: 0 8px 0 0;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+
+input#apexir_SEARCH {
+	padding-top: 1px;
+}
+
+
+}
+/* Progress Bar >>------------------------------------------------ */
+.ui-progressbar {
+    height: 2em;
+    text-align: left;
+}
+.ui-progressbar .ui-progressbar-value {
+    height: 100%;
+    margin: -1px;
+}
+

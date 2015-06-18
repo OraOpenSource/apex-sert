@@ -1,0 +1,260 @@
+<?xml version="1.0"?>
+<project default="help" name="SERT PRODUCT BUILD" basedir=".">
+    <!--The following TASKDEF is needed to include the ANT-CONTRIB libraries -->
+    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+    
+    <!-- Define a script that gets the substring of a supplied string using JavaScript -->
+    <scriptdef name="substring" language="javascript">
+        <attribute name="text" />
+        <attribute name="start" />
+        <attribute name="end" />
+        <attribute name="property" />
+        <![CDATA[
+          var text = attributes.get("text");
+          var start = attributes.get("start");
+          var end = attributes.get("end") || text.length();
+          project.setProperty(attributes.get("property"), text.substring(start, end));
+        ]]>
+    </scriptdef>        
+    
+    <!-- This target sets up the base properties-->
+    <target name="properties">
+        <property name="wd" value="./work" />
+        <property name="sv_version" value="000000"/>
+        <property name="sv_parse_as" value="SV_SERT_APEX"/>
+        <property name="svn_root" value="source"/>
+        <property name="svn_release" value=""/>
+        <property name="sv_target" value=""/>
+    </target>
+    
+    <!-- This target sets up some internal variables we need based on the Properites passed-->
+    <target name="define" depends="properties">
+        <property name="full_path" value="${svn_root}/${svn_release}"/>
+        <if>
+            <equals arg1="${svn_release}" arg2="" />
+            <then>
+                <property name="trunk" value="trunk" />
+            </then>
+            <else>
+                <property name="trunk" value="${svn_release}" />
+            </else>
+        </if>
+        <substring text="${sv_version}" start="0" end="4" property="sv_target" />
+    </target>
+    
+    <!-- This target deletes the working directory and then recreates it.-->
+    <target name="setup" depends="properties,define">
+        <echo message="Deleting the old working directory..." />
+        <delete dir="${wd}" />
+        <echo message="Creating the new working directory ..." />
+        <mkdir dir="${wd}" />
+    </target>
+    
+    <!-- This target does the SVN Check out -->
+    <target name="co" description="Checks out the most recent source to the working direcotry" depends="setup">
+        <echo message="Checking out the SERT Repository to the local working directory" />
+        <exec executable="svn" dir="${wd}">
+            <arg line="co https://github.com/APEXSERT/apexsert/${full_path}"></arg>
+        </exec>
+    </target>
+    
+    <!-- This target does the replacement of the @SV_VERSION@ variable in all the files -->
+    <target name="replace_all" description="replaces all instances of @SV_VERSION@ with the current build version" depends="setup">
+        <replace dir="${wd}" token="@SV_VERSION@" value="${sv_version}" summary="yes" />
+        <replace dir="${wd}" token="@SV_PARSE_AS@" value="${sv_parse_as}" summary="yes" />
+    </target>
+    <!-- This target does the replacement of the @SV_VERSION@ variable in all the files -->
+    <target name="replace_clone" description="replaces all instances of @SV_VERSION@ with the current build version" depends="setup">
+        <replace dir="${wd}" token="@SV_VERSION@" value="${sv_version}" excludes="${wd}/app/*" summary="yes" />
+    </target>
+
+    <!-- This target does the replacement of the @SV_VERSION@ variable in all the files -->
+    <target name="replace_no_network" description="replaces all instances of @SV_VERSION@ with the current build version">
+        <replace dir="${wd}" token="@SV_VERSION@" value="${sv_version}" excludes="${wd}/app/*" summary="yes" />
+        <replace dir="${wd}" token="@SV_PARSE_AS@" value="${sv_parse_as}" summary="yes" />
+    </target>
+
+    <!-- This target copies the files dependant on the target version to their top level counterparts -->
+    <target name="version_specific_files" description="Copies version specific files to thier top level directories." depends="co" >
+        <!-- Promote the version specific app to the top level -->
+        <move file="${wd}/${trunk}/app/${sv_target}/sert_apex.sql" tofile="${wd}/${trunk}/app/sert_apex.sql"/>
+        <move file="${wd}/${trunk}/app/${sv_target}/sert_admin.sql" tofile="${wd}/${trunk}/app/sert_admin.sql"/>        
+        <delete verbose="true" includeemptydirs="true" >
+            <fileset dir="${wd}/${trunk}/app" defaultexcludes="false" >
+                <include name="**/*" />
+                <exclude name="sert_apex.sql" />
+                <exclude name="sert_admin.sql" />
+                <exclude name="_install.sql" />
+                <exclude name="_install_app.sql" />
+                <exclude name="id_prompts.sql" />
+                <exclude name="null.sql" />
+                <exclude name="workspace.sql" />
+                <exclude name="workspace_content.sql" />
+            </fileset>
+        </delete>
+        <!-- Promote the version specific docs to the top level -->
+        <move todir="${wd}/${trunk}/doc">
+          <fileset dir="${wd}/${trunk}/doc/${sv_target}">
+             <exclude name="*.pages" />
+          </fileset>
+        </move>
+        <delete verbose="true" includeemptydirs="true" >
+            <fileset dir="${wd}/${trunk}/doc" defaultexcludes="false" >
+                <include name="**/*" />
+                <exclude name="*.pdf" />
+            </fileset>
+        </delete>
+        <!-- Promote the version specific metadata file to the top level -->
+        <move file="${wd}/${trunk}/cfg/${sv_target}/sv_sec_data.sql" tofile="${wd}/${trunk}/cfg/sv_sec_data.sql"/>
+        <delete verbose="true" includeemptydirs="true" >
+            <fileset dir="${wd}/${trunk}/cfg" defaultexcludes="false" >
+                <include name="**/*" />
+                <exclude name="*.sql" />
+            </fileset>
+        </delete>
+        <!-- Promote the version specific INSTALL script to the root directory-->
+        <move todir="${wd}/${trunk}">
+          <fileset dir="${wd}/${trunk}/root/${sv_target}"/>
+        </move>
+        <delete dir="${wd}/${trunk}/root" />
+    </target>
+    
+    <!-- This target copies the files dependant on the target version to their top level counterparts -->
+    <target name="version_specific_files_no_network" description="Copies version specific files to thier top level directories.">
+        <!-- Promote the version specific app to the top level -->
+        <move file="${wd}/${trunk}/app/${sv_target}/sert_apex.sql" tofile="${wd}/${trunk}/app/sert_apex.sql"/>
+        <move file="${wd}/${trunk}/app/${sv_target}/sert_admin.sql" tofile="${wd}/${trunk}/app/sert_admin.sql"/>        
+        <delete verbose="true" includeemptydirs="true" >
+            <fileset dir="${wd}/${trunk}/app" defaultexcludes="false" >
+                <include name="**/*" />
+                <exclude name="sert_apex.sql" />
+                <exclude name="sert_admin.sql" />
+                <exclude name="_install.sql" />
+                <exclude name="_install_app.sql" />
+                <exclude name="id_prompts.sql" />
+                <exclude name="null.sql" />
+                <exclude name="workspace.sql" />
+                <exclude name="workspace_content.sql" />
+            </fileset>
+        </delete>
+        <!-- Promote the version specific docs to the top level -->
+        <move todir="${wd}/${trunk}/doc">
+          <fileset dir="${wd}/${trunk}/doc/${sv_target}">
+             <exclude name="*.pages" />
+          </fileset>
+        </move>
+        <delete verbose="true" includeemptydirs="true" >
+            <fileset dir="${wd}/${trunk}/doc" defaultexcludes="false" >
+                <include name="**/*" />
+                <exclude name="*.pdf" />
+            </fileset>
+        </delete>
+        <!-- Promote the version specific metadata file to the top level -->
+        <move file="${wd}/${trunk}/cfg/${sv_target}/sv_sec_data.sql" tofile="${wd}/${trunk}/cfg/sv_sec_data.sql"/>
+        <delete verbose="true" includeemptydirs="true" >
+            <fileset dir="${wd}/${trunk}/cfg" defaultexcludes="false" >
+                <include name="**/*" />
+                <exclude name="*.sql" />
+            </fileset>
+        </delete>
+        <!-- Promote the version specific INSTALL script to the root directory-->
+        <move todir="${wd}/${trunk}">
+          <fileset dir="${wd}/${trunk}/root/${sv_target}"/>
+        </move>
+        <delete dir="${wd}/${trunk}/root" />
+    </target>
+    
+    <!-- This target ZIPS the files-->
+    <target name="zip" description="ZIPS the files for the user" >
+        <echo message="ZIPPING the final release..." />
+        <zip destfile="sert_${sv_version}.zip" >
+            <zipfileset dir="${wd}/${trunk}/app" prefix="sert/app" />
+            <zipfileset dir="${wd}/${trunk}/cfg" prefix="sert/cfg" />
+            <zipfileset dir="${wd}/${trunk}/ctx" prefix="sert/ctx" />
+            <zipfileset dir="${wd}/${trunk}/ins" prefix="sert/ins" />
+            <zipfileset dir="${wd}/${trunk}/logger" prefix="sert/logger" />
+            <zipfileset dir="${wd}/${trunk}/pkg" prefix="sert/pkg" />
+            <zipfileset dir="${wd}/${trunk}/prc" prefix="sert/prc" />
+            <zipfileset dir="${wd}/${trunk}/syn" prefix="sert/syn" />
+            <zipfileset dir="${wd}/${trunk}/tbl" prefix="sert/tbl" />
+            <zipfileset dir="${wd}/${trunk}/vw" prefix="sert/vw" />
+            <zipfileset dir="${wd}/${trunk}/doc" includes="*.pdf" prefix="sert/doc" />
+            <zipfileset dir="${wd}/${trunk}" includes="ins.sql" prefix="sert" />
+            <zipfileset dir="${wd}/${trunk}" includes="ins_beta.sql" prefix="sert" />
+            <zipfileset dir="${wd}/${trunk}" includes="ins_admin.sql" prefix="sert" />
+            <zipfileset dir="${wd}/${trunk}" includes="unins.sql" prefix="sert" />
+        </zip>
+        <!-- Only include the UPG directory if it actually exists -->
+        <available file="${wd}/${trunk}/upg" property="upg.avail"/>
+        <if>
+            <equals arg1="${upg.avail}" arg2="true" />
+            <then>
+                <echo message="Adding UPG directory to ZIP file" />
+                <zip destfile="sert_${sv_version}.zip" update="true">
+                    <zipfileset dir="${wd}/${trunk}/upg" prefix="sert/upg" />
+                </zip>
+            </then>
+        </if>
+    </target>
+    
+    <!-- This target deletes the working directory-->
+    <target name="teardown" depends="properties">
+        <delete dir="${wd}" />
+    </target>
+    
+    <!-- ***************************************-->
+    <!--          M A I N   T A R G E T S       -->
+    <!-- ***************************************-->
+    
+    <!-- This target BUILDS the full release set-->
+    <target name="no_network" description="Full Release Build - Manual Copy of Files" depends="properties,define,replace_no_network,zip,teardown">
+        <echo message="Full Build Complete..." />
+    </target>
+    
+    <!-- This target BUILDS the full release set -->
+    <target name="release" description="Full Release Build" depends="properties,co,replace_all,zip,teardown">
+        <echo message="Build Complete..." />
+    </target>
+    
+    <!-- This target BUILDS the full release set without replacing all items-->
+    
+    <target name="clone" description="Full Release Build - No Replacement of Variables" depends="properties,co,replace_clone,zip,teardown">
+        <echo message="CLONE Build Complete..." />
+    </target>
+    
+    <target name="help" description="SERT Build Help" >
+        <echo message="Instruction on building SERT:" />
+        <echo message=" " />
+        <echo message="FORMAT:" />
+        <echo message="  ant -f build_file.xml target -Dproperty=value -Dproperty=value" />
+        <echo message=" " />
+        <echo message="TARGETS:" />
+        <echo message="  release  - Full release." />
+        <echo message="  clone    - Full release without replacing many of the @SV_VERSION@ tags." />
+        <echo message="  co       - Code check out only. Doesn't run any other processes" />
+        <echo message="  teardown - delets the working directory in case of failure or after using co" />
+        <echo message=" " />
+        <echo message="PROPERTIES {DEFAULT} :" />
+        <echo message="  sv_version  {000000} " />
+        <echo message="    - sets the version of the application being generated: MaMiPa" />
+        <echo message="    - Ma = Major level   Mi = Minor level   Pa = Patch level " />
+        <echo message="  sv_parse_as {SV_SERT_APEX} " />
+        <echo message="    - sets the name for the parse as schema to be used." />
+        <echo message="  svn_root    {trunk}" />
+        <echo message="    - sets the root directory used for the SVN Check out (TRUNK, RELEASES, BRANCHES)" />
+        <echo message="  svn_release {} " />
+        <echo message="    - sets the release within the root directory for the SVN Check out" />
+        <echo message=" " />
+        <echo message="EXAMPLES:" />
+        <echo message=" " />
+        <echo message=" Build release 2.1.1 from the TRUNK " />
+        <echo message="     ant -f build_sert release -Dsv_version=020101 " />
+        <echo message=" " />
+        <echo message=" Build a version of release 2.1.1 from the TRUNK" />
+        <echo message="     ant -f build_sert release -Dsv_version=020101 " />
+        <echo message=" " />
+        <echo message=" Build an release version of release 2.1.0 from the /RELEASES/2.1.0"/>
+        <echo message="     ant -f build_sert release -Dsv_version=020100 -Dsvn_root=RELEASES -Dsvn_release=2.1.0 " />
+    </target>
+</project>
+
