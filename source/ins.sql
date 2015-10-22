@@ -274,30 +274,13 @@ set termout off
 
 
 set termout on
---  =================
---  =================  Check to see if they want to install with the grants necessary for Scheduling
---  =================
-PROMPT 
-PROMPT ============================================================================
-PROMPT == E V A L U A T I O N   S C H E D U L I N G   O P T I O N 
-PROMPT ============================================================================
-PROMPT 
-PROMPT SERT can provide the ability to schedule evaluations via DBMS_SCHEDULER.
-PROMPT However this featuire requires the APEX_ADMINSTRATOR_ROLE to be granted to the 
-PROMPT SV_SERT_@SV_VERSION@ user.
-PROMPT 
-PROMPT If you choose to install this option, the grant will be automatically 
-PROMPT apportioned and the feature will be available within SERT
-PROMPT
-ACCEPT sched_optn char DEFAULT 'yes' PROMPT 'Would you like to install the SCHEDULING option? [yes]'
---
 -- Using some SQL*PLUS magic, change the names of the scripts we would use to install the 
 -- Parse As support. The script names will be correct if the user selected YES but will 
 -- be changed to 'null.sql' if the user selects anything else.
 
 column scheduling_grant new_val scheduling_grant_s NOPRINT
---
-select 'null.sql' scheduling_grant from dual where upper('^sched_optn') != 'YES';
+-- Always install the scheduling option, since the role will be assigned anyways
+select 'null.sql' scheduling_grant from dual where 'NO' != 'YES';
 --
 set termout off
 --
