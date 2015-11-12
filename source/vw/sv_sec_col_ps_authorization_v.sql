@@ -22,7 +22,9 @@ SELECT
   d001            last_updated_on,
   c004            authorization_scheme,
   exception,
-  notation
+  notation,
+  exception_url,
+  notation_url
 FROM
   sv_sec_collection_data cd,
   sv_sec_collection c,

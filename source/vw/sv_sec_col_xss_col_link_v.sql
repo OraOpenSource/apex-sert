@@ -35,7 +35,9 @@ SELECT
   c005               column_link_url,
   c006               report_type,
   exception          exception,
-  notation           notation
+  notation           notation,
+  exception_url,
+  notation_url
 FROM
   sv_sec_collection_data cd,
   sv_sec_collection c,

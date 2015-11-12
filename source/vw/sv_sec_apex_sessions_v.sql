@@ -8,7 +8,8 @@ LOOP
 l_sql := 'CREATE OR REPLACE VIEW sv_sec_apex_sessions_v 
 AS
 SELECT
-  cookie,
+  username,
+  cookie_value,
   security_group_id,
   id,
   session_id_hashed

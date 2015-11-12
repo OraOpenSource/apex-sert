@@ -24,7 +24,6 @@ l_query := REPLACE(l_query, '#ATTRIBUTE_SET_ID#', TO_CHAR(p_attribute_set_id));
 l_query := REPLACE(l_query, '#ATTRIBUTE_SET_ID#', p_attribute_set_id);
 
 --l_query := REPLACE(l_query, 'INSERT', 'INSERT /*+ append */');
-
 -- Execute the Query to Populate the Collection Data
 EXECUTE IMMEDIATE ('BEGIN '|| l_query || '; END;');
 commit;

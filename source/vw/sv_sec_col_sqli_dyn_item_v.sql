@@ -30,7 +30,9 @@ SELECT
   c002               dynamic_action_name,
   c003               dynamic_action_name_esc,
   exception          exception,
-  notation           notation
+  notation           notation,
+  exception_url,
+  notation_url
 FROM
   sv_sec_collection_data cd,
   sv_sec_collection c,

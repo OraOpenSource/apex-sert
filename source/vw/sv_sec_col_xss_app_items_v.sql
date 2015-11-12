@@ -29,7 +29,9 @@ SELECT
   c001               item_name,
   c002               session_state_protection,
   exception          exception,
-  notation           notation
+  notation           notation,
+  exception_url,
+  notation_url
 FROM
   sv_sec_collection_data cd,
   sv_sec_collection c,

@@ -45,7 +45,6 @@ LOOP
   apex_util.set_session_state('P310_EMAIL',          x.email);
   apex_util.set_session_state('P310_USER_ID',        apex_util.get_user_id(x.user_name));
   apex_util.set_session_state('P310_ACCOUNT_LOCKED', sv_sec_util.is_account_locked(p_user_name => x.user_name));
-  apex_util.set_session_state('P310_RESET_PASSWORD', CASE WHEN apex_util.change_password_on_first_use(p_user_name => p_user_name) = TRUE THEN 'Y' ELSE 'N' END);
   
 END LOOP;
 

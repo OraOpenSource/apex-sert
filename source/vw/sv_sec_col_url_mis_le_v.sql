@@ -32,7 +32,9 @@ SELECT
   c004               list_entry_auth_scheme,
   c005               page_auth_scheme,
   exception          exception,
-  notation           notation
+  notation           notation,
+  exception_url,
+  notation_url
 FROM
   sv_sec_collection_data cd,
   sv_sec_collection c,

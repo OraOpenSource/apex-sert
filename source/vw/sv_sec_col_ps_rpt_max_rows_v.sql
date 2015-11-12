@@ -33,7 +33,9 @@ SELECT
   c005               recommended_value,
   n001               max_row_count,
   exception          exception,
-  notation           notation
+  notation           notation,
+  exception_url,
+  notation_url
 FROM
   sv_sec_collection_data cd,
   sv_sec_collection c,

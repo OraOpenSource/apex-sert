@@ -1,7 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////
 // sv.js version @SV_VERSION@
-// JavaScript Support Files for sumnevaSERT
-// (c) 2011-12 Sumneva - All Rights Reserved
+// JavaScript Support Files for eSERT
 ///////////////////////////////////////////////////////////////////////////
 
 //FUNCTION: svScan
@@ -21,32 +20,29 @@ gCancelURL = get3.get();
 var get2 = new htmldb_Get(null,$v('pFlowId'),'APPLICATION_PROCESS=prepareURL',0);
 get2.addParam('x01',"f?p=" + $v('pFlowId') + ":" + pPageId + ":" + $v('pInstance') + ":" + pRequest);
 gURL = get2.get();
-window.location=gURL;
+window.top.location=gURL;
 
-d = apex.jQuery('<div id="popup" class="popup"><div class="popupbody">' + 
-  '<div id="progressMessage" >Processing - please wait.</div><div id="progressbar" ' +
-  'class="ui-progressbar ui-widget ui-widget-content ui-corner-all"></div></div></div>');
+d = apex.jQuery('<div id="popup" class="popup"><div class="popupbody">' +
+  '<div id="progressMessage" style="padding:20px;">Processing - please wait.</div></div></div>');
 d.dialog({
   title: 'Processing Application '+pAppId,
   bgiframe: true,
-  width: 400,
-  height: 150,
+  width: 500,
+  height: 200,
   modal: true,
   draggable: false,
   resizable: false,
-  closeOnEscape: true,
-  buttons: 
+  closeOnEscape: false,
+  dialogClass: 'no-close',
+  buttons:
     {
-      Cancel: function() 
-      { 
-      window.location=gCancelURL; 
+      Cancel: function()
+      {
+      window.location=gCancelURL;
       }
     }
   })
-  $("#progressbar" ).progressbar({
-            value: 0
-        });
-} 
+}
 
 //FUNCTION: apexLink
 // Records when someone clicks on an APEX edit link
@@ -82,11 +78,11 @@ function viewSource(pId, pComponentType)
     draggable: false,
     buttons: {
       Close: function() { $( this ).dialog( "close" ); }
-		  }
-    })            
+      }
+    })
 }
 
-// FUNCTION: getInfo 
+// FUNCTION: getInfo
 // Pops up the Info window for a specific attribute
 function getInfo (pAttrId, pAppProc, w, h, pType)
 {
@@ -94,7 +90,7 @@ function getInfo (pAttrId, pAppProc, w, h, pType)
   get.addParam('x01',pAttrId);
   get.addParam('x02',pType);
   s = get.get().split("^");
-  d = apex.jQuery('<div id="apex_item_help_text">' + s[1] + "</div>");
+  d = apex.jQuery('<div style="padding-left:12px;padding-right:12px;">' + s[1] + '</div>');
   d.dialog({
     title: s[0],
     bgiframe: true,
@@ -103,9 +99,9 @@ function getInfo (pAttrId, pAppProc, w, h, pType)
     modal: true,
     draggable: false,
     buttons: {
-      Close: function() { $( this ).dialog( "close" ); }
-		  }
-    })    
+     // Close: function() { $( this ).dialog( "close" ); }
+       }
+    })
   }
 
 // FUNCTION progress
@@ -113,8 +109,7 @@ function progress()
 {
   var get = new htmldb_Get(null,$x('pFlowId').value,'APPLICATION_PROCESS=getProgress',0);
     gReturn = get.get().split('|');
-    $x('progressMessage').innerHTML = gReturn[0] + gReturn[1] +""; 
-    $("#progressbar" ).progressbar("option", "value", parseInt(gReturn[1]));
+    $x('progressMessage').innerHTML = gReturn[0] + gReturn[1] +"";
 }
 
 function HtmlEncode(s)
@@ -176,7 +171,7 @@ function diff_text(text1, text2) {
         matrix[y][x] = 0;
       }
     }
-    
+
     for (y = 1; y < matrix.length; y++) {
       for (x = 1; x < matrix[y].length; x++) {
         if (a1[y-1] === a2[x-1]) {
@@ -203,7 +198,7 @@ var table = document.getElementById('comparison').innerHTML = diff_text(text1, t
 
 function importFile()
 {
-d = apex.jQuery('<div id="popup" class="popup"><div class="popupbody">' + 
+d = apex.jQuery('<div id="popup" class="popup"><div class="popupbody">' +
   '<div id="progressMessage" >Importing File and Recalculating Scores - please wait.</div></div></div>');
 d.dialog({
   title: 'Importing File',
@@ -217,33 +212,4 @@ d.dialog({
   })
   ;
 apex.submit('CREATE');
-}      
-
-function showSidebar()
-{
- $("#main").animate({marginLeft:"0px",width:"810px"}, 200);
- $("#menu").animate({width:"811px"}, 200);
- $("#left-sidebar").animate({marginLeft:"0px"}, 400 );
- $("#colleft").animate({width:"175px", opacity:1}, 400 );
- $("#showPanel").animate({width:"0px", opacity:0}, 600).hide("slow");
- $("#hidePanel").animate({marginLeft:"0px"}, 500);
- $("#region-subtab-holder").animate({width:"815px"}, 500);
- $("#region-tab-holder").animate({width:"815px"}, 500);
- $("#region-tabs").animate({width:"811px"}, 500);
- $("#nav").animate({width:"800px"}, 500);
-}
-
-function hideSidebar(pTime)
-{
- $("#left-sidebar").animate({marginLeft:"-200px"}, pTime );
- $("#colleft").animate({width:"0px", opacity:0}, pTime );
- $("#showPanel").show("normal").animate({width:"7px", opacity:1}, pTime);
- $("#main").animate({marginLeft:"-200px",width:"1010px"}, pTime);
- $("#menu").animate({width:"1010px"}, pTime);
- $("#scoreBoard").animate({width:"1010px"}, pTime);
- $("#nav").animate({width:"1010px"}, pTime);
- $("#region-subtab-holder").animate({width:"1015px"}, pTime);
- $("#region-tab-holder").animate({width:"1015px"}, pTime);
- $("#region-tabs").animate({width:"1015px"}, pTime);
- $("#hidePanel").animate({marginLeft:"-210px"}, pTime);	 
 }

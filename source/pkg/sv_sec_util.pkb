@@ -14,6 +14,7 @@ PROCEDURE init
   )
 IS
 BEGIN
+
 -- Clean up stale collection values
 DELETE FROM sv_sec_collection WHERE 
   app_user = p_app_user
@@ -367,7 +368,7 @@ CASE
     l_color_rgb := '102:204:51';
 
   ELSE 
-    l_color := '#FFD700';
+    l_color := '#FFCE00';
     l_color_rgb := '255:215:0';
 
 END CASE;
@@ -703,16 +704,9 @@ IS
   l_classification_name      VARCHAR2(255);
   l_classification_id        NUMBER;
   l_color_rgb                APEX_APPLICATION_GLOBAL.VC_ARR2;
-  l_pref_score_precision     NUMBER;
+  l_pref_score_precision     NUMBER := 1;
   l_time_to_fix              VARCHAR2(100);
 BEGIN
-
--- Set the preferences, if coming from APEX
-IF p_app_session < 0 THEN
-  l_pref_score_precision := 2;
-ELSE
-  l_pref_score_precision := NVL(apex_util.get_preference(p_preference => 'SCORE_PRECISION', p_user => p_app_user),2);
-END IF;
 
 -- Get the Classification ID and Page Title
 SELECT classification_id, classification_name || ' Summary' 
@@ -797,48 +791,30 @@ LOOP
     IF p_banner = FALSE THEN
       IF p_print = FALSE THEN
         -- Store the HTML in a temporary table so that it can be sorted and printed later based on score
-        INSERT INTO sv_sec_html_temp (html, seq) VALUES ('
-        <div class="formRegionNarrow" style="min-width:250px;width:250px;height: ' || CASE WHEN l_pending_count > 0 THEN '70px;' ELSE '50px;' END || '">
-          <div class="formRegionContent">
-            <div>
-              <div class="summaryRegion"><a href="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':' || x.display_page || ':' 
-              || p_app_session || ':::RP') || '">' || SUBSTR(x.category_name, INSTR(x.category_name, ':' ,1)+1) || '</a><br />
-                <div class="summaryRegionChart"">'
-                || DECODE(l_component_found, 'Y',
-                  '<div style="width:180px;height:14px;background:#cccccc;border-top:1px solid #aaaaaa;border-left:1px solid #aaaaaa;border-bottom:1px solid #ffffff;border-right:1px solid #ffffff;">
-                   <img width="' || ROUND(l_pct_score)*1.8 || '" height="14" border="0" style="background:' 
-                   || l_color || ';" src="/i/1px_trans.gif"></div>
-                </div>
-                <div class="summaryRegionPct">' || l_pct_score || '%</div>', '<span style="font-weight:normal;font-size:10px;">No ' 
-                || SUBSTR(x.category_name, INSTR(x.category_name, ':' ,1)+1) || ' in this application</span></div>') 
-                || DECODE(l_possible_score, 0, NULL,  
-                '<br /><div class="summaryRegionDetails">' || TO_CHAR(l_score, '999G999') || ' out of ' || TO_CHAR(l_possible_score, '999G999')
-                || ' possible points</div>')
-                || '
-              </div>
-            </div>
-          </div>
-        </div>'   
-        ,l_pct_score);
+        INSERT INTO sv_sec_html_temp (html, seq) VALUES (
+             '<li class="t-Cards-item">'
+          || '  <div class="t-Card">'
+          || '  <a href="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':' || x.display_page || ':' || p_app_session || ':::RP') || '" class="t-Card-wrap">'
+          || '    <div class="t-Card-icon"' || CASE WHEN l_possible_score = 0 THEN 'style="display:none;"' END || '><span class="t-Icon fa-laptop" style="width:48px; height:48px;background-color:' || l_color || ';">'
+          || '      <span class="t-Card-initials" role="presentation" style="line-height:4.5rem;">' || CASE WHEN l_pct_score > 100 THEN 100 ELSE l_pct_score END || '%</span></span></div>'
+          || '    <div class="t-Card-titleWrap"><h3 class="t-Card-title">' || SUBSTR(x.category_name, INSTR(x.category_name, ':' ,1)+1) || '</h3></div>'
+          || '    <div class="t-Card-body">' 
+          || '      <div class="t-Card-desc">' || CASE WHEN l_possible_score = 0 THEN 'No '|| SUBSTR(x.category_name, INSTR(x.category_name, ':' ,1)+1) || ' in this application' ELSE TO_CHAR(l_score, '999G999') || ' out of ' || TO_CHAR(l_possible_score, '999G999') || ' Possible Points' END || '</div>'
+          || '    <div class="t-Card-info">'
+          || '      <div class="a-Report-percentChart" style="background-color:#' || CASE WHEN l_possible_score = 0 THEN 'FCFCFC; border: none; box-shadow: none;' ELSE 'DBDBDB' END || ';">'
+          || '        <div class="a-Report-percentChart-fill" style="width:' || l_pct_score || '%; background-color:#' || CASE WHEN l_possible_score = 0 THEN 'FFF' ELSE '999' END || ';"></div>'
+          || '      </div>'
+          || '    </div>'
+          || '  </div>'
+          || '  </a>'
+          || '  </div>'
+          || '</li>', l_pct_score);
 
       ELSE
         
         -- Store the PLPDF data in a temp table
-        INSERT INTO sv_sec_pdf_temp 
-          (
-          category_name, 
-          point_summary, 
-          color, 
-          seq
-          ) 
-          VALUES 
-          (
-          x.category_short_name, 
-          TRIM(TO_CHAR(l_score, '999G999')) || ' out of ' || TRIM(TO_CHAR(l_possible_score, '999G999'))
-            || ' possible points', 
-          l_color,
-          DECODE(l_pct_score, 101, 100, l_pct_score)
-          );
+        NULL;
+
       END IF;
 
     ELSE
@@ -855,60 +831,21 @@ END LOOP;
 IF p_banner = FALSE THEN
 
   IF p_print = FALSE THEN
+    
+    htp.prn('<ul class="t-Cards   t-Cards--compact t-Cards--displayInitials t-Cards--cols t-Cards--desc-2ln">');
+  
     FOR x IN (SELECT * FROM sv_sec_html_temp ORDER BY seq)
     LOOP
       htp.prn(x.html);
     END LOOP;
+  
+    htp.prn('</ul>');
+
   ELSE
   
     -- PRINTING PLACEHOLDER
     NULL;
-    /**
-  
-    plpdf.setcurrentxy(10,30);
-    
-    FOR x IN (SELECT * FROM sv_sec_pdf_temp ORDER BY seq)
-    LOOP
-    
-      sv_sec_rpt_util.set_font
-        (
-        p_family => 'Arial',
-        p_style => 'B',
-        p_size => 8
-        ); 
-    
-      plpdf.printCell(70,10,x.category_name);
-      plpdf.lineBreak(2);
 
-      l_color_rgb := apex_util.string_to_table(x.color);
-
-      sv_sec_rpt_util.set_font
-        (
-        p_family => 'Arial',
-        p_style => NULL,
-        p_size => 7,
-        p_r_bkg => l_color_rgb(1),
-        p_g_bkg => l_color_rgb(2),
-        p_b_bkg => l_color_rgb(3)
-        ); 
-
-      plpdf.drawRect(plpdf.getCurrentX, plpdf.getCurrentY+5,ROUND(x.seq/2),3,'F');
-      plpdf.drawRect(plpdf.getCurrentX, plpdf.getCurrentY+5,50,3);
-
-      plpdf.setcurrentxy(plpdf.getCurrentX+50, plpdf.getCurrentY+2);
-      plpdf.printCell(20,10,x.seq || '%');
-
-      plpdf.lineBreak(3);
-      plpdf.printCell(70,10,x.point_summary);
-
-      plpdf.lineBreak(5);
-
-      -- Commit to clear out temporary table
-      COMMIT;
-
-    END LOOP;  
- 
-    **/
   END IF;
 
 ELSE
@@ -956,70 +893,27 @@ ELSE
     END IF;
  
     -- Print the banner
-    htp.prn('<div id="nav"><div class="summaryScoreBoardTitle">' || l_classification_name 
-      || '</div><div class="summaryScoreBoard2">' 
-      || TO_CHAR(l_total_score, '999G999')
-      || ' out of ' || TO_CHAR(l_total_possible_score, '999G999') || ' points&nbsp;(~' || l_time_to_fix || ' Hrs to Fix)&nbsp;&nbsp;'
-      || '<span class="summaryScoreBoardPct" style="background-color:' || l_color || '">'
-      || l_pct_score || '%</span><span class="summaryScoreBoardIcon">'
-      || '<a class="classificationHelp" id="' || p_classification_key || '" href="#">' 
-      || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id='
-      || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=HELP.gif"></a>&nbsp;'
-      || '<a href="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':961:' || p_app_session 
-      || ':PRINT:::P961_CLASSIFICATION_KEY:' || p_classification_key)
-      || '">'
-
-      -- PRINT PLACEHOLDER
-      --|| '<img src="wwv_flow_file_mgr.get_file?p_security_group_id='
-      --|| APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PRINT.gif"></a>'
-
-      || '</span></div></div>'
-      );
-
+    htp.prn(
+             '<ul class="t-Cards t-Cards--compact t-Cards--displayInitials t-Cards--cols">'
+          || '<li class="t-Cards-item" style="width:100%;">'
+          || '  <div class="t-Card t-Card-wrap">'
+          || '    <div class="t-Card-icon"><span class="t-Icon fa-laptop" style="width:48px; height:48px;background-color:' || l_color || ';">'
+          || '      <span class="t-Card-initials" role="presentation" style="line-height:4.5rem;">' || CASE WHEN l_pct_score > 100 THEN 100 ELSE l_pct_score END || '%</span></span></div>'
+          || '    <div class="t-Card-titleWrap"><h3 class="t-Card-title">' || TO_CHAR(l_total_score, '999G999') || ' out of ' || TO_CHAR(l_total_possible_score, '999G999') || ' points</h3></div>'
+          || '    <div class="t-Card-body">' 
+          || '      <div class="t-Card-desc">~' || l_time_to_fix || ' Hrs to Fix</div>'
+          || '    <div class="t-Card-info">'
+          || '    </div>'
+          || '  </div>'
+          || '  </div>'
+          || '</li>'
+          || '</ul>'
+          );
+    
   ELSE
     -- PRINTING PLACEHOLDER
     NULL;
-    /**
-  
-  
-    -- Call PLPDF to print the summary banner
-    sv_sec_rpt_util.set_font
-      (
-      p_family => 'Arial',
-      p_style => 'B',
-      p_size => 16
-      ); 
-    
-    plpdf.printCell(100,10,l_classification_name,'B');
-  
-    sv_sec_rpt_util.set_font
-      (
-      p_family => 'Arial',
-      p_style => 'B',
-      p_size => 10
-      ); 
-  
-    plpdf.printCell(70,10, TRIM(TO_CHAR(l_total_score, '999G999'))
-      || ' out of ' || TRIM(TO_CHAR(l_total_possible_score, '999G999')) || ' points (~' || l_time_to_fix || ' Hrs to Fix)','B',NULL,'R');
 
-    l_color_rgb := apex_util.string_to_table(get_color(p_pct_score => l_pct_score, p_possible_score => l_total_possible_score,p_print => TRUE));
-
-    sv_sec_rpt_util.set_font
-      (
-      p_family => 'Arial',
-      p_style => 'B',
-      p_size => 16,
-      p_r => 255,
-      p_g => 255,
-      p_b => 255,
-      p_r_bkg => l_color_rgb(1),
-      p_g_bkg => l_color_rgb(2),
-      p_b_bkg => l_color_rgb(3)
-      ); 
-
-    plpdf.printCell(25,10, l_pct_score|| '%','B',NULL,'C',1);
-    **/
-    
   END IF;
   
 END IF;
@@ -1114,14 +1008,14 @@ IF l_possible_score = 0 THEN
   l_total_pct := 0;
   l_total := 0;
 ELSE
-  l_raw_score := ROUND((l_score_arr(3)/(l_possible_score))*100,NVL(apex_util.get_preference(p_preference => 'SCORE_PRECISION', p_user => v('APP_USER')),2));
-  l_pending_score := ROUND((l_score_arr(2)/(l_possible_score))*100,NVL(apex_util.get_preference(p_preference => 'SCORE_PRECISION', p_user => v('APP_USER')),2));
-  l_approved_score := ROUND((l_score_arr(1)/(l_possible_score))*100,NVL(apex_util.get_preference(p_preference => 'SCORE_PRECISION', p_user => v('APP_USER')),2));
+  l_raw_score := ROUND((l_score_arr(3)/(l_possible_score))*100,1);
+  l_pending_score := ROUND((l_score_arr(2)/(l_possible_score))*100,1);
+  l_approved_score := ROUND((l_score_arr(1)/(l_possible_score))*100,1);
 END IF;
 
 
 -- Set the score and style for the approved, pending and raw links
-l_raw_style := 'text-decoration:none;font-size:10px;font-weight:normal;';
+l_raw_style := 'color:white;';
 l_approved_style := l_raw_style;
 l_pending_style := l_raw_style;
 
@@ -1159,43 +1053,27 @@ IF p_record_score = FALSE THEN
       AND c.collection_id = l_collection_id
       AND c.result NOT IN ('PASS','APPROVED','PENDING');
   
-    l_html := l_html || 
-         '<table class="scoreBoard">'
-      || ' <tr>'
-      || '  <td class="scoreBoardApp">' || x.application_id || ': ' 
-      || SUBSTR(x.application_name,1,40) || CASE WHEN LENGTH(x.application_name) > 40 THEN '...' ELSE NULL END || '<br />'
-      || '<span class="scoreBoardWho">' || TO_CHAR(l_score, '999G999') 
-      || ' of ' || TO_CHAR(l_possible_score, '999G999') || ' possible points (~ ' || l_time_to_fix || ' Hours to Fix)</span></td>'
-      || '  <td align="right">'
-      || '  <table class="scoreBoardPct">'
-      || '   <tr>'
-      || '    <td rowspan="2" style="background-color:#fff;width:10px;">'
-      || '<a link="' || apex_util.prepare_url('f?p=' || v('APP_ID') || ':8:' || v('APP_SESSION'))
-      || '" class="exceptionLink" id="openModalWindow" style="cursor:pointer;">'
-      || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-      || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=REPORT.gif"></a>'
-      || '    <td style="' || l_approved_score_style || ';background:' 
-      || sv_sec_util.get_color(p_pct_score => (l_approved_score), p_possible_score => (l_possible_score)) || '">' || l_approved_score || '%</td>'
-      || '    <td style="' || l_pending_score_style || ';background:' 
-      || sv_sec_util.get_color(p_pct_score => (l_pending_score), p_possible_score => (l_possible_score)) || '">' || l_pending_score || '%</td>'
-      || '    <td style="' || l_raw_score_style || ';background:' 
-      || sv_sec_util.get_color(p_pct_score => (l_raw_score), p_possible_score => (l_possible_score)) || '">' || l_raw_score || '%</td>'
-      || '   </tr>'
-      || '   <tr>'
-      || '    <th style="font-size:10px;">'
-      || '     <a href="' || apex_util.prepare_url('f?p=' || v('APP_ID') || ':' || v('APP_PAGE_ID') || ':' || v('APP_SESSION') || '::::P0_RESULT:Approved') || '" style="' || l_approved_style || '">Approved</a>'
-      || '    </th>'
-      || '    <th style="font-size:10px;">'
-      || '     &nbsp;<a href="' || apex_util.prepare_url('f?p=' || v('APP_ID') || ':' || v('APP_PAGE_ID') || ':' || v('APP_SESSION') || '::::P0_RESULT:Pending') || '" style="' || l_pending_style || '">Pending</a>'
-      || '    </th>'
-      || '    <th style="font-size:10px;">'
-      || '     &nbsp;<a href="' || apex_util.prepare_url('f?p=' || v('APP_ID') || ':' || v('APP_PAGE_ID') || ':' || v('APP_SESSION') || '::::P0_RESULT:Raw') || '" style="' || l_raw_style || '">Raw</a>'
-      || '    </th>'
-      || '  </tr>'
-      || ' </table>'      
-      || '</td>'
-      || '</tr>'
-      || '</table>';
+    l_html := ''
+      || TO_CHAR(l_score, '999G999') || ' of ' || TO_CHAR(l_possible_score, '999G999') || ' Points'
+      || '    <ul class="t-BadgeList t-BadgeList--responsive t-BadgeList--small t-BadgeList--cols t-BadgeList--3cols">'
+      || '      <li class="t-BadgeList-item">'
+      || '        <span class="t-BadgeList-label sert-BadgeList-label"' || CASE WHEN v('P0_RESULT') = 'Approved' THEN ' style="font-weight: bold;"' ELSE NULL END || '>Approved</span>'
+      || '        <span class="t-BadgeList-value"' || CASE WHEN v('P0_RESULT') = 'Approved' THEN ' style="font-weight: bold;"' ELSE NULL END || '><a href="' || apex_util.prepare_url('f?p=' || v('APP_ID') || ':' || v('APP_PAGE_ID') || ':' || v('APP_SESSION') || '::::P0_RESULT:Approved') || '"'
+      || '          style="color:white;background:' || sv_sec_util.get_color(p_pct_score => (l_approved_score), p_possible_score => (l_possible_score)) || ';">' || l_approved_score || '%</a></span>'
+      || '      </li>'
+      || '      <li class="t-BadgeList-item">'
+      || '        <span class="t-BadgeList-label sert-BadgeList-label"' || CASE WHEN v('P0_RESULT') = 'Pending' THEN ' style="font-weight: bold;"' ELSE NULL END || '>Pending</span>'
+      || '        <span class="t-BadgeList-value"' || CASE WHEN v('P0_RESULT') = 'Pending' THEN ' style="font-weight: bold;"' ELSE NULL END || '><a href="' || apex_util.prepare_url('f?p=' || v('APP_ID') || ':' || v('APP_PAGE_ID') || ':' || v('APP_SESSION') || '::::P0_RESULT:Pending') || '"'
+      || '          style="color:white;background:' || sv_sec_util.get_color(p_pct_score => (l_pending_score), p_possible_score => (l_possible_score)) || ';">' || l_pending_score || '%</a></span>'
+      || '      </li>'
+      || '      <li class="t-BadgeList-item">'
+      || '        <span class="t-BadgeList-label sert-BadgeList-label"' || CASE WHEN v('P0_RESULT') = 'Raw' THEN ' style="font-weight: bold;"' ELSE NULL END || '>Raw</span>'
+      || '        <span class="t-BadgeList-value"' || CASE WHEN v('P0_RESULT') = 'Raw' THEN ' style="font-weight: bold;"' ELSE NULL END || '><a href="' || apex_util.prepare_url('f?p=' || v('APP_ID') || ':' || v('APP_PAGE_ID') || ':' || v('APP_SESSION') || '::::P0_RESULT:Raw') || '"'
+      || '          style="color:white;background:' || sv_sec_util.get_color(p_pct_score => (l_raw_score), p_possible_score => (l_possible_score)) || ';">' || l_raw_score || '%</a></span>'
+      || '      </li>'
+      || '    </ul>'
+      ;
+
   END LOOP;
 
 ELSE
@@ -2178,7 +2056,7 @@ IS
 BEGIN
 
 -- Needed to make bold text the same size as non-bold text
-htp.prn('<style type="text/css">strong {font-size:12px;} li strong{font-size: 11px;}</style>');
+--htp.prn('<style type="text/css">strong {font-size:12px;} li strong{font-size: 11px;}</style>');
 
 -- First, check if the rule is NOT NULL, GREATER or LESS THAN
 FOR x IN (SELECT * FROM sv_sec_attributes WHERE attribute_id = p_attribute_id)
@@ -2343,9 +2221,9 @@ CASE
       (
       SELECT series_query q, region_id, series_id, page_id, region_name, series_name
         FROM apex_application_page_flash5_s
-      UNION ALL
-      SELECT series_query q, region_id, series_id, page_id, region_name, series_name
-        FROM apex_application_page_flash_s
+  --    UNION ALL
+  --    SELECT series_query q, region_id, series_id, page_id, region_name, series_name
+  --      FROM apex_application_page_flash_s
       )
     WHERE series_id = p_id;
 
@@ -2736,13 +2614,10 @@ BEGIN
 
 -- Update all attributes with a Add Notation link
 UPDATE sv_sec_collection_data 
-  SET notation =
-    '<a link="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':20:' || p_app_session || ':::20:P20_NOTATION_PK:'
-        || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id)
-        || '" class="notationLink" id="openModalWindow" style="cursor:pointer;"><img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-        || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=NOTE_ADD.gif"></a>'
+  SET notation = '<i class="fa fa-lg fa-comment" style="color:#999;"></i>',
+      notation_url = 'f?p=' || p_sert_app_id || ':20:' || p_app_session || ':::20:P20_NOTATION_PK:' || attribute_id || '|' || CASE WHEN page_id = -1 THEN NULL ELSE page_id END || '|' || component_id || '|' || column_id
   WHERE notation IS NULL AND collection_id = p_collection_id;
-
+        
 -- Add an Edit Notation link for any existing notations
 FOR x IN (SELECT DISTINCT attribute_id, page_id, component_id, column_id, COUNT(*) c 
   FROM sv_sec_notations 
@@ -2752,15 +2627,13 @@ LOOP
 
   UPDATE sv_sec_collection_data 
     SET notation = 
-        x.c || '<a link="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':20:' || p_app_session || ':::20:P20_NOTATION_PK:'
-        || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id)
-        || '" class="notationLink" id="openModalWindow" style="cursor:pointer;"><img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-        || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=NOTE_EDIT.gif"></a>'
+        '<i class="fa fa-lg fa-comments" style="color:#999;padding-left:3px;" title="' || x.c || ' Comments"></i>',
+        notation_url = 'f?p=' || p_sert_app_id || ':20:' || p_app_session || ':::20:P20_NOTATION_PK:' || attribute_id || '|' || CASE WHEN page_id = -1 THEN NULL ELSE page_id END || '|' || component_id || '|' || column_id-- Note Edit
     WHERE collection_id = p_collection_id
     AND
       CASE 
-        WHEN attribute_id IS NOT NULL AND page_id IS NULL AND component_id IS NULL AND column_id IS NULL AND attribute_id = x.attribute_id THEN 1
-        WHEN attribute_id IS NOT NULL AND page_id IS NOT NULL AND component_id IS NULL AND column_id IS NULL AND attribute_id = x.attribute_id AND page_id = x.page_id THEN 1
+        WHEN attribute_id IS NOT NULL AND (page_id IS NULL OR page_id = -1) AND component_id IS NULL AND column_id IS NULL AND attribute_id = x.attribute_id THEN 1
+        WHEN attribute_id IS NOT NULL AND page_id IS NOT NULL AND component_id IS NULL AND column_id IS NULL AND attribute_id = x.attribute_id AND (page_id = x.page_id OR page_id = -1) THEN 1
         WHEN attribute_id IS NOT NULL AND page_id IS NOT NULL AND component_id IS NOT NULL AND column_id IS NULL AND attribute_id = x.attribute_id AND page_id = x.page_id AND component_id = x.component_id THEN 1
         WHEN attribute_id IS NOT NULL AND page_id IS NOT NULL AND component_id IS NOT NULL AND column_id IS NOT NULL AND attribute_id = x.attribute_id AND page_id = x.page_id AND component_id = x.component_id AND column_id = x.column_id THEN 1
         ELSE 0
@@ -2813,9 +2686,14 @@ END LOOP;
 IF p_notation_pk IS NULL THEN
 
 l_sql := 'SELECT
-   NOTATION, 
-  CREATED_BY, 
-  CREATED_ON
+  NOTATION comment_text, 
+  CREATED_BY user_name, 
+  CREATED_ON comment_date,
+  NULL actions,
+  NULL attribute_1,
+  NULL attribute_2,
+  NULL attribute_3,
+  NULL attribute_4
 FROM
 sv_sec_notations WHERE 1 = 2 ';
 
@@ -2825,15 +2703,18 @@ ELSE
 -- Assemble the SQL to be used
 l_sql := ' 
 SELECT
-  n.NOTATION, 
-  n.CREATED_BY || '' ('' || au.workspace_name || '')'' created_by, 
-  n.CREATED_ON,
+  n.NOTATION comment_text, 
+  n.CREATED_BY || '' ('' || au.workspace_name || '')'' user_name, 
+  n.CREATED_ON comment_date,
   CASE 
     WHEN n.created_by = v(''APP_USER'') AND au.workspace_name = (SELECT workspace_name FROM apex_workspaces WHERE workspace_id = nv(''G_WORKSPACE_ID'')) THEN
-      ''<a href="#" id="'' || n.notation_id || ''" class="removeNotation"><img title="Remove Notation" src="wwv_flow_file_mgr.get_file?p_security_group_id='' 
-      || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || ''&p_fname=TRASH.gif"></a>''
+      ''<a href="#" id="'' || n.notation_id || ''" class="removeNotation"><i class="fa fa-lg fa-trash"></i></a>''
     ELSE NULL 
-  END delete_notation
+  END actions,
+  NULL attribute_1,
+  NULL attribute_2,
+  NULL attribute_3,
+  NULL attribute_4
 FROM
   sv_sec_notations n,
   apex_workspace_apex_users au
@@ -2900,263 +2781,6 @@ END get_checksum;
 
 
 --------------------------------------------------------------------------------
--- PROCEDURE: D A S H B O A R D _ C H A R T
---------------------------------------------------------------------------------
--- Produces the HTML Region for the chart on page 1
---------------------------------------------------------------------------------
-PROCEDURE dashboard_chart
-IS
-  l_url                      VARCHAR2(1000);
-  l_img                      VARCHAR2(255);
-BEGIN
-
-l_url := owa_util.get_cgi_env('REQUEST_PROTOCOL') || '://' ||  owa_util.get_cgi_env('SERVER_NAME')
-  || CASE WHEN owa_util.get_cgi_env('SERVER_PORT') NOT IN (80,443) THEN ':' 
-  || owa_util.get_cgi_env('SERVER_PORT') ELSE NULL END
-  || owa_util.get_cgi_env('SCRIPT_NAME') || '/wwv_flow.show?p_request=APPLICATION_PROCESS=dashboardXML&p_flow_id=' 
-  || v('APP_ID' ) || '&p_flow_step_id=1&p_instance=' || v('SESSION');
-
-
-l_img := v('IMAGE_PREFIX');
-  
-htp.prn('
-<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
-    codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
-    width="800"
-    height="300"
-    id="c26187435512302129"
-    align="top">
-<param name="movie" value="' || l_img || 'flashchart/anychart_5/swf/OracleAnyChart.swf?XMLFile=' || l_url || '">
-<param name="quality" value="high">
-<param name="allowScriptAccess" value="sameDomain">
-<param name="allowNetworking" value="all">
-<param name="scale" value="noscale">
-<param name="wmode" value="transparent">
-<param name="FlashVars" value="initText=Initializing...&xmlLoadingText=Loading data...&resourcesLoadingText=Loading resources...&noDataText=No data found.&waitingForDataText=Loading data. Please wait.&templatesLoadingText=Loading templates...">
-<embed src="' || l_img || 'flashchart/anychart_5/swf/OracleAnyChart.swf?XMLFile=' || l_url || '"
-       quality="high"
-       width="800"
-       height="300"
-       name="c26187435512302129"
-       scale="noscale"
-       align=""
-       allowScriptAccess="sameDomain" 
-       allowNetworking="all"
-       type="application/x-shockwave-flash"
-       pluginspage="http://www.macromedia.com/go/getflashplayer"
-       wmode="transparent"
-       FlashVars="initText=Initializing...&xmlLoadingText=Loading data...&resourcesLoadingText=Loading resources...&noDataText=No data found.&waitingForDataText=Loading data. Please wait.&templatesLoadingText=Loading templates...">
-</embed>
-</object>
-');
-
-END dashboard_chart;
-
---------------------------------------------------------------------------------
--- PROCEDURE: D A S H B O A R D _ X M L
---------------------------------------------------------------------------------
--- Produces the XML source for the main chart on page 1
---------------------------------------------------------------------------------
-PROCEDURE dashboard_xml
-  (
-  p_attribute_set_id         IN NUMBER
-  )
-IS
-BEGIN
-
-htp.prn('
-<anychart>
-        <settings>
-                <animation enabled="False"/>
-        </settings>
-        <charts>
-                <chart plot_type="CategorizedBySeriesVertical">
-                        <data_plot_settings default_series_type="Bar" enable_3d_mode="true" z_aspect="1">
-                                <bar_series group_padding="1">
-                                        <tooltip_settings enabled="true">
-                                                <format>{%Name} - {%Value}</format>
-                                        </tooltip_settings>
-                                        <label_settings enabled="true" rotation="90">
-                                                <position anchor="CenterBottom"/>
-                                                <format>{%Name}</format>
-                                                <background enabled="false">
-                                                </background>
-                                                <font size="9" color="White" bold="true"/>
-                                        </label_settings>
-                                </bar_series>
-                        </data_plot_settings>
-                        <chart_settings>
-                                <chart_background enabled="false">
-                                </chart_background>
-                                <title enabled="true">
-                                        <text></text>
-                                </title>
-                                <axes>
-                                        <y_axis>
-                                                <title enabled="false"></title>
-                                                <labels>
-                                                        <format>{%Value}{numDecimals:0}</format>
-                                                </labels>
-                                                <scale minimum="0" maximum="100"></scale>
-                                        </y_axis>
-                                        <x_axis>
-                                                <title enabled="false"></title>
-                                        </x_axis>
-                                </axes>
-                        </chart_settings>
-                        <data>');
-
-FOR x IN 
-  (
-  SELECT
-    app_eval_id,
-    application_id,
-    link,
-    approved_score,
-    pending_score,
-    raw_score
-  FROM
-    (
-    SELECT
-      ev.app_eval_id,
-      'javascript:svScan('|| ev.application_id || ',' || ev.attribute_set_id || ',800,''SCORE'');' link,
-
---        CASE WHEN sv_lic_core.is_licensed(sv_sec.get_guid, aa.workspace_id, ev.application_id) = 'FALSE' THEN 
---          apex_util.prepare_url('f?p=&APP_ID.:2:&SESSION.::::P2_APPLICATION_ID:' 
---          || ev.application_id) || '">'
---        ELSE 
---          'javascript:svScan('|| ev.application_id || ',' || ev.attribute_set_id || ',800,''SCORE'');' END link,
-      aa.application_id,
-      ev.approved_score,
-      ev.pending_score,
-      ev.raw_score
-    FROM
-      (
-      SELECT
-        a.*
-      FROM
-        sv_sec_app_evals a,
-        (
-        SELECT DISTINCT 
-          application_id, 
-          attribute_set_id,
-          max(app_eval_id) app_eval_id 
-        FROM
-          sv_sec_app_evals ae
-        GROUP BY
-          application_id,
-          attribute_set_id
-        ) b
-      WHERE
-        a.app_eval_id = b.app_eval_id
-      ) ev,
-      sv_sec_attribute_sets ats,
-      sv_sec_apex_applications_v aa
-    WHERE
-      ev.attribute_set_id = ats.attribute_set_id
-      AND ev.application_id = aa.application_id
-      AND ev.attribute_set_id = p_attribute_set_id
-    ORDER BY
-      eval_date DESC    
-    )
-  WHERE
-    rownum < 11
-  )
-LOOP
-htp.prn('
-                        <series name="App ' || x.application_id || '">
-                                <actions>
-                                        <action type="Call" function="svScan(' || x.application_id || ',-1,800,''SCORE'')"></action>
-                                </actions>
-                                <point name="Approved" y="' || x.approved_score || '" color="' || get_color(x.approved_score,100) || '" />
-                                <point name="Pending" y="'  || x.pending_score  || '" color="' || get_color(x.pending_score,100)  || '" />
-                                <point name="Raw" y="'      || x.raw_score      || '" color="' || get_color(x.raw_score,100)      || '" />
-                        </series>
-');
-END LOOP;
-htp.prn('
-                        </data>
-                </chart>
-        </charts>
-</anychart>
-');
-END;
-
---------------------------------------------------------------------------------
--- PROCEDURE: G L O B A L S 
---------------------------------------------------------------------------------
--- Produces CSS images and JS for Page Zero
---------------------------------------------------------------------------------
-
-PROCEDURE GLOBALS
-IS
-  -- Set l_path to the Workspace Images path
-  l_path VARCHAR2(1000) := v('APP_IMAGES');
-BEGIN
-
--- Sizing
-htp.prn('
-    <script>
-  var $header = $("#logo-and-tabs")
-    , $cgFluid = $(".formRegion")
-    , $mRight = $(".menu-right");
-  var fluidOffset = $header.width() - $mRight.width();
-  var cminPageSize = 1000,
-      cPadding = 10;
-
-  function fluidTop() {
-
-    var newHeaderWidth = $cgFluid.width() + cPadding;
-    var newTopWidth;
-    var maxWidth = $(window).width();
-
-    // check the bounds
-    if (newHeaderWidth > maxWidth) {
-    newHeaderWidth = maxWidth - cPadding;
-    }
-    if (newHeaderWidth < cminPageSize) {
-      newHeaderWidth = cminPageSize;
-    }
-
-    newTopWidth = newHeaderWidth - fluidOffset;
-
-    // Resize top
-    $header.width(newHeaderWidth);
-    $mRight.width(newTopWidth);
-
-  }
-
-  // bind fluifTop to window resize
-  $(window).resize(function() {
-
-    fluidTop();
-
-  // Kick off one resize to fix all charts on page load
-  }).resize();
-
-  // Tie the fluidTop to the refresh from an IR
-  var IR = $v("apexir_REGION_ID");
-  if (IR) {
-    $(''#'' + IR).live("apexafterrefresh", function() {fluidTop()});
-  }
-  </script>
-');
-
--- CSS Image References
---htp.prn('<style type="text/css">' || CHR(13));
---FOR x IN (SELECT * FROM sv_sec_css WHERE active_flag = 'Y' ORDER BY seq)
---LOOP
---  htp.prn(x.class_name || ' {' || REPLACE(x.contents,'$PATH$',l_path) || '}' || CHR(13));
---END LOOP;
---htp.prn('</style>');
-
-EXCEPTION
-  WHEN OTHERS THEN sv_sec_error.raise_unanticipated;
-
-END GLOBALS;
-
-
---------------------------------------------------------------------------------
 -- PROCEDURE: R E C O R D _ C O O K I E
 --------------------------------------------------------------------------------
 -- Records Session ID and Cookie for Builder Authentication
@@ -3171,7 +2795,7 @@ BEGIN
 
 -- Store the Session ID and Cookie Value
 INSERT INTO sv_sec_cookie_sessions (session_id, cookie_val) 
-  VALUES (p_session_id, p_cookie_val);
+  VALUES (TO_CHAR(p_session_id), TO_CHAR(p_cookie_val));
 
 END record_cookie;
 
@@ -3194,8 +2818,8 @@ BEGIN
 FOR x IN (SELECT * FROM sv_sec_cookie_sessions WHERE session_id = p_session_id)
 LOOP
   -- Validate that a row in WWV_FLOW_SESSIONS$ exists that contains the session ID and cookie value
-  SELECT cookie, security_group_id INTO l_username, l_sgid 
-    FROM sv_sec_apex_sessions_v WHERE id = p_session_id and session_id_hashed = x.cookie_val; 
+  SELECT username, security_group_id INTO l_username, l_sgid 
+    FROM sv_sec_apex_sessions_v WHERE id = p_session_id and cookie_value = x.cookie_val; 
 END LOOP;
 
 -- Delete the corresponding row from the temp table
@@ -3416,75 +3040,63 @@ END purge_events;
 
 
 --------------------------------------------------------------------------------
--- PROCEDURE: G L O B A L _ P A G E
+-- FUNCTION: B C _ B U T T O N S
 --------------------------------------------------------------------------------
--- Renders inline CSS with images references
+-- Determines which buttons to render in the breadcrumb region
 --------------------------------------------------------------------------------
-PROCEDURE global_page
+FUNCTION bc_buttons
+  (
+  p_button_key               IN VARCHAR2
+  )
+RETURN BOOLEAN
 IS
-  -- Set l_path to the Workspace Images path
-  l_path VARCHAR2(1000) := v('WORKSPACE_IMAGES');
+  l_app_page_id              NUMBER := nv('APP_PAGE_ID');
+  l_count                    NUMBER;
 BEGIN
 
--- Auto-expanding of the page based on region width
-htp.prn('
-    <script>
-  var $header = $("#logo-and-tabs")
-    , $cgFluid = $(".formRegion")
-    , $mRight = $(".menu-right");
-  var fluidOffset = $header.width() - $mRight.width();
-  var cminPageSize = 1000,
-      cPadding = 10;
+-- Reject by Page Range First
+IF l_app_page_id < 400 OR l_app_page_id > 799 THEN
+  RETURN FALSE;
+END IF;
 
-  function fluidTop() {
+-- Determine SEV
+IF p_button_key LIKE 'SEV%' THEN
+  SELECT COUNT(*) INTO l_count FROM sv_sec_attribute_set_attrs WHERE attribute_id = nv('G_ATTRIBUTE_ID') AND attribute_set_id = nv('P0_ATTRIBUTE_SET_ID') AND severity_level = SUBSTR(p_button_key,4);
+  IF l_count = 1 THEN
+    RETURN TRUE;
+  ELSE
+    RETURN FALSE;
+  END IF;
 
-    var newHeaderWidth = $cgFluid.width() + cPadding;
-    var newTopWidth;
-    var maxWidth = $(window).width();
+ELSIF p_button_key LIKE '%MULT' THEN
+  IF l_app_page_id IN (300,400,500,600,700,450,570,705,710,715,720,725,730,735,740,745,750,755,760,765,770,775,780,785) THEN
+    RETURN FALSE;
+  ELSE
+    RETURN TRUE;
+  END IF;
 
-    // check the bounds
-    if (newHeaderWidth > maxWidth) {
-    newHeaderWidth = maxWidth - cPadding;
-    }
-    if (newHeaderWidth < cminPageSize) {
-      newHeaderWidth = cminPageSize;
-    }
+ELSIF p_button_key = 'HELP' THEN
 
-    newTopWidth = newHeaderWidth - fluidOffset;
+  IF l_app_page_id IN (0) THEN
+    RETURN FALSE;
+  ELSE
+    RETURN TRUE;
+  END IF;
 
-    // Resize top
-    $header.width(newHeaderWidth);
-    $mRight.width(newTopWidth);
+ELSIF p_button_key = 'FIX' THEN
+  IF l_app_page_id IN (300,400,500,600,700,450,570,705,710,715,720,725,730,735,740,745,750,755,760,765,770,775,780,785) THEN
+    RETURN FALSE;
+  ELSE
+    RETURN TRUE;
+  END IF;
 
-  }
+END IF;
 
-  // bind fluifTop to window resize
-  $(window).resize(function() {
-
-    fluidTop();
-
-  // Kick off one resize to fix all charts on page load
-  }).resize();
-
-  // Tie the fluidTop to the refresh from an IR
-  var IR = $v("apexir_REGION_ID");
-  if (IR) {
-    $(''#'' + IR).live("apexafterrefresh", function() {fluidTop()});
-  }
-  </script>
-    ');
-
--- CSS Image References
-htp.prn('<style type="text/css">' || CHR(13));
-FOR x IN (SELECT * FROM sv_sec_css WHERE active_flag = 'Y' ORDER BY seq)
-LOOP
-  htp.prn(x.class_name || ' {' || REPLACE(x.contents,'$PATH$',l_path) || '}' || CHR(13));
-END LOOP;
-htp.prn('</style>');
-
-END global_page;
+-- Catch All Return False
+RETURN FALSE;
 
 
+END bc_buttons;
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 END sv_sec_util;

@@ -1164,11 +1164,9 @@ END LOOP;
       END = 1;
 
 -- Update the Collection
-  UPDATE sv_sec_collection_data SET exception = 
-      '<a link="' || apex_util.prepare_url('f?p=' || v('APP_ID') || ':10:' || v('APP_SESSION') || ':::10:P10_EXCEPTION_PK:'
-        || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id)
-        || '" class="exceptionLink" id="openModalWindow" style="cursor:pointer;"><img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-        || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PAGE_ADD.gif"></a>',
+  UPDATE sv_sec_collection_data SET 
+    exception = '<i class="fa fa-lg fa-plus-circle" style="color:green;"></i>', 
+    exception_url = 'f?p=' || v('APP_ID') || ':10:' || v('APP_SESSION') || ':::10:P10_EXCEPTION_PK:' || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id,
     result = 'FAIL'   
   WHERE
     attribute_id = l_attribute_id
@@ -1321,88 +1319,94 @@ WHEN MATCHED THEN
     cd.exception = DECODE(cd.result, 'PASS', NULL, DECODE
     (
     e.approved_flag,
-    'P',
+    'P', -- PENDING
       CASE
       -- Approver
       WHEN l_is_approver = 'Y' AND e.created_by||e.created_ws != p_app_user||p_user_workspace_id THEN
-        '<a link="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':10:' || p_app_session || ':VIEW::10:P10_EXCEPTION_PK:'
-          || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id)
-          || '" class="exceptionLink" id="openModalWindow" style="cursor:pointer;">'
-          || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PAGE_GO.gif"></a>'
+        '<i class="fa fa-lg fa-pencil-square" style="color:orange;"></i>'
       -- Owner
       WHEN e.created_by||e.created_ws = p_app_user||p_user_workspace_id THEN
-        '<a link="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':10:' || p_app_session || ':VIEW::10:P10_EXCEPTION_PK:'
-          || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id)
-          || '" class="exceptionLink" id="openModalWindow" style="cursor:pointer;">'
-          || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PAGE_EDIT.gif"></a>'
+        '<i class="fa fa-lg fa-pencil-square" style="color:green;"></i>'
       ELSE 
       -- Viewer
-        '<a link="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':10:' || p_app_session || ':VIEW::10:P10_EXCEPTION_PK:'
-          || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id)
-          || '" class="exceptionLink" id="openModalWindow" style="cursor:pointer;">'
-          || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PAGE_YELLOW.gif"></a>'
+        '<i class="fa fa-lg fa-info-circle" style="color:orange;"></i>'
       END,
-    'R',
+    'R', -- REJECTED
       CASE
       -- Rejected and Owner
       WHEN e.created_by||e.created_ws = p_app_user||p_user_workspace_id THEN
-        '<a link="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':14:' || p_app_session || ':::14:P14_EXCEPTION_PK:'
-          || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id)
-          || '" class="exceptionLink" id="openModalWindow" style="cursor:pointer;">'
-          || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PAGE_EDIT_RED.gif" title="Rejected by ' 
-          || e.rejected_by || ' on ' || TO_CHAR(e.rejected_on, 'DD-MON-YYYY HH:MIPM') || '"></a>'
+        '<i class="fa fa-lg fa-pencil-square" style="color:red;" title="Rejected by ' || e.rejected_by || ' on ' || TO_CHAR(e.rejected_on, 'DD-MON-YYYY HH:MIPM') || '"></i>'
       ELSE
       -- Rejected and Not Owner
-        '<a link="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':14:' || p_app_session || ':::14:P14_EXCEPTION_PK:'
-          || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id)
-          || '" class="exceptionLink" id="openModalWindow" style="cursor:pointer;">'
-          || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PAGE_ERROR.gif" title="Rejected by ' 
-          || e.rejected_by || ' on ' || TO_CHAR(e.rejected_on, 'DD-MON-YYYY HH:MIPM') || '"></a>'
+        '<i class="fa fa-lg fa-info-circle" style="color:red;" title="Rejected by ' || e.rejected_by || ' on ' || TO_CHAR(e.rejected_on, 'DD-MON-YYYY HH:MIPM') || '"></i>'
       END,
-    'S',
+    'S', -- STALE
       CASE
       -- Failed and Owner
       WHEN e.created_by = p_app_user THEN
-        '<a link="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':16:' || p_app_session || ':::16:P16_EXCEPTION_PK:'
-          || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id)
-          || '" class="exceptionLink" id="openModalWindow" style="cursor:pointer;">'
-          || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PAGE_ERROR.gif"></a>'
+        '<i class="fa fa-lg fa-info-circle" style="color:red;"></i>'
       ELSE
       -- Failed and Not Owner
-        '<a link="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':16:' || p_app_session || ':::16:P16_EXCEPTION_PK:'
-          || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id)
-          || '" class="exceptionLink" id="openModalWindow" style="cursor:pointer;">'
-          || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PAGE_ERROR.gif"></a>'
+        '<i class="fa fa-lg fa-info-circle" style="color:red;"></i>'
       END,
     'Y',
       CASE
       -- Approved and Owner
       WHEN e.created_by||e.created_ws = p_app_user||p_user_workspace_id THEN
-        '<a link="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':12:' || p_app_session || ':::12:P12_EXCEPTION_PK:'
-          || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id)
-          || '" class="exceptionLink" id="openModalWindow" style="cursor:pointer;">'
-          || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PAGE_EDIT_GREEN.gif" title="Approved by ' 
-          || e.approved_by || ' on ' || TO_CHAR(e.approved_on, 'DD-MON-YYYY HH:MIPM') || '"></a>'
+        '<i class="fa fa-lg fa-pencil-square" style="color:green;" title="Approved by ' || e.approved_by || ' on ' || TO_CHAR(e.approved_on, 'DD-MON-YYYY HH:MIPM') || '"></i>'
       ELSE
       -- Approved and Not Owner
-        '<a link="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':12:' || p_app_session || ':::12:P12_EXCEPTION_PK:'
-          || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id)
-          || '" class="exceptionLink" id="openModalWindow" style="cursor:pointer;">'
-          || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PAGE_GREEN.gif" title="Approved by ' 
-          || e.approved_by || ' on ' || TO_CHAR(e.approved_on, 'DD-MON-YYYY HH:MIPM') || '"></a>'
+        '<i class="fa fa-lg fa-info-circle" style="color:green;" title="Approved by ' || e.approved_by || ' on ' || TO_CHAR(e.approved_on, 'DD-MON-YYYY HH:MIPM') || '"></i>'
       END,
       NULL
-    ));
-
+      )
+    ),
+    cd.exception_url = DECODE(cd.result, 'PASS', NULL, DECODE
+    (
+    e.approved_flag,
+    'P',
+      CASE
+      -- Approver
+      WHEN l_is_approver = 'Y' AND e.created_by||e.created_ws != p_app_user||p_user_workspace_id THEN
+        'f?p=' || p_sert_app_id || ':10:' || p_app_session || ':VIEW::10:P10_EXCEPTION_PK:' || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id
+      -- Owner
+      WHEN e.created_by||e.created_ws = p_app_user||p_user_workspace_id THEN
+        'f?p=' || p_sert_app_id || ':10:' || p_app_session || ':VIEW::10:P10_EXCEPTION_PK:' || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id
+      ELSE 
+      -- Viewer
+        'f?p=' || p_sert_app_id || ':10:' || p_app_session || ':VIEW::10:P10_EXCEPTION_PK:' || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id
+      END,
+    'R',
+      CASE
+      -- Rejected and Owner
+      WHEN e.created_by||e.created_ws = p_app_user||p_user_workspace_id THEN
+        'f?p=' || p_sert_app_id || ':14:' || p_app_session || ':::14:P14_EXCEPTION_PK:' || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id
+      ELSE
+      -- Rejected and Not Owner
+        'f?p=' || p_sert_app_id || ':14:' || p_app_session || ':::14:P14_EXCEPTION_PK:' || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id
+      END,
+    'S',
+      CASE
+      -- Failed and Owner
+      WHEN e.created_by = p_app_user THEN
+        'f?p=' || p_sert_app_id || ':16:' || p_app_session || ':::16:P16_EXCEPTION_PK:' || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id
+      ELSE
+      -- Failed and Not Owner
+        'f?p=' || p_sert_app_id || ':16:' || p_app_session || ':::16:P16_EXCEPTION_PK:' || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id
+      END,
+    'Y',
+      CASE
+      -- Approved and Owner
+      WHEN e.created_by||e.created_ws = p_app_user||p_user_workspace_id THEN
+        'f?p=' || p_sert_app_id || ':12:' || p_app_session || ':::12:P12_EXCEPTION_PK:' || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id
+      ELSE
+      -- Approved and Not Owner
+        'f?p=' || p_sert_app_id || ':12:' || p_app_session || ':::12:P12_EXCEPTION_PK:' || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id
+      END,
+      NULL
+      )
+    );
+    
 EXCEPTION
   WHEN OTHERS THEN sv_sec_error.raise_unanticipated;
 

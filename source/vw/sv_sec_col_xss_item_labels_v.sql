@@ -32,7 +32,9 @@ SELECT
   c004               label_esc,
   c005               display_as,
   exception          exception,
-  notation           notation
+  notation           notation,
+  exception_url,
+  notation_url
 FROM
   sv_sec_collection_data cd,
   sv_sec_collection c,

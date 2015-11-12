@@ -236,7 +236,7 @@ ELSE
     )
   LOOP
     l_recommended_value := x.value;
-    l_recommended_value_list := l_recommended_value_list || '<li>' || x.value || '</li>';
+    l_recommended_value_list := l_recommended_value_list || '<li style="font-size:1.2rem; margin-left:10px;">' || x.value || '</li>';
     l_counter := l_counter + 1;
   END LOOP;    
     
@@ -322,9 +322,6 @@ PROCEDURE summary_dashboard
 AS
   l_collection_id            sv_sec_collection.collection_id%TYPE;
   l_title                    apex_application_pages.page_title%TYPE;
-  l_raw_style                VARCHAR2(255);
-  l_pending_style            VARCHAR2(255);
-  l_approved_style           VARCHAR2(255);
   l_result                   VARCHAR2(100);
   l_pct_score                NUMBER;
   TYPE l_score_t             IS TABLE OF NUMBER index by binary_integer;
@@ -338,7 +335,8 @@ AS
   l_total_pct                NUMBER := 0;
   l_attribute_name           VARCHAR2(255);
   l_total_possible_score     NUMBER := 0;
-  l_category_key             VARCHAR2(255);
+  l_not_found_html           VARCHAR2(10000);
+  l_html                     VARCHAR2(10000);
 BEGIN
 
 -- Get the name based on the page name
@@ -355,39 +353,6 @@ l_collection_id := sv_sec_util.get_collection_id(
 -- Get the value of Result
 l_result := NVL(v('P0_RESULT'),'Raw');
 
--- Get the category key for this attribute
-SELECT category_key INTO l_category_key
-  FROM sv_sec_categories
-  WHERE display_page = 
-    (SELECT page_alias FROM apex_application_pages 
-       WHERE application_id = p_sert_app_id AND page_id = p_page_id);
-
--- Set the style for the approved, pending and raw links
-l_raw_style := 'text-decoration:none;font-size:11px;font-weight:normal;color:#666;';
-l_approved_style := l_raw_style;
-l_pending_style := l_raw_style;
-
-IF l_result = 'Raw' THEN
-  l_raw_style := l_raw_style || 'font-weight:bold;color:#333;';
-ELSIF l_result = 'Pending' THEN
-  l_pending_style := l_raw_style || 'font-weight:bold;color:#333;';
-ELSE
-  l_approved_style := l_raw_style || 'font-weight:bold;color:#333;';
-END IF;
-
--- Open the table and print the title
-htp.prn('<table class="dashboardTable">
- <tr>
-  <td><span class="dashboardTableTitle">' || l_title || '</span></td>
-  <td align="right">
-    <a href="#" class="categoryHelp" id="' || l_category_key || '"><img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-        || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=HELP.gif"></a>
-  </td>
- </tr>
- </table>
- <table class="dashboardTable">');
-
-
 -- Produce the dashboard region for the specific summary page
 FOR x IN (SELECT * FROM sv_sec_attributes WHERE summary_page_id = p_page_id ORDER BY attribute_key)
 LOOP
@@ -398,6 +363,7 @@ LOOP
     attribute_id = x.attribute_id
     AND collection_id = l_collection_id;
 
+  -- If there is no data found, then record the card
   IF l_count = 0 THEN
 
     -- Get the attribute name
@@ -407,13 +373,22 @@ LOOP
       l_attribute_name := x.attribute_name;
     END IF;
 
-    htp.prn('
-      <tr>
-        <th width="125"><a href="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':' || x.display_page_id || ':' || p_app_session)
-          || '" style="color:#666;text-decoration:none;">' 
-          || l_attribute_name || '</a></th>
-        <td colspan="4">No matching components for this attribute</td>
-      </tr>');
+    l_not_found_html := l_not_found_html || 
+         '<li class="t-Cards-item">'
+      || '<div class="t-Card t-Card-wrap"><a href="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':' || x.display_page_id || ':' || p_app_session) || '">'
+      || '  <div class="t-Card-titleWrap"><h3 class="t-Card-title">' || 
+        CASE 
+          WHEN (INSTR(x.attribute_name, 'Contains') > 0) THEN
+            SUBSTR(x.attribute_name, INSTR(x.attribute_name, 'Contains')+9)
+          WHEN (INSTR(x.attribute_name, 'Inconsistencies') > 0) THEN
+            REPLACE(x.attribute_name, 'Inconsistencies', NULL)
+          ELSE x.attribute_name 
+        END || '</h3></div>'
+      || '<div class="t-Card-body">'
+      || '  <div class="t-Card-desc" style="height:60px;">No matching components for this attribute</div>'
+      || '  </div>'
+      || '</a></div>'
+      || '</li>';
 
   ELSE
 
@@ -472,30 +447,35 @@ LOOP
       AND cd.collection_id = l_collection_id
       AND result = 'PENDING';
 
-    htp.prn('
-      </tr>
-      <tr>
-        <th width="125"><a href="' || apex_util.prepare_url('f?p=' || p_sert_app_id|| ':' || x.display_page_id || ':' || p_app_session)
-          || '" style="color:#666;text-decoration:none;">' ||
-          CASE 
-            WHEN (INSTR(x.attribute_name, 'Contains') > 0) THEN
-              SUBSTR(x.attribute_name, INSTR(x.attribute_name, 'Contains')+9)
-            WHEN (INSTR(x.attribute_name, 'Inconsistencies') > 0) THEN
-              REPLACE(x.attribute_name, 'Inconsistencies', NULL)
-            ELSE x.attribute_name END  
-          || '</a></th>
-        <td width="225"><div class="dashboardTableChartBackground">
-          <img width="' || ROUND(l_pct_score)*2.25 || '" height="14" border="0" style="background:' 
-            || sv_sec_util.get_color(p_pct_score => (l_pct_score), p_possible_score => l_possible_score) 
-            || ';" src="/i/1px_trans.gif"></div></td>
-        <th style="text-align:left;">' || l_pct_score || '%</td>
-        <td colspan="2" class="dashboardTablePoints">' || l_score_arr(y) || ' out of ' || l_possible_score || ' possible points '
-          || CASE WHEN l_pending_count > 0 THEN 
-          '&nbsp;&nbsp;&nbsp;<b>' || l_pending_count || ' Pending Approvals</b>&nbsp;'
-          || '<a href="' || apex_util.prepare_url('f?p=' || p_sert_app_id|| ':' || x.display_page_id || ':' || p_app_session) || '" style="color:#666;text-decoration:none;">'
-          || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PAGE_GO.gif"></a></div>' ELSE NULL END || '</td>
-      </tr>');
+    l_html := l_html || 
+         '<li class="t-Cards-item">'
+      || '<div class="t-Card t-Card-wrap"><a href="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':' || x.display_page_id || ':' || p_app_session) || '">'
+      || '  <div class="t-Card-icon"><span class="t-Icon fa-laptop" style="width:48px; height:48px;background-color:'
+      || sv_sec_util.get_color(p_pct_score => ROUND(l_pct_score), p_possible_score => l_possible_score) || ';"><span class="t-Card-initials" role="presentation" style="line-height:4.5rem;">' || l_pct_score || '%</span></span></div>'
+      || '  <div class="t-Card-titleWrap"><h3 class="t-Card-title">' || 
+        CASE 
+          WHEN (INSTR(x.attribute_name, 'Contains') > 0) THEN
+            SUBSTR(x.attribute_name, INSTR(x.attribute_name, 'Contains')+9)
+          WHEN (INSTR(x.attribute_name, 'Inconsistencies') > 0) THEN
+            REPLACE(x.attribute_name, 'Inconsistencies', NULL)
+          ELSE x.attribute_name END  || '</h3></div>'
+      || '  <div class="t-Card-body">'
+      || '    <div class="t-Card-desc">' || l_score_arr(y) || ' out of ' || l_possible_score || ' possible points</div>'
+      || '    <div class="t-Card-info">'
+      || '      <div class="a-Report-percentChart" style="background-color:#DBDBDB;">'
+      || '        <div class="a-Report-percentChart-fill" style="width:' || l_pct_score || '%; background-color:#999;"></div>'
+      || '      </div>'
+      || '    </div>'
+      || '  </div>'
+      || '</a></div>'
+      || '</li>';
+
+
+--          || CASE WHEN l_pending_count > 0 THEN 
+--          '&nbsp;&nbsp;&nbsp;<b>' || l_pending_count || ' Pending Approvals</b>&nbsp;'
+--          || '<a href="' || apex_util.prepare_url('f?p=' || p_sert_app_id|| ':' || x.display_page_id || ':' || p_app_session) || '" style="color:#666;text-decoration:none;">'
+--          || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
+--          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PAGE_GO.gif"></a></div>' ELSE NULL END || '</td>
 
     -- Increment the score
     l_total := l_total + l_score_arr(y);
@@ -513,23 +493,38 @@ IF l_possible_score = 0 THEN
   l_total_pct := 0;
   l_total := 0;
 ELSE
-  l_total_pct := ROUND((l_total/(l_total_possible_score))*100,NVL(apex_util.get_preference(p_preference => 'SCORE_PRECISION', p_user => v('G_WORKSPACE_ID') || '.' || v('APP_USER')),2));
+  l_total_pct := ROUND((l_total/(l_total_possible_score))*100,1);
 END IF;
 
-htp.prn('
-      <tr>
-        <th width="125" style="color:#000;">TOTAL</th>
-        <td width="225"><div class="dashboardTableChartBackground">
-          <img width="' || ROUND(l_total_pct)*2.25 || '" height="14" border="0" style="background:' 
-            || sv_sec_util.get_color(p_pct_score => (l_total_pct), p_possible_score => (l_total_possible_score)) 
-            || ';" src="/i/1px_trans.gif"></div></td>
-        <th style="text-align:left;color:#000;">' || l_total_pct || '%</td>
-        <td colspan="2" class="dashboardTablePoints" style="color:#000;"><b>' || TO_CHAR(l_total)
-          || ' out of ' || (l_total_possible_score) || ' possible points</b></td>
-      </tr>');
 
--- Close the table
-htp.prn('</table>');
+htp.prn( 
+             '<ul class="t-Cards t-Cards--compact t-Cards--displayInitials t-Cards--cols">'
+          || '<li class="t-Cards-item" style="width:100%;">'
+          || '  <div class="t-Card t-Card-wrap">'
+          || '    <div class="t-Card-icon"' || CASE WHEN l_total_possible_score = 0 THEN 'style="display:none;"' END || '><span class="t-Icon fa-laptop" style="width:48px; height:48px;background-color:' 
+          || sv_sec_util.get_color(p_pct_score => ROUND(l_total_pct), p_possible_score => l_total_possible_score) || ';">'
+          || '      <span class="t-Card-initials" role="presentation" style="line-height:4.5rem;">' || CASE WHEN l_total_pct > 100 THEN 100 ELSE l_total_pct END || '%</span></span></div>'
+          || '    <div class="t-Card-titleWrap"><h3 class="t-Card-title">' || l_title || '</h3></div>'
+          || '    <div class="t-Card-body">' 
+          || '      <div class="t-Card-desc">' || CASE WHEN l_total_possible_score = 0 THEN 'No Attributes in this application' 
+            ELSE TO_CHAR(l_total, '999G999') || ' out of ' || TO_CHAR(l_total_possible_score, '999G999') || ' Possible Points' END || '</div>'
+          || '    </div>'
+          || '  </div>'
+          || '</li>'
+          || '</ul>'
+          );
+
+-- Open the UL
+htp.prn('<ul class="t-Cards t-Cards--compact t-Cards--displayInitials t-Cards--3cols t-Cards--desc-2ln">');
+
+-- Print the HTML for found attributes
+htp.prn(l_html);
+
+-- Print the HTML for not found attributes
+htp.prn(l_not_found_html);
+
+-- Close the UL
+htp.prn('</ul>');
 
 EXCEPTION
   WHEN OTHERS THEN sv_sec_error.raise_unanticipated;
@@ -570,7 +565,7 @@ AS
   y                          NUMBER := 1;
   l_color_rgb                APEX_APPLICATION_GLOBAL.VC_ARR2;
   l_color                    VARCHAR2(255);
-  l_html                     VARCHAR2(4000);
+  l_html                     VARCHAR2(32767);
   l_severity_level           NUMBER;
   l_severity                 VARCHAR2(1000);
 BEGIN
@@ -586,70 +581,18 @@ l_score_label_arr(1) := 'Approved';
 l_score_label_arr(2) := 'Pending';
 l_score_label_arr(3) := 'Raw';
 
--- Set l_severity
-l_severity := '<span style="color:#666;border-top:1px solid #000;border-left:1px solid #000;border-bottom:1px solid #000;padding-left:3px;padding-right:3px;font-size:12px;">'
-  || 'SEV</span><span style="font-size:12px;border:1px solid black;color:white;padding-left:5px;padding-right:5px;background-color:#COLOR#;">#SEV#</span>';
-
 
 -- Produce the dashboard region for the specific page
 FOR x IN (SELECT * FROM sv_sec_attributes WHERE display_page_id = p_page_id)
 LOOP
 
-  -- Get the Severity Level
-  FOR y IN (SELECT severity_level FROM sv_sec_attribute_set_attrs WHERE attribute_set_id = p_attribute_set_id AND attribute_id = x.attribute_id)
-  LOOP
-    l_severity_level := y.severity_level;
-  END LOOP;
-
   IF p_format = 'HTML' THEN
-  
-    -- Replace the Severity Image contents
-    l_severity := REPLACE(l_severity,'#SEV#',l_severity_level);
-    CASE
-      WHEN l_severity_level = 3 THEN l_severity := REPLACE(l_severity,'#COLOR#','#FFCC00');
-      WHEN l_severity_level = 2 THEN l_severity := REPLACE(l_severity,'#COLOR#','#EAA207');
-      WHEN l_severity_level = 1 THEN l_severity := REPLACE(l_severity,'#COLOR#','#FF0000');
-    END CASE;
-  
-    -- Open the table and print the title
-    l_html := l_html || '<table class="dashboardTable">
-     <tr>
-      <td colspan="4"><span class="dashboardTableTitle">' || x.attribute_name || '&nbsp;&nbsp;' || l_severity || '</span></td>
-      <td align="right" width="85">    
-        <a href="javascript:getInfo(' || x.attribute_id 
-            || ',''getFix'',600,500,''A'')" style="color:grey;font-size:11px;"><img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=FIX.gif"></a>&nbsp;
-        <a href="javascript:getInfo(' || x.attribute_id 
-            || ',''getInfo'',600,500,''A'')" style="color:grey;font-size:11px;"><img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=HELP.gif"></a>&nbsp;'
-
--- PRINT PLACEHOLDER
---          || '<a href="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':' || p_page_id || ':' || p_app_session
---          || ':PRINT_ATTRIBUTE') || '" style="color:grey;font-size:11px;">'
---          || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
---          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PRINT.gif"></a>'
-
-          || '
-      </td>
-     </tr>
-    </table>
-    <table class="dashboardTable">';
-    
+    l_html := '<ul class="t-Cards t-Cards--compact t-Cards--displayInitials t-Cards--3cols t-Cards--desc-2ln">';
+      
   ELSE
 
     -- PRINT PLACEHOLDER
     NULL;
-    /**
-    sv_sec_rpt_util.set_font
-      (
-      p_family => 'Arial',
-      p_size   => 14,
-      p_style => 'B'
-      ); 
-
-    plpdf.printCell(200,10,x.attribute_name || ' (Severity: ' || l_severity_level || ')');
-    plpdf.lineBreak(6);
-    **/
     
   END IF;
   
@@ -661,22 +604,11 @@ LOOP
   IF l_count < 1 THEN
     IF p_format = 'HTML' THEN
       -- Attribute is not part of the current set  
-      l_html := l_html || '<tr><td colspan="2">This Attribute is not part of the current Attribute Set.  '
-        || 'No information will be displayed.</td></tr>';
+      l_html := l_html || 'This Attribute is not part of the current Attribute Set.  '
+        || 'No information will be displayed.';
     ELSE
       -- PRINT PLACEHOLDER
       NULL;
-      /**
-      sv_sec_rpt_util.set_font
-        (
-        p_family => 'Arial',
-        p_size   => 10,
-        p_style => 'B'
-        ); 
-
-      plpdf.printCell(200,10,'This Attribute is not part of the current Attribute Set.  '
-        || 'No information will be displayed');
-      **/    
 
     END IF;
 
@@ -690,7 +622,7 @@ LOOP
     
     IF l_count = 0 THEN      
       IF p_format = 'HTML' THEN
-        l_html := l_html || '<tr><td colspan="2"><p>There are no matching components for this attribute.</p></td></tr>';
+        l_html := l_html || 'There are no matching components for this attribute.';
       END IF;
     ELSE
       -- Print the scores for the current attribute
@@ -749,61 +681,31 @@ LOOP
       FOR x IN 1..3 LOOP
 
         -- Calculate the percentage
-        l_pct_score := ROUND((l_score_arr(x)/l_possible_score)*100,NVL(apex_util.get_preference(p_preference => 'SCORE_PRECISION', p_user => v('G_WORKSPACE_ID') || '.' || p_app_user),2));
+        l_pct_score := ROUND((l_score_arr(x)/l_possible_score)*100,1);
 
         IF p_format = 'HTML' THEN
           -- Print the row
-          l_html := l_html || '
-           <tr>
-            <th width="20">' || l_score_label_arr(x) || '</th>
-            <td width="225"><div class="dashboardTableChartBackground">
-              <img width="' || ROUND(l_pct_score)*2.25 || '" height="14" border="0" style="background:' 
-              || sv_sec_util.get_color(p_pct_score => ROUND(l_pct_score), p_possible_score => l_possible_score) 
-              || ';" src="/i/1px_trans.gif"></div></td>
-            <th style="text-align:left;width:20px;">' || l_pct_score || '%</th>
-            <td class="dashboardTablePoints">' || l_score_arr(x) || ' out of ' || l_possible_score || ' possible points</td>
-            <td>&nbsp;</td>
-           </tr>';
-        
+          l_html := l_html || 
+            '<li class="t-Cards-item">  
+               <div class="t-Card t-Card-wrap">
+                 <div class="t-Card-icon"><span class="t-Icon fa-laptop" style="width:48px; height:48px;background-color:'
+                 || sv_sec_util.get_color(p_pct_score => ROUND(l_pct_score), p_possible_score => l_possible_score) || ';"><span class="t-Card-initials" role="presentation" style="line-height:4.5rem;">' || l_pct_score || '%</span></span></div>
+                 <div class="t-Card-titleWrap"><h3 class="t-Card-title">' || l_score_label_arr(x) || '</h3></div>
+                 <div class="t-Card-body">
+                   <div class="t-Card-desc">' || l_score_arr(x) || ' out of ' || l_possible_score || ' possible points</div>
+                   <div class="t-Card-info">
+                     <div class="a-Report-percentChart" style="background-color:#DBDBDB;">
+                     <div class="a-Report-percentChart-fill" style="width:' || l_pct_score || '%; background-color:#999;"></div>
+                   </div>
+                 </div>
+               </div>
+               </div>
+             </li>';
+
         ELSE
           -- PRINT PLACEHOLDER
           NULL;
-          /**
 
-          l_color := sv_sec_util.get_color(p_pct_score => l_pct_score, p_possible_score => l_possible_score, p_print => TRUE);
-
-          sv_sec_rpt_util.set_font
-            (
-            p_family => 'Arial',
-            p_style => NULL,
-            p_size => 9
-            ); 
-    
-          plpdf.printCell(20,13,l_score_label_arr(x),NULL,NULL,'R');
-
-          l_color_rgb := apex_util.string_to_table(l_color);
-
-          sv_sec_rpt_util.set_font
-            (
-            p_family => 'Arial',
-            p_style => NULL,
-            p_size => 8,
-            p_r_bkg => l_color_rgb(1),
-            p_g_bkg => l_color_rgb(2),
-            p_b_bkg => l_color_rgb(3)
-            ); 
-        
-          plpdf.drawRect(plpdf.getCurrentX, plpdf.getCurrentY+5,ROUND(l_pct_score/1.34),3,'F');
-          plpdf.drawRect(plpdf.getCurrentX, plpdf.getCurrentY+5,75,3);
-
-          plpdf.setcurrentxy(plpdf.getCurrentX+75, plpdf.getCurrentY+2);
-          plpdf.printCell(20,10,l_pct_score || '%');
-
-          plpdf.printCell(70,10,l_score_arr(x) || ' out of ' || l_possible_score || ' Possible Points');
-
-          plpdf.lineBreak(4);
-
-          **/
         END IF;
 
       END LOOP;
@@ -813,11 +715,11 @@ LOOP
 END LOOP;
 
 IF p_format = 'HTML' THEN
--- Close the table
-  l_html := l_html || '</table>';
+-- Close the region
+  l_html := l_html || '</ul>';
   RETURN l_html;
 ELSE
-  RETURN NULL;
+  NULL;
 END IF;
 
 EXCEPTION
@@ -1169,10 +1071,8 @@ THEN
 
   -- Add the HTML for FAILed attributes
   UPDATE sv_sec_collection_data 
-    SET exception = '<a link="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':10:' || p_app_session || ':::10:P10_EXCEPTION_PK:'
-        || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id)
-        || '" class="exceptionLink" id="openModalWindow" style="cursor:pointer;"><img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
-        || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PAGE_ADD.gif"></a>'
+    SET exception = '<i class="fa fa-lg fa-plus-circle" style="color:green;" title="Add Exception"></i>',
+        exception_url = 'f?p=' || p_sert_app_id || ':10:' || p_app_session || ':::10:P10_EXCEPTION_PK:' || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id
     WHERE 
       result = 'FAIL' 
       AND collection_id = l_collection_id;
@@ -1217,7 +1117,7 @@ END IF;
 
 ELSE
   -- Application is Run and Build
-  logger.log('The eSERT Application Status needs to be set to Run Only');
+  logger.log('The SERT Application Status needs to be set to Run Only');
   owa_util.redirect_url(apex_util.prepare_url('f?p=' || TO_CHAR(p_sert_app_id || ':3:' || p_app_session)));  
 
 END IF;

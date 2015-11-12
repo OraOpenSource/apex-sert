@@ -23,7 +23,9 @@ SELECT
   d001            last_updated_on,
   c004            form_autocomplete,
   exception,
-  notation
+  notation,
+  exception_url,
+  notation_url
 FROM
   sv_sec_collection_data cd,
   sv_sec_collection c,

@@ -303,15 +303,6 @@ FUNCTION get_checksum
   )
   RETURN RAW;
 
-PROCEDURE dashboard_chart;
-
-PROCEDURE dashboard_xml
-  (
-  p_attribute_set_id         IN NUMBER
-  );
-
-PROCEDURE globals;
-
 PROCEDURE record_cookie
   (
   p_session_id               IN NUMBER,
@@ -364,7 +355,10 @@ PROCEDURE purge_events
   p_event_type               IN VARCHAR2
   );
 
-PROCEDURE global_page;
-
+FUNCTION bc_buttons
+  (
+  p_button_key               IN VARCHAR2
+  )
+RETURN BOOLEAN;
 
 END sv_sec_util;

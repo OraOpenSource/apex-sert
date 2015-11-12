@@ -28,7 +28,9 @@ SELECT
   cd.link            link,  
   c001               page_name,
   exception          exception,
-  notation           notation
+  notation           notation,
+  exception_url,
+  notation_url
 FROM
   sv_sec_collection_data cd,
   sv_sec_collection c,

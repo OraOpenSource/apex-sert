@@ -31,7 +31,9 @@ SELECT
   c003               tab_label_esc,
   c004               tab_set,
   exception          exception,
-  notation           notation
+  notation           notation,
+  exception_url,
+  notation_url
 FROM
   sv_sec_collection_data cd,
   sv_sec_collection c,
