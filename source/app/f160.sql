@@ -27,7 +27,7 @@ prompt APPLICATION 160 - SERT Administration
 -- Application Export:
 --   Application:     160
 --   Name:            SERT Administration
---   Date and Time:   08:49 Saturday October 24, 2015
+--   Date and Time:   20:19 Thursday November 5, 2015
 --   Exported By:     ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -94,7 +94,7 @@ wwv_flow_api.create_flow(
 ,p_alias=>nvl(wwv_flow_application_install.get_application_alias,'SERT_ADMIN')
 ,p_page_view_logging=>'YES'
 ,p_page_protection_enabled_y_n=>'Y'
-,p_checksum_salt_last_reset=>'20151023121450'
+,p_checksum_salt_last_reset=>'20151105094246'
 ,p_bookmark_checksum_function=>'MD5'
 ,p_max_session_length_sec=>9999
 ,p_max_session_idle_sec=>1999
@@ -124,7 +124,7 @@ wwv_flow_api.create_flow(
 ,p_rejoin_existing_sessions=>'P'
 ,p_csv_encoding=>'Y'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20151023121450'
+,p_last_upd_yyyymmddhh24miss=>'20151105094246'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_ui_type_name => null
 );
@@ -11755,7 +11755,6 @@ wwv_flow_api.create_user_interface(
 ,p_navigation_list_template_id=>wwv_flow_api.id(33674323860756599)
 ,p_nav_list_template_options=>'#DEFAULT#'
 ,p_css_file_urls=>'https://fonts.googleapis.com/css?family=Noto+Sans:400,700'
-,p_include_legacy_javascript=>true
 ,p_include_jquery_migrate=>true
 ,p_nav_bar_type=>'NAVBAR'
 );
