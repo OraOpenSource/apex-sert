@@ -7,3 +7,6 @@ Currently, APEX-SERT support APEX 4.2.  Support for APEX 5 will be coming in ear
 
 ### Documentation
 At this point, all APEX-SERT documentation is included with the build as PDF files.  Starting with APEX-SERT 5, documentation will move to Markdown format.
+
+### Download
+APEX-SERT can be downloaded from GitHub. Under the /releases directory, simply unzip the corresponding version and then refer to the Installation Guide found there.
