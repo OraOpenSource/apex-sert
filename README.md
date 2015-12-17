@@ -10,3 +10,6 @@ At this point, all APEX-SERT documentation is included with the build as PDF fil
 
 ### Download
 APEX-SERT can be downloaded from GitHub. Under the [`releases`](/releases) directory, simply unzip the corresponding version and then refer to the Installation Guide found there.
+
+### Support
+APEX-SERT is open source under the GPLv3 license, and can be used at no cost.  However, if your organization would like support for APEX-SERT, Sumner Technologies offers paid support contracts.  Visit <a href="http://www.sumnertech.com/apex-sert">their site</a> for more details.
