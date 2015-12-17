@@ -1491,7 +1491,7 @@ IS
 BEGIN
 
 SELECT 'SERT - Licensed via <a target="_blank" href="http://opensource.org/licenses/lgpl-3.0.html">LGPL3</a> '
-  || '| <a target="_blank" href="https://github.com/OraOpenSource/apexsert">Download</a> | Version ' || v('G_VERSION_DISP') 
+  || '| <a target="_blank" href="https://github.com/OraOpenSource/apex-sert">Download</a> | Version ' || v('G_VERSION_DISP') 
 INTO
   l_copyright
 FROM 
