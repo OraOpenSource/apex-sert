@@ -280,7 +280,6 @@ set termout on
 
 column scheduling_grant new_val scheduling_grant_s NOPRINT
 -- Always install the scheduling option, since the role will be assigned anyways
-select 'null.sql' scheduling_grant from dual where 'NO' != 'YES';
 --
 set termout off
 --
