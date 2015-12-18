@@ -12,7 +12,7 @@ prompt  APPLICATION 202 - SERT Administration
 -- Application Export:
 --   Application:     202
 --   Name:            SERT Administration
---   Date and Time:   09:37 Thursday June 18, 2015
+--   Date and Time:   08:26 Friday December 18, 2015
 --   Exported By:     ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -161,7 +161,7 @@ wwv_flow_api.create_flow(
   p_alias => nvl(wwv_flow_application_install.get_application_alias,'SERT_ADMIN'),
   p_page_view_logging => 'YES',
   p_page_protection_enabled_y_n=> 'Y',
-  p_checksum_salt_last_reset => '20150618093739',
+  p_checksum_salt_last_reset => '20151218082613',
   p_max_session_length_sec=> 9999,
   p_max_session_idle_sec=> 1999,
   p_compatibility_mode=> '4.2',
@@ -175,8 +175,8 @@ wwv_flow_api.create_flow(
   p_authentication=> 'PLUGIN',
   p_authentication_id=> 506237230236596306 + wwv_flow_api.g_id_offset,
   p_logout_url=> 'f?p=&APP_ID.:102:&SESSION.',
-  p_application_tab_set=> 0,
-  p_logo_image => 'TEXT:SERT Admin',
+  p_application_tab_set=> 1,
+  p_logo_image => 'TEXT:APEX-SERT Admin',
   p_public_url_prefix => '',
   p_public_user=> 'APEX_PUBLIC_USER',
   p_dbauth_url_prefix => '',
@@ -200,7 +200,7 @@ wwv_flow_api.create_flow(
   p_include_legacy_javascript=> 'Y',
   p_default_error_display_loc=> 'INLINE_WITH_FIELD_AND_NOTIFICATION',
   p_last_updated_by => 'ADMIN',
-  p_last_upd_yyyymmddhh24miss=> '20150618093739',
+  p_last_upd_yyyymmddhh24miss=> '20151218082613',
   p_ui_type_name => null,
   p_required_roles=> wwv_flow_utilities.string_to_table2(''));
  

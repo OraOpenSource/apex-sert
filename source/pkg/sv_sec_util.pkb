@@ -1490,7 +1490,7 @@ IS
   l_copyright                VARCHAR2(255);
 BEGIN
 
-SELECT 'SERT - Licensed via <a target="_blank" href="http://opensource.org/licenses/lgpl-3.0.html">LGPL3</a> '
+SELECT 'APEX-SERT - Licensed via <a target="_blank" href="http://opensource.org/licenses/lgpl-3.0.html">LGPL3</a> '
   || '| <a target="_blank" href="https://github.com/OraOpenSource/apex-sert">Download</a> | Version ' || v('G_VERSION_DISP') 
 INTO
   l_copyright
