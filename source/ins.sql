@@ -350,7 +350,6 @@ PROMPT  ========================================================================
 PROMPT
 PROMPT  Log File                  = ^logname
 PROMPT  SERT Schema               = ^esert_user
-PROMPT  Install Scheduling Option = ^sched_optn
 PROMPT  View System Privileges    = ^parse_as_optn
 PROMPT  App ID Auto Assign        = ^app_id_auto          
 PROMPT  SERT Application ID       = ^sert_app_id
