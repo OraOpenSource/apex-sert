@@ -2011,7 +2011,11 @@ IS
   l_info                     VARCHAR2(4000);
   l_label                    VARCHAR2(4000);
   l_info_link                VARCHAR2(4000);
+  l_url                      VARCHAR2(4000);
 BEGIN
+
+-- Get the Help URL
+SELECT snippet INTO l_url FROM sv_sec_snippets WHERE snippet_key = 'HELP_URL';
 
 -- Search for any info associated with attribute
 FOR x IN (SELECT * FROM sv_sec_attributes WHERE attribute_id = p_attribute_id)
@@ -2020,8 +2024,7 @@ LOOP
   l_label := x.attribute_name;
   IF x.help_page IS NOT NULL THEN
     l_info_link := '<div style="text-align:right;padding-top:5px;border-top:1px solid #aaa;">'
-      || '<a href="' || apex_util.get_preference(p_preference => 'HELP_URL', p_user => v('G_WORKSPACE_ID') || '.' || v('APP_USER')) 
-      || x.help_page || '" target="_blank">View Related Oracle Help</a></div>';
+      || '<a href="' || l_url || x.help_page || '" target="_blank">View Related Oracle Help</a></div>';
   END IF;
 END LOOP;
 
@@ -3077,7 +3080,7 @@ ELSIF p_button_key LIKE '%MULT' THEN
 
 ELSIF p_button_key = 'HELP' THEN
 
-  IF l_app_page_id IN (0) THEN
+  IF l_app_page_id IN (0,400,500,600,700) THEN
     RETURN FALSE;
   ELSE
     RETURN TRUE;
