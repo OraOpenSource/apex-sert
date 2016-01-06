@@ -875,10 +875,6 @@ SELECT snippet INTO l_parse_as FROM sv_sec_snippets WHERE snippet_key = 'PARSE_A
 -- Check to see that the APP is Run Only or the user is a member of SV_SERT_SU
 SELECT build_status INTO l_build_status FROM apex_applications WHERE application_id = p_sert_app_id;
 
-IF 1=1
---IF l_build_status = 'Run Only' OR sv_sec_util.user_has_role(p_workspace_id => p_user_workspace_id, p_user_name => p_app_user, p_role_name => 'SV_SERT_SU') 
-THEN
-
   -- Check to see if the user has access to evaluate the application
   -- Use the core of the sv_sec_apex_applications_v here
   SELECT 
@@ -1212,13 +1208,6 @@ ELSE
   -- Application is not accessible by the user
   logger.log('Application ' || p_application_id || ' is not accessible by this user');
   owa_util.redirect_url(apex_util.prepare_url('f?p=' || TO_CHAR(p_sert_app_id || ':4:' || p_app_session)));  
-
-END IF;
-
-ELSE
-  -- Application is Run and Build
-  logger.log('The eSERT Application Status needs to be set to Run Only');
-  owa_util.redirect_url(apex_util.prepare_url('f?p=' || TO_CHAR(p_sert_app_id || ':3:' || p_app_session)));  
 
 END IF;
 
