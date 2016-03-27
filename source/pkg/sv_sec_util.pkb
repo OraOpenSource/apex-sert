@@ -1054,24 +1054,24 @@ IF p_record_score = FALSE THEN
       AND c.result NOT IN ('PASS','APPROVED','PENDING');
   
     l_html := ''
-      || TO_CHAR(l_score, '999G999') || ' of ' || TO_CHAR(l_possible_score, '999G999') || ' Points'
-      || '    <ul class="t-BadgeList t-BadgeList--responsive t-BadgeList--small t-BadgeList--cols t-BadgeList--3cols">'
+      || '    <ul class="t-BadgeList t-BadgeList--responsive t-BadgeList--small t-BadgeList--cols t-BadgeList--3cols" style="border:1px solid #aaa;">'
       || '      <li class="t-BadgeList-item">'
       || '        <span class="t-BadgeList-label sert-BadgeList-label"' || CASE WHEN v('P0_RESULT') = 'Approved' THEN ' style="font-weight: bold;"' ELSE NULL END || '>Approved</span>'
       || '        <span class="t-BadgeList-value"' || CASE WHEN v('P0_RESULT') = 'Approved' THEN ' style="font-weight: bold;"' ELSE NULL END || '><a href="' || apex_util.prepare_url('f?p=' || v('APP_ID') || ':' || v('APP_PAGE_ID') || ':' || v('APP_SESSION') || '::::P0_RESULT:Approved') || '"'
-      || '          style="color:white;background:' || sv_sec_util.get_color(p_pct_score => (l_approved_score), p_possible_score => (l_possible_score)) || ';">' || l_approved_score || '%</a></span>'
+      || '          style="color:white;font-size:18px;background:' || sv_sec_util.get_color(p_pct_score => (l_approved_score), p_possible_score => (l_possible_score)) || ';">' || l_approved_score || '%</a></span>'
       || '      </li>'
       || '      <li class="t-BadgeList-item">'
       || '        <span class="t-BadgeList-label sert-BadgeList-label"' || CASE WHEN v('P0_RESULT') = 'Pending' THEN ' style="font-weight: bold;"' ELSE NULL END || '>Pending</span>'
       || '        <span class="t-BadgeList-value"' || CASE WHEN v('P0_RESULT') = 'Pending' THEN ' style="font-weight: bold;"' ELSE NULL END || '><a href="' || apex_util.prepare_url('f?p=' || v('APP_ID') || ':' || v('APP_PAGE_ID') || ':' || v('APP_SESSION') || '::::P0_RESULT:Pending') || '"'
-      || '          style="color:white;background:' || sv_sec_util.get_color(p_pct_score => (l_pending_score), p_possible_score => (l_possible_score)) || ';">' || l_pending_score || '%</a></span>'
+      || '          style="color:white;font-size:18px;background:' || sv_sec_util.get_color(p_pct_score => (l_pending_score), p_possible_score => (l_possible_score)) || ';">' || l_pending_score || '%</a></span>'
       || '      </li>'
       || '      <li class="t-BadgeList-item">'
       || '        <span class="t-BadgeList-label sert-BadgeList-label"' || CASE WHEN v('P0_RESULT') = 'Raw' THEN ' style="font-weight: bold;"' ELSE NULL END || '>Raw</span>'
       || '        <span class="t-BadgeList-value"' || CASE WHEN v('P0_RESULT') = 'Raw' THEN ' style="font-weight: bold;"' ELSE NULL END || '><a href="' || apex_util.prepare_url('f?p=' || v('APP_ID') || ':' || v('APP_PAGE_ID') || ':' || v('APP_SESSION') || '::::P0_RESULT:Raw') || '"'
-      || '          style="color:white;background:' || sv_sec_util.get_color(p_pct_score => (l_raw_score), p_possible_score => (l_possible_score)) || ';">' || l_raw_score || '%</a></span>'
+      || '          style="color:white;font-size:18px;background:' || sv_sec_util.get_color(p_pct_score => (l_raw_score), p_possible_score => (l_possible_score)) || ';">' || l_raw_score || '%</a></span>'
       || '      </li>'
       || '    </ul>'
+      || '    <div style="padding-top:5px;">' || to_char(l_score, '999G999') || ' of ' || to_char(l_possible_score, '999G999') || ' Points</div>'
       ;
 
   END LOOP;
