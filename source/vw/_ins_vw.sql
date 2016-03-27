@@ -31,6 +31,9 @@ PROMPT == SV_SEC_COL_PS_DEEP_LINK_V
 PROMPT == SV_SEC_COL_PS_RPT_RESTFUL_V
 @vw/sv_sec_col_ps_rpt_restful_v.sql
 
+PROMPT == SV_SEC_COL_PS_REJOIN_SES_V
+@vw/sv_sec_col_ps_rejoin_sess_v.sql
+
 PROMPT == SV_SEC_COL_SQLI_ATH_DBMS_V
 @vw/sv_sec_col_sqli_ath_dbms_v.sql
 
@@ -364,8 +367,11 @@ PROMPT == SV_SEC_COL_SET_SES_SETTINGS_V
 PROMPT == SV_SEC_COL_SET_AUTH_SETTINGS_V
 @vw/sv_sec_col_set_auth_settings_v.sql
 
-PROMPT == SV_SEC_COL_SET_UI_SETTINGS_V
-@vw/sv_sec_col_set_ui_settings_v.sql
+PROMPT == SV_SEC_COL_SET_UI_DT_SET_V
+@vw/sv_sec_col_set_ui_dt_set_v.sql
+
+PROMPT == SV_SEC_COL_SET_UI_MOB_SET_V
+@vw/sv_sec_col_set_ui_mob_set_v.sql
 
 PROMPT == SV_SEC_EXCEPTIONS_V
 @vw/sv_sec_exceptions_v.sql

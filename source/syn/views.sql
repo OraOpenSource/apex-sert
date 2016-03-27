@@ -68,6 +68,12 @@ GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_ps_deep_link_v TO ^parse_as_user
 CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_ps_deep_link_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_ps_deep_link_v
 /
 
+PROMPT == SV_SEC_COL_PS_REJOIN_SESS_V
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_ps_rejoin_sess_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_ps_rejoin_sess_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_ps_rejoin_sess_v
+/
+
 PROMPT == SV_SEC_COL_PS_RPT_RESTFUL_V
 GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_ps_rpt_restful_v TO ^parse_as_user
 /
@@ -672,10 +678,16 @@ GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_set_ses_settings_v TO ^parse_as_
 CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_set_ses_settings_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_set_ses_settings_v
 /
 
-PROMPT == SV_SEC_COL_SET_UI_SETTINGS_V
-GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_set_ui_settings_v TO ^parse_as_user
+PROMPT == SV_SEC_COL_SET_UI_DT_SET_V
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_set_ui_dt_set_v TO ^parse_as_user
 /
-CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_set_ui_settings_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_set_ui_settings_v
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_set_ui_dt_set_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_set_ui_dt_set_v
+/
+
+PROMPT == SV_SEC_COL_SET_UI_MOB_SET_V
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_set_ui_mob_set_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_set_ui_mob_set_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_set_ui_mob_set_v
 /
 
 PROMPT == SV_SEC_COL_SET_AUTH_SETTINGS_V
