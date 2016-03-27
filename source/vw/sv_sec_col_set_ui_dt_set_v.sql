@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW sv_sec_col_set_ui_settings_v
+CREATE OR REPLACE VIEW sv_sec_col_set_ui_dt_set_v
 AS
 SELECT
   seq_id             id,
@@ -28,6 +28,7 @@ SELECT
   c003               recommended_value,
   c004               fix,
   c005               info,
+  c006               ui_type_name,
   exception          exception,
   notation           notation,
   exception_url,
@@ -38,8 +39,8 @@ FROM
   sv_sec_exceptions e,
   sv_sec_attributes a
 WHERE
-  cd.attribute_id = a.attribute_id
-  AND a.category_id = (SELECT category_id FROM sv_sec_categories WHERE category_key = 'SV_SET_USER_INTERFACE')
+  cd.attribute_id = A.attribute_id
+  AND a.category_id = (SELECT category_id FROM sv_sec_categories WHERE category_key = 'SV_SET_USER_INTERFACE_DESKTOP')
   AND c.collection_id = cd.collection_id
   AND c.collection_id = SYS_CONTEXT('SV_SERT_CTX', 'COLLECTION_ID')
   AND e.attribute_set_id(+) = SYS_CONTEXT('SV_SERT_CTX', 'ATTRIBUTE_SET_ID')
