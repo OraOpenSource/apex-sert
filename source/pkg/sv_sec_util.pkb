@@ -1842,9 +1842,7 @@ INSERT INTO sv_sec_attributes
   rule_plsql,
   rule_type,
   info,
-  info_pdf,
   fix,
-  fix_pdf,
   when_not_found,
   seq,
   internal_flag,
@@ -1878,9 +1876,7 @@ VALUES
   l_attr.rule_plsql,
   l_attr.rule_type,
   l_attr.info,
-  l_attr.info_pdf,
   l_attr.fix,
-  l_attr.fix_pdf,
   l_attr.when_not_found,
   l_attr.seq,
   'N',
@@ -2431,7 +2427,7 @@ IF LENGTH(l_source) > 0 THEN
   l_source := REPLACE(l_source, '~CLOSE~', '</span>');
  
   -- Display the source
-  htp.prn('<b>Source</b><pre style="font-family:Courier;">' || l_source || '</pre>');
+  htp.prn('<span style="padding:10px;"><b>Source</b><pre style="font-family:Courier;padding:10px;">' || l_source || '</pre></span>');
 ELSE
   htp.prn('This region contains no contents');
 END IF;
@@ -3080,7 +3076,7 @@ ELSIF p_button_key LIKE '%MULT' THEN
 
 ELSIF p_button_key = 'HELP' THEN
 
-  IF l_app_page_id IN (0,400,500,600,700) THEN
+  IF l_app_page_id IN (0,400,500,600,700) OR v('G_ATTRIBUTE_ID') IS NULL THEN
     RETURN FALSE;
   ELSE
     RETURN TRUE;
