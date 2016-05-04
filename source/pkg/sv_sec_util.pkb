@@ -2427,7 +2427,7 @@ IF LENGTH(l_source) > 0 THEN
   l_source := REPLACE(l_source, '~CLOSE~', '</span>');
  
   -- Display the source
-  htp.prn('<span style="padding:10px;"><b>Source</b><pre style="font-family:Courier;padding:10px;">' || l_source || '</pre></span>');
+  htp.prn('<span style="padding:15px;"><b>Source</b><pre style="font-family:Courier;padding:15px;">' || l_source || '</pre></span>');
 ELSE
   htp.prn('This region contains no contents');
 END IF;
