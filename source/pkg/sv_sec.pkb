@@ -354,7 +354,7 @@ l_collection_id := sv_sec_util.get_collection_id(
 l_result := NVL(v('P0_RESULT'),'Raw');
 
 -- Produce the dashboard region for the specific summary page
-FOR x IN (SELECT * FROM sv_sec_attributes WHERE summary_page_id = p_page_id ORDER BY attribute_key)
+FOR x IN (SELECT * FROM sv_sec_attributes WHERE summary_page_id = p_page_id AND active_flag = 'Y' ORDER BY attribute_key)
 LOOP
   -- Determine if any components exist
   SELECT count(*) INTO l_count FROM
