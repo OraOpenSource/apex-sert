@@ -840,6 +840,54 @@ GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_xss_unesc_items_v TO ^parse_as_u
 CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_xss_unesc_items_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_xss_unesc_items_v
 /
 
+PROMPT == SV_SEC_COL_XSS_PLSQL_OUTPUT_V
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_xss_plsql_output_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_xss_plsql_output_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_xss_plsql_output_v
+/
+
+PROMPT == SV_SEC_COL_XSS_LINK_ICON_V
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_xss_link_icon_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_xss_link_icon_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_xss_link_icon_v
+/
+
+PROMPT == SV_SEC_COL_XSS_SHOW_NULL_V
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_xss_show_null_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_xss_show_null_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_xss_show_null_v
+/
+
+PROMPT == SV_SEC_COL_XSS_NO_DATA_V
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_xss_no_data_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_xss_no_data_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_xss_no_data_v
+/
+
+PROMPT == SV_SEC_COL_XSS_MORE_DATA_V
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_xss_more_data_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_xss_more_data_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_xss_more_data_v
+/
+
+PROMPT == SV_SEC_COL_XSS_REG_HEAD_FOOT_V
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_xss_reg_head_foot_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_xss_reg_head_foot_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_xss_reg_head_foot_v
+/
+
+PROMPT == SV_SEC_COL_XSS_LIST_URL_V
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_xss_list_url_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_xss_list_url_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_xss_list_url_v
+/
+
+PROMPT == SV_SEC_COL_XSS_LIST_ATTR_V
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_xss_list_attr_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_xss_list_attr_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_xss_list_attr_v
+/
+
 PROMPT == SVV_DBA_SYS_PRIVS
 --GRANT SELECT ON SV_SERT_@SV_VERSION@.svv_dba_sys_privs TO ^parse_as_user
 --/

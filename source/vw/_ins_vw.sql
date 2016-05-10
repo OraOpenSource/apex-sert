@@ -355,6 +355,30 @@ PROMPT == SV_SEC_COL_XSS_COL_LINK_V
 PROMPT == SV_SEC_COL_XSS_UNESC_ITEMS_V
 @vw/sv_sec_col_xss_unesc_items_v.sql
 
+PROMPT == SV_SEC_COL_XSS_PLSQL_OUTPUT_V
+@vw/sv_sec_col_xss_plsql_output_v.sql
+
+PROMPT == SV_SEC_COL_XSS_LINK_ICON_V
+@vw/sv_sec_col_xss_link_icon_v.sql
+
+PROMPT == SV_SEC_COL_XSS_SHOW_NULL_V
+@vw/sv_sec_col_xss_show_null_v.sql
+
+PROMPT == SV_SEC_COL_XSS_NO_DATA_V
+@vw/sv_sec_col_xss_no_data_v.sql
+
+PROMPT == SV_SEC_COL_XSS_MORE_DATA_V
+@vw/sv_sec_col_xss_more_data_v.sql
+
+PROMPT == SV_SEC_COL_XSS_REG_HEAD_FOOT_V
+@vw/sv_sec_col_xss_reg_head_foot_v.sql
+
+PROMPT == SV_SEC_COL_XSS_LIST_URL_V
+@vw/sv_sec_col_xss_list_url_v.sql
+
+PROMPT == SV_SEC_COL_XSS_LIST_ATTR_V
+@vw/sv_sec_col_xss_list_attr_v.sql
+
 PROMPT == SV_SEC_COL_SET_APP_SETTINGS_V
 @vw/sv_sec_col_set_app_settings_v.sql
 
