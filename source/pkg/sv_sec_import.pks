@@ -62,8 +62,6 @@ PROCEDURE attribute
   p_rule_plsql               IN CLOB     DEFAULT NULL,
   p_info                     IN CLOB     DEFAULT NULL,
   p_fix                      IN CLOB     DEFAULT NULL,
-  p_info_pdf                 IN CLOB     DEFAULT NULL,
-  p_fix_pdf                  IN CLOB     DEFAULT NULL,  
   p_impact                   IN VARCHAR  DEFAULT NULL,
   p_display_page_id          IN NUMBER   DEFAULT NULL,
   p_summary_page_id          IN NUMBER   DEFAULT NULL,
