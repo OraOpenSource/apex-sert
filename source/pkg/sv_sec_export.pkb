@@ -502,8 +502,6 @@ LOOP
   print_clob(p_var => 'a', p_str => x.rule_plsql);    
   print_clob(p_var => 'b', p_str => x.info);    
   print_clob(p_var => 'c', p_str => x.fix);    
-  print_clob(p_var => 'd', p_str => x.info_pdf);    
-  print_clob(p_var => 'e', p_str => x.fix_pdf);    
    
   p(
        'sv_sec_import.attribute(' || lf
@@ -548,9 +546,7 @@ LOOP
   p(
        '  p_rule_plsql               => ' ||       'a'                        || nc
     || '  p_info                     => ' ||       'b'                        || nc
-    || '  p_fix                      => ' ||       'c'                        || nc
-    || '  p_info_pdf                 => ' ||       'd'                        || nc
-    || '  p_fix_pdf                  => ' ||       'e'                        || nc_last
+    || '  p_fix                      => ' ||       'c'                        || nc_last
     || '  );' || lf
     || 'END;' || lf
     || '/'    || lf);
