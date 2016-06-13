@@ -32,7 +32,7 @@ PROMPT == SV_SEC_COL_PS_RPT_RESTFUL_V
 @vw/sv_sec_col_ps_rpt_restful_v.sql
 
 PROMPT == SV_SEC_COL_PS_REJOIN_SES_V
-@vw/sv_sec_col_ps_rejoin_sess_v.sql
+@vw/sv_sec_col_ps_rejoin_ses_v.sql
 
 PROMPT == SV_SEC_COL_SQLI_ATH_DBMS_V
 @vw/sv_sec_col_sqli_ath_dbms_v.sql

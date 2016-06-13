@@ -11,8 +11,7 @@ SELECT
   username,
   cookie_value,
   security_group_id,
-  id,
-  session_id_hashed
+  id
 FROM
   ' || x.username || '.wwv_flow_sessions$';
 END LOOP;
