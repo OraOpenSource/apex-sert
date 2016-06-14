@@ -1,4 +1,3 @@
---  Copyright (c) 2012. All Rights Reserved.
 --  VERSION @SV_VERSION@
 --
 --    NAME
@@ -99,9 +98,9 @@ begin
 end;
 /
 --  =================
---  =================  Check for V10.2.0.3 and above of the databse
+--  =================  Check for V11.2.0.4 and above of the databse
 --  =================
-PROMPT  ...... Test for Oracle 10.2.0.3 or above
+PROMPT  ...... Test for Oracle 11.2.0.4 or above
 
 declare
     l_version number;
@@ -110,8 +109,8 @@ begin
       'select to_number(replace(version,''.'',null)) from registry$ where cid=''CATPROC'''
     into l_version;
 
-    if l_version < 102030 then
-        dbms_output.put_line('SERT installation requires database version 10.2.0.3 or later.');
+    if l_version < 110204 then
+        dbms_output.put_line('APEX-SERT installation requires database version 11.2.0.4 or later.');
         execute immediate 'bogus statement to force exit';
     end if;
 end;
@@ -134,16 +133,16 @@ begin
 
 
     if l_edition = 'XE' then
-        dbms_output.put_line('SERT will not run on the XE edition of Oracle.');
+        dbms_output.put_line('APEX-SERT will not run on the XE edition of Oracle.');
         execute immediate 'bogus statement to force exit';
     end if;
 end;
 /
 
 --  =================
---  =================  Check for APEX 4.2.1 or above
+--  =================  Check for APEX 5.0.0 or above
 --  =================
-PROMPT  ...... Test for Valid Instance of APEX 4.2.1 or above
+PROMPT  ...... Test for Valid Instance of APEX 5.0.0 or above
 declare
     l_version number;
     l_status dba_registry.status%TYPE := 'INVALID';
@@ -163,8 +162,8 @@ begin
          execute immediate 'bogus statement to force exit'; 
     END; 
     
-    if l_version < 4210000 then
-        dbms_output.put_line('SERT installation requires APEX version 4.2.1 or later.');
+    if l_version < 5000000 then
+        dbms_output.put_line('This APEX-SERT installation requires APEX version 5.0.0 or later.');
         execute immediate 'bogus statement to force exit';
     elsif l_status = 'INVALID' then
         dbms_output.put_line('Current version of APEX is marked as INVALID.');
