@@ -41,7 +41,7 @@ INSERT INTO sv_sec_snippets (snippet_key, snippet, editable)
 /
 
 INSERT INTO sv_sec_snippets (snippet_key, snippet, editable)
-  SELECT 'INSTANCE_ID', value, 'N' FROM apex_040200.wwv_flow_platform_prefs WHERE name = 'INSTANCE_ID'
+  SELECT 'INSTANCE_ID', value, 'N' FROM apex_050000.wwv_flow_platform_prefs WHERE name = 'INSTANCE_ID'
 /
 
 COMMIT
