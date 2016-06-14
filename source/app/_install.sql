@@ -50,10 +50,10 @@ def script_admin_email_address = '^5'
 @@workspace_content.sql 
 
 -- Main SERT Application 
-@@_install_app.sql sert_apex.sql ^script_app_id
+@@_install_app.sql apex-sert.sql ^script_app_id
 
 -- SERT Manager Application
-@@_install_app.sql sert_admin.sql ^script_mgmt_id
+@@_install_app.sql apex-sert_admin.sql ^script_mgmt_id
 set define '^'
 
 undef script_pw      
