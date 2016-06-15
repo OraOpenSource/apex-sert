@@ -1,8 +1,13 @@
 <?xml version="1.0"?>
 <project default="help" name="SERT PRODUCT BUILD" basedir=".">
     <!--The following TASKDEF is needed to include the ANT-CONTRIB libraries -->
-    <taskdef resource="net/sf/antcontrib/antlib.xml"/>
-    
+
+   <taskdef resource="net/sf/antcontrib/antlib.xml">
+    <classpath>
+     <pathelement location="/usr/local/apache-ant-1.9.7/lib/ant-contrib-0.6.jar"/>
+    </classpath>
+   </taskdef>
+
     <!-- Define a script that gets the substring of a supplied string using JavaScript -->
     <scriptdef name="substring" language="javascript">
         <attribute name="text" />
@@ -54,7 +59,7 @@
     <target name="co" description="Checks out the most recent source to the working direcotry" depends="setup">
         <echo message="Checking out the SERT Repository to the local working directory" />
         <exec executable="svn" dir="${wd}">
-            <arg line="co https://github.com/APEXSERT/apexsert/${full_path}"></arg>
+            <arg line="co https://github.com/OraOpenSource/apex-sert/${full_path}"></arg>
         </exec>
     </target>
     
