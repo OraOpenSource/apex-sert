@@ -46,9 +46,6 @@ def script_admin_email_address = '^5'
 -- Also Creates ADMIN user 
 @@workspace.sql ^script_pw ^script_parse_as_user ^script_admin_email_address
 
--- Installs static components
-@@workspace_content.sql 
-
 -- Main SERT Application 
 @@_install_app.sql apex-sert.sql ^script_app_id
 
