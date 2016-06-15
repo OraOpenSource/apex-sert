@@ -27,7 +27,7 @@ prompt APPLICATION 159 - APEX-SERT
 -- Application Export:
 --   Application:     159
 --   Name:            APEX-SERT
---   Date and Time:   07:58 Wednesday June 15, 2016
+--   Date and Time:   08:04 Wednesday June 15, 2016
 --   Exported By:     ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -75,7 +75,7 @@ prompt APPLICATION 159 - APEX-SERT
 --       Plug-ins:               6
 --     Globalization:
 --     Reports:
---   Supporting Objects:  Included
+--   Supporting Objects:  Included (auto-install)
 --     Install scripts:          1
 
 prompt --application/delete_application
@@ -114105,7 +114105,7 @@ end;
 /
 prompt --application/end_environment
 begin
-wwv_flow_api.import_end(p_auto_install_sup_obj => nvl(wwv_flow_application_install.get_auto_install_sup_obj, false));
+wwv_flow_api.import_end(p_auto_install_sup_obj => nvl(wwv_flow_application_install.get_auto_install_sup_obj, true));
 commit;
 end;
 /
