@@ -29,21 +29,21 @@ set termout off
 set termout on
 CLEAR SCREEN
 PROMPT 
-PROMPT   _____ ______ _____ _______ 
-PROMPT  / ____|  ____|  __ \__   __|
-PROMPT | (___ | |__  | |__) | | |   
-PROMPT  \___ \|  __| |  _  /  | |   
-PROMPT  ____) | |____| | \ \  | |   
-PROMPT |_____/|______|_|  \_\ |_|   
+PROMPT.   ___  ______ _______   __      _____ ___________ _____ 
+PROMPT.  / _ \ | ___ \  ___\ \ / /     /  ___|  ___| ___ \_   _|
+PROMPT. / /_\ \| |_/ / |__  \ V /______\ `--.| |__ | |_/ / | |  
+PROMPT. |  _  ||  __/|  __| /   \______|`--. \  __||    /  | |  
+PROMPT. | | | || |   | |___/ /^\ \     /\__/ / |___| |\ \  | |  
+PROMPT. \_| |_/\_|   \____/\/   \/     \____/\____/\_| \_| \_/  
 PROMPT                              
-PROMPT  ========================== SERT ============================
+PROMPT  ===================== APEX-SERT =======================
 PROMPT
-PROMPT  ******************************************************************************
-PROMPT  ***                                                                        ***
-PROMPT  ***      WARNING:  Running this script will DROP the schema where          ***
-PROMPT  ***            SERT is installed.  You will lose ALL DATA!!!               ***
-PROMPT  ***                                                                        ***
-PROMPT  ******************************************************************************
+PROMPT  ******************************************************************
+PROMPT  ***                                                            ***
+PROMPT  ***  WARNING:  Running this script will DROP the schema where  ***
+PROMPT  ***    APEX-SERT is installed.  You will lose ALL DATA!!!      ***
+PROMPT  ***                                                            ***
+PROMPT  ******************************************************************
 PROMPT
 PAUSE   Press Enter to continue uninstallation or CTRL-C to EXIT
 --
@@ -58,7 +58,7 @@ PROMPT ****   Dropping the SV_SERT_@SV_VERSION@ USER
 drop user SV_SERT_@SV_VERSION@ cascade
 /
 
-PROMPT ****   Dropping the SERT Workspace
+PROMPT ****   Dropping the APEX-SERT Workspace
 BEGIN
 APEX_INSTANCE_ADMIN.REMOVE_WORKSPACE
   (
@@ -70,6 +70,6 @@ END;
 
 PROMPT
 PROMPT
-PROMPT  =============================================================================
-PROMPT  ============================= C O M P L E T E ===============================
-PROMPT  =============================================================================
+PROMPT  ==================================================================
+PROMPT  ======================= C O M P L E T E ==========================
+PROMPT  ==================================================================

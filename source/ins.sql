@@ -32,14 +32,14 @@ set verify off
 set termout on
 CLEAR SCREEN
 PROMPT 
-PROMPT.   _____ ______ _____ _______ 
-PROMPT.  / ____|  ____|  __ \__   __|
-PROMPT. | (___ | |__  | |__) | | |   
-PROMPT.  \___ \|  __| |  _  /  | |   
-PROMPT.  ____) | |____| | \ \  | |   
-PROMPT. |_____/|______|_|  \_\ |_|   
+PROMPT.   ___  ______ _______   __      _____ ___________ _____ 
+PROMPT.  / _ \ | ___ \  ___\ \ / /     /  ___|  ___| ___ \_   _|
+PROMPT. / /_\ \| |_/ / |__  \ V /______\ `--.| |__ | |_/ / | |  
+PROMPT. |  _  ||  __/|  __| /   \______|`--. \  __||    /  | |  
+PROMPT. | | | || |   | |___/ /^\ \     /\__/ / |___| |\ \  | |  
+PROMPT. \_| |_/\_|   \____/\/   \/     \____/\____/\_| \_| \_/  
 PROMPT                              
-PROMPT  ========================== SERT ============================
+PROMPT  ===================== APEX-SERT =======================
 PROMPT  Software Version: @SV_VERSION@
 PROMPT
 PAUSE   Press Enter to continue installation or CTRL-C to EXIT
@@ -512,7 +512,7 @@ whenever sqlerror continue
 --  =================
 PROMPT
 PROMPT
-PROMPT  =================================== SERT ==================================
+PROMPT  =============================== APEX-SERT ==================================
 PROMPT
 PROMPT  Please check the log file for errors. 
 PROMPT  
