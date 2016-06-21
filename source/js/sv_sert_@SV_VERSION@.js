@@ -1,116 +1,170 @@
 ///////////////////////////////////////////////////////////////////////////
 // sv.js version @SV_VERSION@
-// JavaScript Support Files for eSERT
+// JavaScript Support Files for APEX-SERT
 ///////////////////////////////////////////////////////////////////////////
 
 //FUNCTION: svScan
 // Initiates the security scan for an application
 function svScan(pAppId,pAttributeSetId,pPageId,pRequest)
 {
-var get = new htmldb_Get(null,$v('pFlowId'),'APPLICATION_PROCESS=initScan',0);
-get.addParam('x01',pAttributeSetId);
-get.addParam('x02',pAppId);
-gReturn = get.get();
-setInterval("progress()", 500);
 
-var get3 = new htmldb_Get(null,$v('pFlowId'),'APPLICATION_PROCESS=prepareURL',0);
-get3.addParam('x01',"f?p=" + $v('pFlowId') + ":1:" + $v('pInstance') + ":CANCEL");
-gCancelURL = get3.get();
-
-var get2 = new htmldb_Get(null,$v('pFlowId'),'APPLICATION_PROCESS=prepareURL',0);
-get2.addParam('x01',"f?p=" + $v('pFlowId') + ":" + pPageId + ":" + $v('pInstance') + ":" + pRequest);
-gURL = get2.get();
-window.top.location=gURL;
-
-d = apex.jQuery('<div id="popup" class="popup"><div class="popupbody">' +
-  '<div id="progressMessage" style="padding:20px;">Processing - please wait.</div></div></div>');
-d.dialog({
-  title: 'Processing Application '+pAppId,
-  bgiframe: true,
-  width: 500,
-  height: 200,
-  modal: true,
-  draggable: false,
-  resizable: false,
-  closeOnEscape: false,
-  dialogClass: 'no-close',
-  buttons:
+  // Set the Attribute Set ID and App ID in session state
+  apex.server.process("initScan",
     {
-      Cancel: function()
+      x01: pAttributeSetId,
+      x02: pAppId
+    },                 
+    {
+      success: function (pData)
       {
-      window.location=gCancelURL;
       }
-    }
-  })
+    }                   
+  );
+
+  // Set the refresh interval for the progress window
+  setInterval("progress()", 500);
+
+  // Prepare the Cancellation URL
+  apex.server.process("prepareURL",
+    {
+      x01: "f?p=" + $v('pFlowId') + ":1:" + $v('pInstance') + ":CANCEL"
+    },                 
+    {
+      success: function (pData)
+      {
+        gCancelURL = pData[0].url;
+      }
+    }                   
+  );
+
+  // Prepare the URL
+  apex.server.process("prepareURL",
+    {
+      x01: "f?p=" + $v('pFlowId') + ":" + pPageId + ":" + $v('pInstance') + ":" + pRequest
+    },                 
+    {
+      success: function (pData)
+      {
+        window.top.location = pData[0].url;
+        d = apex.jQuery('<div id="popup" class="popup"><div class="popupbody">' +
+          '<div id="progressMessage" style="padding:20px;">Processing - please wait.</div></div></div>');
+        d.dialog({
+          title: 'Processing Application ' + pAppId,
+          bgiframe: true,
+          width: 500,
+          height: 200,
+          modal: true,
+          draggable: false,
+          resizable: false,
+          closeOnEscape: false,
+          dialogClass: 'no-close',
+          buttons:
+            {
+              Cancel: function()
+              {
+              window.location=gCancelURL;
+              }
+            }
+          })
+        }
+      }                   
+    );
 }
+
 
 //FUNCTION: apexLink
 // Records when someone clicks on an APEX edit link
 function apexLink(gPageId, gRP, gLink, gComponent, gCategory)
 {
-  var get = new htmldb_Get(null,$v('pFlowId'),'APPLICATION_PROCESS=saveApexLink',0);
-  get.addParam('x01',gPageId);
-  get.addParam('x02',gLink);
-  get.addParam('x03',gRP);
-  get.addParam('x04',gComponent);
-  get.addParam('x05',gCategory);
-  var gReturn = get.get();
-  var url = 'f?p=4000:' + gPageId + ':' + gApexSession + '::NO:' + gRP +':' + gLink;
-  newWin = window.open( url );
+  apex.server.process("saveApexLink",
+    {
+      x01: gPageId,
+      x02: gLink,
+      x03: gRP,
+      x04: gComponent,
+      x05: gCategory
+    },                 
+    {
+      success: function (pData)
+      {
+      var url = 'f?p=4000:' + gPageId + ':' + gApexSession + '::NO:' + gRP +':' + gLink;
+      newWin = window.open( url );
+      }
+    }                   
+  );
 }
 
 //FUNCTION: viewSource
 // Pops up window for source
 function viewSource(pId, pComponentType)
 {
-  var get = new htmldb_Get(null,$v('pFlowId'),'APPLICATION_PROCESS=viewSource',0);
-  get.addParam('x01',pId);
-  get.addParam('x02',pComponentType);
-  s = get.get().split("~");
-  d = apex.jQuery('<div id="apex_item_help_text"><pre class="brush: SERT;">' + s[1]
- + '</pre></div>');
-  d.dialog({
-    title: s[0],
-    bgiframe: true,
-    width: 700,
-    height: 600,
-    modal: true,
-    draggable: false,
-    buttons: {
-      Close: function() { $( this ).dialog( "close" ); }
+  apex.server.process("viewSource",
+    {
+      x01: pId,
+      x02: pComponentType
+    },                 
+    {
+      success: function (pData)
+      {
+      d = apex.jQuery('<div id="apex_item_help_text"><pre class="brush: SERT;">' + pData[0].source + '</pre></div>');
+      d.dialog({
+        title: pData[0].title,
+        bgiframe: true,
+        width: 700,
+        height: 600,
+        modal: true,
+        draggable: false,
+        buttons: {}
+        })
       }
-    })
+    }                   
+  );
 }
+
 
 // FUNCTION: getInfo
 // Pops up the Info window for a specific attribute
 function getInfo (pAttrId, pAppProc, w, h, pType)
 {
-  var get = new htmldb_Get(null,$v('pFlowId'),'APPLICATION_PROCESS=' + pAppProc,0);
-  get.addParam('x01',pAttrId);
-  get.addParam('x02',pType);
-  s = get.get().split("^");
-  d = apex.jQuery('<div style="padding-left:12px;padding-right:12px;">' + s[1] + '</div>');
-  d.dialog({
-    title: s[0],
-    bgiframe: true,
-    width: w,
-    height: h,
-    modal: true,
-    draggable: false,
-    buttons: {
-     // Close: function() { $( this ).dialog( "close" ); }
-       }
-    })
-  }
+  apex.server.process(pAppProc,
+    {
+      x01: pAttrId,
+      x02: pType
+    },                 
+    {
+      success: function (pData)
+      {
+      d = apex.jQuery('<div style="padding-left:12px;padding-right:12px;">' + pData[0].info + '</div>');
+      d.dialog({
+        title: pData[0].label,
+        bgiframe: true,
+        width: w,
+        height: h,
+        modal: true,
+        draggable: false,
+        buttons: {}
+        })
+      }
+    }                   
+  );
+}
+
 
 // FUNCTION progress
 function progress()
 {
-  var get = new htmldb_Get(null,$x('pFlowId').value,'APPLICATION_PROCESS=getProgress',0);
-    gReturn = get.get().split('|');
-    $x('progressMessage').innerHTML = gReturn[0] + gReturn[1] +"";
+  apex.server.process("getProgress",
+    {
+    },                 
+    {
+      success: function (pData)
+      {
+      $x('progressMessage').innerHTML = pData[0].title + pData[0].value;
+      }
+    }                   
+  );
 }
+
 
 function HtmlEncode(s)
 {
