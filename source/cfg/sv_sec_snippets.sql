@@ -44,5 +44,9 @@ INSERT INTO sv_sec_snippets (snippet_key, snippet, editable)
   SELECT 'INSTANCE_ID', value, 'N' FROM apex_050000.wwv_flow_platform_prefs WHERE name = 'INSTANCE_ID'
 /
 
+INSERT INTO sv_sec_snippets (snippet_key, snippet, editable)
+  VALUES ('HELP_URL', 'https://docs.oracle.com/cd/E59726_01/doc.50/e39147/','Y')
+/
+
 COMMIT
 /
