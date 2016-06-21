@@ -804,7 +804,8 @@ THEN
 
       IF p_app_session > 0 THEN
         -- Reset the Progress bar
-        apex_util.set_session_state('G_PROGRESS','Starting Evaluation...|');
+        apex_util.set_session_state('G_PROGRESS','"title": "Starting Evaluation...", "value": ""');
+
       END IF;
 
       -- Log the event
@@ -943,7 +944,7 @@ THEN
     END LOOP;
 
     IF p_app_session > 0 THEN
-     apex_util.set_session_state('G_PROGRESS','Processing | Exceptions');
+      apex_util.set_session_state('G_PROGRESS','"title": "Processing Exceptions...", "value": ""');
     END IF;
 
     -- Apply exceptions for all collection data

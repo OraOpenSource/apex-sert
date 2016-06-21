@@ -661,7 +661,8 @@ PROCEDURE get_progress
 IS
 BEGIN
 
-htp.prn(v('G_PROGRESS'));
+-- Update the progress bar
+htp.prn('[{' || v('G_PROGRESS') || '}]');
 
 EXCEPTION
   WHEN OTHERS THEN sv_sec_error.raise_unanticipated;
@@ -1184,7 +1185,7 @@ VALUES
   p_category
   );
 
-htp.prn('OK');  
+htp.prn('[{"result":"OK"}]');  
 
 EXCEPTION
   WHEN OTHERS THEN sv_sec_error.raise_unanticipated;
@@ -2024,13 +2025,23 @@ LOOP
   END IF;
 END LOOP;
 
+-- Open the JSON document
+apex_json.open_array;
+apex_json.open_object;
+
 IF l_info IS NOT NULL THEN
   -- Print the info
-  htp.prn(l_label || '^' || l_info || l_info_link);
+  apex_json.write('label', l_label); 
+  apex_json.write('info', l_info || l_info_link);
 ELSE
   -- No info found; print corresponding icon and message
-  htp.prn('Not Found' || '^' || 'There is no information defined for this attribute');
+  apex_json.write('label', 'Not Found'); 
+  apex_json.write('info', 'There is no information defined for this attribute');
 END IF;
+
+-- Close the JSON document
+apex_json.close_object;
+apex_json.close_array;
 
 EXCEPTION
   WHEN OTHERS THEN sv_sec_error.raise_unanticipated;
@@ -2070,26 +2081,6 @@ END LOOP;
   SELECT fix INTO l_fix FROM sv_sec_attributes
     WHERE attribute_id = p_attribute_id;
 
---ELSE
-
-   -- Loop through all possible resolutions for each attribute value
---  FOR x IN
---    (SELECT * FROM sv_sec_attribute_values
---      WHERE attribute_value_id = NVL(p_attribute_value_id, -1)
---      AND attribute_set_id = v('P0_ATTRIBUTE_SET_ID'))
---  LOOP
---    -- Check to see if there is a linked resolution
---    IF x.link_to_default = 'Y' THEN
---      -- Get the linked resolution
---      SELECT long_fix INTO l_fix FROM sv_sec_attribute_values 
---        WHERE attribute_value_id = x.link_attribute_value_id;
---    ELSE
---      -- Use the current resolution
---      l_fix := x.long_fix;
---    END IF;
---  END LOOP;
---END IF;
-
 -- Revert to the fix embedded in the attribute, if no fix is found
 IF l_fix IS NULL THEN
   -- For attributes
@@ -2114,14 +2105,24 @@ IF l_fix IS NULL THEN
   l_label := 'Not Found';
   l_fix := 'There is no fix defined for this attribute';
 END IF;
-  -- Print the fix
-  htp.prn(l_label || '^' || l_fix);
 
+-- Print the fix
+apex_json.open_array;
+apex_json.open_object;
+apex_json.write('label', l_label); 
+apex_json.write('info', l_fix);
+apex_json.close_object;
+apex_json.close_array;
 
 EXCEPTION
 WHEN NO_DATA_FOUND THEN
   -- No fix found; print corresponding icon and message
-  htp.prn('Not Found' || '^' || 'There is no information defined for this attribute');
+  apex_json.open_array;
+  apex_json.open_object;
+  apex_json.write('label', 'Not Found'); 
+  apex_json.write('info', 'There is no fix defined for this attribute');
+  apex_json.close_object;
+  apex_json.close_array;
 
 WHEN OTHERS THEN 
   sv_sec_error.raise_unanticipated;
@@ -2409,7 +2410,9 @@ IF p_component_type IN ('REGION','REGION_XSS','PAGE_PROCESS','PAGE_PROCESS_XSS')
 END IF;
 
 -- Print the results
-htp.prn(l_title || '~');
+apex_json.open_array;
+apex_json.open_object;
+apex_json.write('title', l_title); 
 
 IF LENGTH(l_source) > 0 THEN
   -- Put back the & and .
@@ -2426,16 +2429,26 @@ IF LENGTH(l_source) > 0 THEN
   l_source := REPLACE(l_source, '~OPEN_HTP~', '<span style="background-color:orange;font-family:Courier;">');
   l_source := REPLACE(l_source, '~CLOSE~', '</span>');
  
-  -- Display the source
-  htp.prn('<span style="padding:10px;"><b>Source</b><pre style="font-family:Courier;padding:10px;">' || l_source || '</pre></span>');
+  l_source := '<span style="padding:10px;"><b>Source</b><pre style="font-family:Courier;padding:10px;">' || l_source || '</pre></span>';
 ELSE
-  htp.prn('This region contains no contents');
+  l_source := 'This region contains no contents';
 END IF;
+
+apex_json.write('source', l_source);
+apex_json.close_object;
+apex_json.close_array;
 
 EXCEPTION
 
 WHEN NO_DATA_FOUND THEN
-  htp.p('Error~' || p_id);
+
+  apex_json.open_array;
+  apex_json.open_object;
+  apex_json.write('title', 'An Error Had Occured'); 
+  apex_json.write('source', p_id);
+  apex_json.close_object;
+  apex_json.close_array;
+
 WHEN OTHERS THEN 
   sv_sec_error.raise_unanticipated;
 

@@ -91,7 +91,9 @@ SELECT count(*) INTO l_total_col
 -- Set the initial progress bar
 IF p_app_session > 0 THEN
   IF l_total_col != 0 THEN
-    apex_util.set_session_state('G_PROGRESS','Processing - |' || ROUND(l_count /  l_total_col * 100) || '% Complete');
+    apex_util.set_session_state('G_PROGRESS','"title" : "Processing - ", "value":"' ||  ROUND(l_count /  l_total_col * 100) || '% Complete"');
+
+
   END IF;
 END IF;
 
@@ -123,7 +125,7 @@ LOOP
 
   IF p_app_session > 0 THEN
     -- Set the Progress Bar
-    apex_util.set_session_state('G_PROGRESS','Processing - |' || ROUND(l_count /  l_total_col * 100) || '% Complete');
+    apex_util.set_session_state('G_PROGRESS','"title" : "Processing - ", "value":"' ||  ROUND(l_count /  l_total_col * 100) || '% Complete"');
   END IF;
   
   l_count := l_count + 1;
