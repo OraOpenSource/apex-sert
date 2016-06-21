@@ -27,7 +27,7 @@ prompt APPLICATION 160 - APEX-SERT Administration
 -- Application Export:
 --   Application:     160
 --   Name:            APEX-SERT Administration
---   Date and Time:   06:36 Tuesday June 14, 2016
+--   Date and Time:   18:05 Tuesday June 21, 2016
 --   Exported By:     ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -55,7 +55,6 @@ prompt APPLICATION 160 - APEX-SERT Administration
 --       NavBar Entries:         3
 --     Security:
 --       Authentication:         1
---       Authorization:          1
 --     User Interface:
 --       Themes:                 2
 --       Templates:
@@ -94,7 +93,7 @@ wwv_flow_api.create_flow(
 ,p_alias=>nvl(wwv_flow_application_install.get_application_alias,'SERT_ADMIN')
 ,p_page_view_logging=>'YES'
 ,p_page_protection_enabled_y_n=>'Y'
-,p_checksum_salt_last_reset=>'20160504074433'
+,p_checksum_salt_last_reset=>'20160621180512'
 ,p_bookmark_checksum_function=>'MD5'
 ,p_max_session_length_sec=>9999
 ,p_max_session_idle_sec=>1999
@@ -123,8 +122,8 @@ wwv_flow_api.create_flow(
 ,p_authorize_public_pages_yn=>'Y'
 ,p_rejoin_existing_sessions=>'P'
 ,p_csv_encoding=>'Y'
-,p_last_updated_by=>'SSPENDOL'
-,p_last_upd_yyyymmddhh24miss=>'20160504074433'
+,p_last_updated_by=>'ADMIN'
+,p_last_upd_yyyymmddhh24miss=>'20160621180512'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_ui_type_name => null
 );
@@ -149,7 +148,6 @@ wwv_flow_api.create_list_item(
 ,p_list_item_display_sequence=>10
 ,p_list_item_link_text=>'Admin Users'
 ,p_list_item_link_target=>'f?p=&APP_ID.:300:&SESSION.::&DEBUG.::::'
-,p_security_scheme=>wwv_flow_api.id(33764293060377332)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'300,310'
 );
@@ -333,19 +331,7 @@ end;
 /
 prompt --application/shared_components/security/authorizations
 begin
-wwv_flow_api.create_security_scheme(
- p_id=>wwv_flow_api.id(33764293060377332)
-,p_name=>'Admin User'
-,p_scheme_type=>'NATIVE_FUNCTION_BODY'
-,p_attribute_01=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
-'IF :APP_USER = ''ADMIN'' THEN ',
-'  RETURN TRUE;',
-'ELSE',
-'  RETURN FALSE;',
-'END IF;'))
-,p_error_message=>'Not authorized.'
-,p_caching=>'BY_USER_BY_SESSION'
-);
+null;
 end;
 /
 prompt --application/shared_components/navigation/navigation_bar
@@ -12907,8 +12893,8 @@ wwv_flow_api.create_page(
 ,p_protection_level=>'C'
 ,p_cache_mode=>'NOCACHE'
 ,p_cache_timeout_seconds=>21600
-,p_last_updated_by=>'SSPENDOL'
-,p_last_upd_yyyymmddhh24miss=>'20160504072128'
+,p_last_updated_by=>'ADMIN'
+,p_last_upd_yyyymmddhh24miss=>'20160621180512'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(539957117245999589)
@@ -13110,7 +13096,7 @@ wwv_flow_api.create_page_button(
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>wwv_flow_api.id(33676969712756605)
 ,p_button_is_hot=>'Y'
-,p_button_image_alt=>'Create Role'
+,p_button_image_alt=>'Assign Role'
 ,p_button_position=>'REGION_TEMPLATE_EDIT'
 ,p_button_redirect_url=>'f?p=&APP_ID.:210:&SESSION.::&DEBUG.:210::'
 );
@@ -13523,13 +13509,12 @@ wwv_flow_api.create_page(
 ,p_first_item=>'NO_FIRST_ITEM'
 ,p_autocomplete_on_off=>'OFF'
 ,p_page_template_options=>'#DEFAULT#'
-,p_required_role=>wwv_flow_api.id(33764293060377332)
 ,p_overwrite_navigation_list=>'N'
 ,p_page_is_public_y_n=>'N'
 ,p_protection_level=>'C'
 ,p_cache_mode=>'NOCACHE'
-,p_last_updated_by=>'SSPENDOL'
-,p_last_upd_yyyymmddhh24miss=>'20160504071638'
+,p_last_updated_by=>'ADMIN'
+,p_last_upd_yyyymmddhh24miss=>'20160621175238'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(286793587350840001)
@@ -13922,14 +13907,13 @@ wwv_flow_api.create_page(
 ,p_first_item=>'NO_FIRST_ITEM'
 ,p_autocomplete_on_off=>'OFF'
 ,p_page_template_options=>'#DEFAULT#'
-,p_required_role=>wwv_flow_api.id(33764293060377332)
 ,p_dialog_chained=>'Y'
 ,p_overwrite_navigation_list=>'N'
 ,p_page_is_public_y_n=>'N'
 ,p_protection_level=>'C'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20160503224403'
+,p_last_upd_yyyymmddhh24miss=>'20160621175246'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(33378254154832617)
