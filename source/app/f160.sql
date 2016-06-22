@@ -27,7 +27,7 @@ prompt APPLICATION 160 - APEX-SERT Administration
 -- Application Export:
 --   Application:     160
 --   Name:            APEX-SERT Administration
---   Date and Time:   18:05 Tuesday June 21, 2016
+--   Date and Time:   07:19 Wednesday June 22, 2016
 --   Exported By:     ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -48,6 +48,7 @@ prompt APPLICATION 160 - APEX-SERT Administration
 --     Logic:
 --       Items:                  2
 --       Computations:           1
+--       Build Options:          1
 --     Navigation:
 --       Lists:                  2
 --       Breadcrumbs:            1
@@ -93,7 +94,7 @@ wwv_flow_api.create_flow(
 ,p_alias=>nvl(wwv_flow_application_install.get_application_alias,'SERT_ADMIN')
 ,p_page_view_logging=>'YES'
 ,p_page_protection_enabled_y_n=>'Y'
-,p_checksum_salt_last_reset=>'20160621180512'
+,p_checksum_salt_last_reset=>'20160622071835'
 ,p_bookmark_checksum_function=>'MD5'
 ,p_max_session_length_sec=>9999
 ,p_max_session_idle_sec=>1999
@@ -123,7 +124,7 @@ wwv_flow_api.create_flow(
 ,p_rejoin_existing_sessions=>'P'
 ,p_csv_encoding=>'Y'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20160621180512'
+,p_last_upd_yyyymmddhh24miss=>'20160622071835'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_ui_type_name => null
 );
@@ -148,6 +149,7 @@ wwv_flow_api.create_list_item(
 ,p_list_item_display_sequence=>10
 ,p_list_item_link_text=>'Admin Users'
 ,p_list_item_link_target=>'f?p=&APP_ID.:300:&SESSION.::&DEBUG.::::'
+,p_required_patch=>wwv_flow_api.id(86952713930065896)
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'300,310'
 );
@@ -10612,7 +10614,11 @@ end;
 /
 prompt --application/shared_components/logic/build_options
 begin
-null;
+wwv_flow_api.create_build_option(
+ p_id=>wwv_flow_api.id(86952713930065896)
+,p_build_option_name=>'Unavailable'
+,p_build_option_status=>'EXCLUDE'
+);
 end;
 /
 prompt --application/shared_components/globalization/language
@@ -13509,12 +13515,13 @@ wwv_flow_api.create_page(
 ,p_first_item=>'NO_FIRST_ITEM'
 ,p_autocomplete_on_off=>'OFF'
 ,p_page_template_options=>'#DEFAULT#'
+,p_required_patch=>wwv_flow_api.id(86952713930065896)
 ,p_overwrite_navigation_list=>'N'
 ,p_page_is_public_y_n=>'N'
 ,p_protection_level=>'C'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20160621175238'
+,p_last_upd_yyyymmddhh24miss=>'20160622071826'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(286793587350840001)
@@ -13907,13 +13914,14 @@ wwv_flow_api.create_page(
 ,p_first_item=>'NO_FIRST_ITEM'
 ,p_autocomplete_on_off=>'OFF'
 ,p_page_template_options=>'#DEFAULT#'
+,p_required_patch=>wwv_flow_api.id(86952713930065896)
 ,p_dialog_chained=>'Y'
 ,p_overwrite_navigation_list=>'N'
 ,p_page_is_public_y_n=>'N'
 ,p_protection_level=>'C'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20160621175246'
+,p_last_upd_yyyymmddhh24miss=>'20160622071835'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(33378254154832617)
