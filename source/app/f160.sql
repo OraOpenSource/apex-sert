@@ -27,7 +27,7 @@ prompt APPLICATION 160 - APEX-SERT Administration
 -- Application Export:
 --   Application:     160
 --   Name:            APEX-SERT Administration
---   Date and Time:   07:19 Wednesday June 22, 2016
+--   Date and Time:   08:07 Wednesday June 22, 2016
 --   Exported By:     ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -94,7 +94,7 @@ wwv_flow_api.create_flow(
 ,p_alias=>nvl(wwv_flow_application_install.get_application_alias,'SERT_ADMIN')
 ,p_page_view_logging=>'YES'
 ,p_page_protection_enabled_y_n=>'Y'
-,p_checksum_salt_last_reset=>'20160622071835'
+,p_checksum_salt_last_reset=>'20160622075817'
 ,p_bookmark_checksum_function=>'MD5'
 ,p_max_session_length_sec=>9999
 ,p_max_session_idle_sec=>1999
@@ -124,7 +124,7 @@ wwv_flow_api.create_flow(
 ,p_rejoin_existing_sessions=>'P'
 ,p_csv_encoding=>'Y'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20160622071835'
+,p_last_upd_yyyymmddhh24miss=>'20160622075817'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_ui_type_name => null
 );
@@ -15363,7 +15363,7 @@ wwv_flow_api.create_page(
 ,p_cache_mode=>'NOCACHE'
 ,p_help_text=>'No help is available for this page.'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20151217060025'
+,p_last_upd_yyyymmddhh24miss=>'20160622075817'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(288622799853638790)
@@ -15500,10 +15500,8 @@ wwv_flow_api.create_worksheet_column(
 ,p_display_order=>8
 ,p_column_identifier=>'H'
 ,p_column_label=>'PDF'
-,p_allow_pivot=>'N'
 ,p_column_type=>'STRING'
-,p_column_alignment=>'CENTER'
-,p_tz_dependent=>'N'
+,p_display_text_as=>'HIDDEN'
 ,p_static_id=>'SAVE_PDF'
 );
 wwv_flow_api.create_worksheet_rpt(
