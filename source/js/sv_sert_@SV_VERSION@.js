@@ -13,12 +13,12 @@ function svScan(pAppId,pAttributeSetId,pPageId,pRequest)
     {
       x01: pAttributeSetId,
       x02: pAppId
-    },                 
+    },
     {
       success: function (pData)
       {
       }
-    }                   
+    }
   );
 
   // Set the refresh interval for the progress window
@@ -27,21 +27,23 @@ function svScan(pAppId,pAttributeSetId,pPageId,pRequest)
   // Prepare the Cancellation URL
   apex.server.process("prepareURL",
     {
-      x01: "f?p=" + $v('pFlowId') + ":1:" + $v('pInstance') + ":CANCEL"
-    },                 
+      x01: "CANCEL"
+    },
     {
       success: function (pData)
       {
         gCancelURL = pData[0].url;
       }
-    }                   
+    }
   );
 
   // Prepare the URL
   apex.server.process("prepareURL",
     {
-      x01: "f?p=" + $v('pFlowId') + ":" + pPageId + ":" + $v('pInstance') + ":" + pRequest
-    },                 
+      x01: "SCORE",
+      x02: pPageId,
+      x03: pRequest
+    },
     {
       success: function (pData)
       {
@@ -67,7 +69,7 @@ function svScan(pAppId,pAttributeSetId,pPageId,pRequest)
             }
           })
         }
-      }                   
+      }
     );
 }
 
@@ -83,14 +85,14 @@ function apexLink(gPageId, gRP, gLink, gComponent, gCategory)
       x03: gRP,
       x04: gComponent,
       x05: gCategory
-    },                 
+    },
     {
       success: function (pData)
       {
       var url = 'f?p=4000:' + gPageId + ':' + gApexSession + '::NO:' + gRP +':' + gLink;
       newWin = window.open( url );
       }
-    }                   
+    }
   );
 }
 
@@ -102,7 +104,7 @@ function viewSource(pId, pComponentType)
     {
       x01: pId,
       x02: pComponentType
-    },                 
+    },
     {
       success: function (pData)
       {
@@ -117,7 +119,7 @@ function viewSource(pId, pComponentType)
         buttons: {}
         })
       }
-    }                   
+    }
   );
 }
 
@@ -130,7 +132,7 @@ function getInfo (pAttrId, pAppProc, w, h, pType)
     {
       x01: pAttrId,
       x02: pType
-    },                 
+    },
     {
       success: function (pData)
       {
@@ -145,7 +147,7 @@ function getInfo (pAttrId, pAppProc, w, h, pType)
         buttons: {}
         })
       }
-    }                   
+    }
   );
 }
 
@@ -155,13 +157,13 @@ function progress()
 {
   apex.server.process("getProgress",
     {
-    },                 
+    },
     {
       success: function (pData)
       {
       $x('progressMessage').innerHTML = pData[0].title + pData[0].value;
       }
-    }                   
+    }
   );
 }
 

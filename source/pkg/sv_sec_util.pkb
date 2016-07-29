@@ -2744,7 +2744,8 @@ END IF;
 
 -- Include Component, if one exists
 IF l_component_id IS NOT NULL THEN
-  l_sql := l_sql || ' AND component_id = ' || l_component_id;
+  apex_util.set_session_state('P20_COMPONENT_ID',l_component_id);
+  l_sql := l_sql || ' AND component_id = :P20_COMPONENT_ID';
 END IF;
 
 -- Include Column, if one exists
@@ -3107,8 +3108,46 @@ END IF;
 -- Catch All Return False
 RETURN FALSE;
 
-
 END bc_buttons;
+
+
+--------------------------------------------------------------------------------
+-- PROCEDURE: P R E P A R E _ U R L
+--------------------------------------------------------------------------------
+-- Prepares URLs called by Score Buttons
+--------------------------------------------------------------------------------
+PROCEDURE prepare_url
+  (
+  p_type                     IN VARCHAR2,
+  p_page                     IN NUMBER   DEFAULT NULL,
+  p_request                  IN VARCHAR2 DEFAULT NULL
+  )
+IS
+  l_url                      VARCHAR2(1000);
+BEGIN
+
+-- Determine which type of URL to assemble
+IF p_type = 'CANCEL' THEN
+  l_url := 'f?p=' || v('APP_ID') || ':1:' || v('APP_SESSION') || ':CANCEL';
+
+ELSIF p_type = 'SCORE' THEN
+
+  -- Ensure that p_request is either SCORE or PAGE_SCORE
+  IF p_request IN ('SCORE','PAGE_SCORE') THEN
+    l_url := 'f?p=' || v('APP_ID') || ':' || p_page || ':' || v('APP_SESSION') || ':' || p_request;
+  ELSE
+    l_url := 'f?p=' || v('APP_ID') || ':1:' || v('APP_SESSION');
+  END IF;
+
+END IF;
+
+-- Print out the Prepared URL
+htp.prn('[{"url":"' || apex_util.prepare_url(l_url) || '"}]');
+
+
+END prepare_url;
+
+
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 END sv_sec_util;

@@ -361,4 +361,11 @@ FUNCTION bc_buttons
   )
 RETURN BOOLEAN;
 
+PROCEDURE prepare_url
+  (
+  p_type                     IN VARCHAR2,
+  p_page                     IN NUMBER   DEFAULT NULL,
+  p_request                  IN VARCHAR2 DEFAULT NULL
+  );
+
 END sv_sec_util;
