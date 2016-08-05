@@ -35,7 +35,7 @@ ACCEPT dflt CHAR DEFAULT 'users' PROMPT 'Please enter the default tablespace to 
 ACCEPT temp CHAR DEFAULT 'temp'  PROMPT 'Please enter the temporary tablespace to be used for ^parse_as_user [TEMP] : '
 --
 set feedback on
-create user ^parse_as_user identified by "^schema_password" default tablespace ^dflt quota unlimited on ^dflt temporary tablespace ^temp;
+create user ^parse_as_user identified by "^schema_password" default tablespace "^dflt" quota unlimited on "^dflt" temporary tablespace "^temp";
 
 -- This is required for scheduling jobs
 grant SCHEDULER_ADMIN to ^parse_as_user;

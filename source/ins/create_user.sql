@@ -35,7 +35,7 @@ ACCEPT temp CHAR DEFAULT 'temp'  PROMPT 'Please enter the temporary tablespace t
 --
 set feedback on
 
-create user sv_sert_@SV_VERSION@ identified by "^schema_password" default tablespace ^dflt quota unlimited on ^dflt temporary tablespace ^temp;
+create user sv_sert_@SV_VERSION@ identified by "^schema_password" default tablespace "^dflt" quota unlimited on "^dflt" temporary tablespace "^temp";
 grant connect, resource, create any job to sv_sert_@SV_VERSION@;
 
 set feedback off;
