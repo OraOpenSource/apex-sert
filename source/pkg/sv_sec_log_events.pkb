@@ -90,16 +90,20 @@ END IF;
 -- Get any information we need about the PAGE being recalced
 IF p_page_id IS NOT NULL AND P_EVENT_KEY IN ('RECALC_PAGE','RECALC_APP') THEN
   
+  FOR x IN 
+  (
   SELECT
     page_title
-  INTO
-    l_page_title
   FROM
     apex_application_pages
   WHERE
     application_id = p_sert_app_id
-    AND page_id    = p_page_id;
-
+    AND page_id    = p_page_id
+  )
+  LOOP
+    l_page_title := x.page_title;
+  END LOOP;
+  
 END IF;
 
 -- Get info we need about the component.
