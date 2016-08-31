@@ -568,6 +568,7 @@ AS
   l_html                     VARCHAR2(32767);
   l_severity_level           NUMBER;
   l_severity                 VARCHAR2(1000);
+  l_time_to_fix              NUMBER;
 BEGIN
 
 -- Get the current collection ID
@@ -581,13 +582,31 @@ l_score_label_arr(1) := 'Approved';
 l_score_label_arr(2) := 'Pending';
 l_score_label_arr(3) := 'Raw';
 
-
 -- Produce the dashboard region for the specific page
 FOR x IN (SELECT * FROM sv_sec_attributes WHERE display_page_id = p_page_id)
 LOOP
 
+  -- Calculate the total time to fix
+  SELECT
+    NVL(ROUND((SUM(s.time_to_fix))/60,2),0)
+  INTO
+     l_time_to_fix
+  FROM
+    sv_sec_attribute_set_attrs s,
+    sv_sec_collection_data c,
+    sv_sec_attributes a,
+    sv_sec_categories cat
+  WHERE
+    s.attribute_set_id = p_attribute_set_id
+    AND s.attribute_id = c.attribute_id
+    AND c.attribute_id = a.attribute_id
+    AND a.category_id = cat.category_id
+    AND c.collection_id = l_collection_id
+    AND a.attribute_id = x.attribute_id
+    AND c.result NOT IN ('PASS','APPROVED','PENDING');
+
   IF p_format = 'HTML' THEN
-    l_html := '<ul class="t-Cards t-Cards--compact t-Cards--displayInitials t-Cards--3cols t-Cards--desc-2ln">';
+    l_html := '<div>Approximate Time to Fix: ' || l_time_to_fix || ' hours</div><ul class="t-Cards t-Cards--compact t-Cards--displayInitials t-Cards--3cols t-Cards--desc-2ln">';
       
   ELSE
 

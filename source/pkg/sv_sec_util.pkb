@@ -859,7 +859,7 @@ ELSE
 
   -- Calculate the total time to fix
   SELECT
-    NVL(ROUND((SUM(s.time_to_fix)/60),1),0)
+    NVL(ROUND((SUM(s.time_to_fix)/60),2),0)
   INTO
      l_time_to_fix
   FROM
@@ -902,7 +902,7 @@ ELSE
           || '      <span class="t-Card-initials" role="presentation" style="line-height:4.5rem;">' || CASE WHEN l_pct_score > 100 THEN 100 ELSE l_pct_score END || '%</span></span></div>'
           || '    <div class="t-Card-titleWrap"><h3 class="t-Card-title">' || TO_CHAR(l_total_score, '999G999') || ' out of ' || TO_CHAR(l_total_possible_score, '999G999') || ' points</h3></div>'
           || '    <div class="t-Card-body">' 
-          || '      <div class="t-Card-desc">~' || l_time_to_fix || ' Hrs to Fix</div>'
+          || '      <div class="t-Card-desc">Approximate Time to Fix: ' || l_time_to_fix || ' hours</div>'
           || '    <div class="t-Card-info">'
           || '    </div>'
           || '  </div>'
