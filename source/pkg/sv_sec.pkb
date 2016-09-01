@@ -451,7 +451,7 @@ LOOP
          '<li class="t-Cards-item">'
       || '<div class="t-Card t-Card-wrap"><a href="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':' || x.display_page_id || ':' || p_app_session) || '">'
       || '  <div class="t-Card-icon"><span class="t-Icon fa-laptop" style="width:48px; height:48px;background-color:'
-      || sv_sec_util.get_color(p_pct_score => ROUND(l_pct_score), p_possible_score => l_possible_score) || ';"><span class="t-Card-initials" role="presentation" style="line-height:4.5rem;">' || l_pct_score || '%</span></span></div>'
+      || sv_sec_util.get_color(p_pct_score => l_pct_score, p_possible_score => l_possible_score) || ';"><span class="t-Card-initials" role="presentation" style="line-height:4.5rem;">' || l_pct_score || '%</span></span></div>'
       || '  <div class="t-Card-titleWrap"><h3 class="t-Card-title">' || 
         CASE 
           WHEN (INSTR(x.attribute_name, 'Contains') > 0) THEN
@@ -469,13 +469,6 @@ LOOP
       || '  </div>'
       || '</a></div>'
       || '</li>';
-
-
---          || CASE WHEN l_pending_count > 0 THEN 
---          '&nbsp;&nbsp;&nbsp;<b>' || l_pending_count || ' Pending Approvals</b>&nbsp;'
---          || '<a href="' || apex_util.prepare_url('f?p=' || p_sert_app_id|| ':' || x.display_page_id || ':' || p_app_session) || '" style="color:#666;text-decoration:none;">'
---          || '<img src="wwv_flow_file_mgr.get_file?p_security_group_id=' 
---          || APEX_CUSTOM_AUTH.GET_SECURITY_GROUP_ID || '&p_fname=PAGE_GO.gif"></a></div>' ELSE NULL END || '</td>
 
     -- Increment the score
     l_total := l_total + l_score_arr(y);
