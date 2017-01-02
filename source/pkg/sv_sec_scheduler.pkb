@@ -125,7 +125,7 @@ BEGIN
 -- Snapshot the Time of Day in case of long running processes
 l_time_of_day := TO_CHAR(SYSDATE,'HH24');
 
--- Get the eSERT App ID
+-- Get the APEX-SERT App ID
 SELECT application_id, workspace_id INTO l_sert_app_id, l_workspace_id 
   FROM apex_applications WHERE alias = 'SERT';
 
@@ -250,7 +250,7 @@ LOOP
       (
       p_to            => l_email,
       p_from          => l_email_arr(6),
-      p_subj          => 'eSERT Scheduled Evaluation Results',
+      p_subj          => 'APEX-SERT Scheduled Evaluation Results',
       p_body          => 'Please use an HTML-capable e-mail client to view this message.',
       p_body_html     => l_msg
       );
@@ -409,7 +409,7 @@ LOOP
       (
       p_to            => y.email,
       p_from          => l_email_arr(6),
-      p_subj          => 'eSERT Scheduled Evaluation Results',
+      p_subj          => 'APEX-SERT Scheduled Evaluation Results',
       p_body          => 'Please use an HTML-capable e-mail client to view this message.',
       p_body_html     => l_msg
       );

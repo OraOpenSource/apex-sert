@@ -45,7 +45,7 @@ IS
   l_role_name_arr            vc_t;
 BEGIN
 
--- Get the workspace_id for the eSERT application
+-- Get the workspace_id for the APEX-SERT application
 SELECT workspace_id INTO l_workspace_id FROM apex_applications WHERE alias = 'SERT';
 
 -- Get the admin email address
@@ -282,7 +282,7 @@ IF p_event_key IN ('REJECTED','APPROVED','SUBMITTED') THEN
       (
       p_to        => x.email,
       p_from      => l_admin_email,
-      p_subj      => 'eSERT: Exception ' || INITCAP(p_event_key) || ' in Application ' || p_application_id,
+      p_subj      => 'APEX-SERT: Exception ' || INITCAP(p_event_key) || ' in Application ' || p_application_id,
       p_body      => 'Please use an HTML-capable e-mail client to view this message.',
       p_body_html => l_msg
       );

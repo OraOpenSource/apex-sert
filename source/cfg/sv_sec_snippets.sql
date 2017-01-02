@@ -28,7 +28,7 @@ INSERT INTO sv_sec_snippets (snippet_key, snippet, editable)
 /
 
 INSERT INTO sv_sec_snippets (snippet_key, snippet, editable)
-  VALUES ('EMAIL_HEADER', '<!DOCTYPE html><head><title>eSERT Scheduled Evaluation Notification</title><meta http-equiv="Pragma" content="no-cache" /><meta http-equiv="Expires" content="-1" /><meta http-equiv="Cache-Control" content="no-cache" />
+  VALUES ('EMAIL_HEADER', '<!DOCTYPE html><head><title>APEX-SERT Scheduled Evaluation Notification</title><meta http-equiv="Pragma" content="no-cache" /><meta http-equiv="Expires" content="-1" /><meta http-equiv="Cache-Control" content="no-cache" />
 </head><body>','N')
 /
 

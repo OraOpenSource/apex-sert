@@ -12,7 +12,7 @@ BEGIN
             end_date            => NULL,
             enabled             => FALSE,
             auto_drop           => FALSE,
-            comments            => 'eSERT Hourly Job for Scheduled Notifications');
+            comments            => 'APEX-SERT Hourly Job for Scheduled Notifications');
 
     DBMS_SCHEDULER.SET_ATTRIBUTE( 
             name      => '@SV_PARSE_AS@.SV_SERT_EVAL_JOB', 
