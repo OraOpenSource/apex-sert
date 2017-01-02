@@ -31,8 +31,8 @@ PROMPT
 select tablespace_name "Tablespace Name" from dba_tablespaces ORDER BY 1;
 --
 PROMPT
-ACCEPT dflt CHAR DEFAULT 'users' PROMPT 'Please enter the default tablespace to be used for ^parse_as_user [USERS] : '
-ACCEPT temp CHAR DEFAULT 'temp'  PROMPT 'Please enter the temporary tablespace to be used for ^parse_as_user [TEMP] : '
+ACCEPT dflt CHAR DEFAULT 'USERS' PROMPT 'Please enter the default tablespace to be used for ^parse_as_user [USERS] : '
+ACCEPT temp CHAR DEFAULT 'TEMP'  PROMPT 'Please enter the temporary tablespace to be used for ^parse_as_user [TEMP] : '
 --
 set feedback on
 create user ^parse_as_user identified by "^schema_password" default tablespace "^dflt" quota unlimited on "^dflt" temporary tablespace "^temp";

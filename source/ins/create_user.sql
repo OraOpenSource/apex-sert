@@ -30,8 +30,8 @@ PROMPT
 select tablespace_name "Tablespace Name" from dba_tablespaces ORDER BY 1;
 --
 PROMPT
-ACCEPT dflt CHAR DEFAULT 'users' PROMPT 'Please enter the default tablespace to be used for SV_SERT_@SV_VERSION@ [USERS] : '
-ACCEPT temp CHAR DEFAULT 'temp'  PROMPT 'Please enter the temporary tablespace to be used for SV_SERT_@SV_VERSION@ [TEMP] : '
+ACCEPT dflt CHAR DEFAULT 'USERS' PROMPT 'Please enter the default tablespace to be used for SV_SERT_@SV_VERSION@ [USERS] : '
+ACCEPT temp CHAR DEFAULT 'TEMP'  PROMPT 'Please enter the temporary tablespace to be used for SV_SERT_@SV_VERSION@ [TEMP] : '
 --
 set feedback on
 
