@@ -13,7 +13,7 @@ whenever sqlerror exit sql.sqlcode rollback
 begin
 wwv_flow_api.import_begin (
  p_version_yyyy_mm_dd=>'2013.01.01'
-,p_release=>'5.0.2.00.07'
+,p_release=>'5.0.4.00.12'
 ,p_default_workspace_id=>33530162989655026
 ,p_default_application_id=>161
 ,p_default_owner=>'SV_SERT_APEX'
@@ -27,11 +27,11 @@ prompt APPLICATION 161 - APEX-SERT Maintenance
 -- Application Export:
 --   Application:     161
 --   Name:            APEX-SERT Maintenance
---   Date and Time:   06:36 Tuesday June 14, 2016
+--   Date and Time:   15:31 Monday January 2, 2017
 --   Exported By:     ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
---   Version:         5.0.2.00.07
+--   Version:         5.0.4.00.12
 --   Instance ID:     69403355430565
 --
 
