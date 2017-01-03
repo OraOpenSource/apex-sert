@@ -186,22 +186,6 @@ owa.init_cgi_env
 -- Set the APEX Security Group
 wwv_flow_api.set_security_group_id(l_workspace_id);
 
--- Set the APEX Session ID, App ID and Page ID
-apex_application.g_instance := l_app_session;
-apex_application.g_flow_id := l_sert_app_id;
-apex_application.g_flow_step_id := 1;
-
--- Create the APEX session
-apex_custom_auth.post_login
-  (
-  p_uname => 'ADMIN',
-  p_session_id => l_app_session,
-  p_app_page => apex_application.g_flow_id||':'||1
-  );
-
--- Set the APEX item G_WORKSPACE_ID so that the views that reference it will work
-apex_util.set_session_state('G_WORKSPACE_ID',l_workspace_id);
-
 -- Run All Individual App Evals
 FOR x IN
   (
@@ -214,6 +198,17 @@ FOR x IN
     OR (eval_interval = 'WEEKLY' AND time_of_day = l_time_of_day AND day_of_week = TO_CHAR(SYSDATE,'DY'))
   )
 LOOP
+
+  -- Create the APEX session
+  apex_custom_auth.post_login
+    (
+    p_uname      => x.scheduled_by,
+    p_session_id => l_app_session,
+    p_app_page   => l_sert_app_id || ':' || 1
+    );
+
+  -- Set the APEX item G_WORKSPACE_ID so that the views that reference it will work
+  apex_util.set_session_state('G_WORKSPACE_ID',x.scheduled_ws);
 
   logger.log('START: APP ' || x.application_id);
 
