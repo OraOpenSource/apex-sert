@@ -162,6 +162,7 @@ SELECT snippet INTO l_email_arr(5) FROM sv_sec_snippets WHERE snippet_key = 'EMA
 
 -- Get the e-mail FROM address
 l_email_arr(6) := 'noreply@noreply.com';
+
 FOR x IN (SELECT * FROM sv_sec_snippets WHERE snippet_key = 'EVAL_NOTIFICATION_FROM' AND snippet IS NOT NULL)
 LOOP
   l_email_arr(6) := x.snippet;
@@ -209,8 +210,8 @@ FOR x IN
   FROM 
     sv_sec_sched_evals
   WHERE
-    (eval_interval = 'DAILY' AND TO_CHAR(time_of_day) = l_time_of_day)
-    OR (eval_interval = 'WEEKLY' AND TO_CHAR(time_of_day) = l_time_of_day AND day_of_week = TO_CHAR(SYSDATE,'DY'))
+    (eval_interval = 'DAILY' AND time_of_day = l_time_of_day)
+    OR (eval_interval = 'WEEKLY' AND time_of_day = l_time_of_day AND day_of_week = TO_CHAR(SYSDATE,'DY'))
   )
 LOOP
 
@@ -300,8 +301,8 @@ FOR x IN
   FROM 
     sv_sec_sched_grp_evals
   WHERE
-    (eval_interval = 'DAILY' AND TO_CHAR(time_of_day) = l_time_of_day)
-    OR (eval_interval = 'WEEKLY' AND TO_CHAR(time_of_day) = l_time_of_day AND day_of_week = TO_CHAR(SYSDATE,'DY'))
+    (eval_interval = 'DAILY' AND time_of_day = l_time_of_day)
+    OR (eval_interval = 'WEEKLY' AND time_of_day = l_time_of_day AND day_of_week = TO_CHAR(SYSDATE,'DY'))
   )
 LOOP
 
@@ -463,31 +464,6 @@ l_dummy := sv_sec.calc_score
   p_user_workspace_id        => p_user_workspace_id,
   p_scheduled_eval           => 'Y'
   );
-
-IF p_save_pdf = 'Y' THEN
-  
-  -- PRINTING PLACEHOLDER
-  NULL;
-
-  /**
-  sv_sec_rpt_moar.print
-    (
-    p_classifications     => 'SETTINGS:PAGE_ACCESS:SQL_INJECTION:CROSS_SITE_SCRIPTING:URL_TAMPERING',
-    p_statuses            => 'PASS:FAIL:APPROVED:PENDING:REJECTED:STALE',
-    p_application_id      => p_application_id,
-    p_sert_app_id         => p_sert_app_id,
-    p_attribute_set_id    => p_attribute_set_id,
-    p_app_session         => l_app_session,
-    p_print               => FALSE,
-    p_app_user            => p_app_user,
-    p_workspace_id        => p_workspace_id,
-    p_scoring_method      => p_scoring_method,
-    p_app_eval_id         => l_app_eval_id
-    );
-
-  **/
-  
-END IF;
 
 EXCEPTION
   WHEN OTHERS THEN

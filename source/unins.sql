@@ -18,9 +18,8 @@
 --    2)With connect string
 --      sqlplus "sys/syspass@10g as sysdba" @unins 
 --
---    MODIFIED   
---      dgault    1/7/09 7:19 PM - Created   
 --
+
 set define '^'
 set concat on
 set concat .
@@ -65,6 +64,22 @@ APEX_INSTANCE_ADMIN.REMOVE_WORKSPACE
   p_workspace => 'SERT'
   );
 COMMIT;
+END;
+/
+
+PROMPT ****   Removing the APEX-SERT Scheduled job
+DECLARE
+   l_job_exists number;
+BEGIN
+
+SELECT COUNT(*) INTO l_job_exists
+  FROM user_scheduler_jobs
+  WHERE job_name = 'SV_SERT_EVAL_JOB';
+
+IF l_job_exists = 1 THEN
+  dbms_scheduler.drop_job(job_name => 'SV_SERT_@SV_VERSION@.SV_SERT_EVAL_JOB');
+END IF;
+
 END;
 /
 
