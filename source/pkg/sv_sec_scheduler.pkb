@@ -16,9 +16,12 @@ RETURN VARCHAR2
 IS
 BEGIN
 
--- Scores are the same; return a -
-IF p_score_1 = p_score_2 THEN
-  RETURN '-';
+-- Score 2 is -1, meaning there was no previous review
+IF p_score_2 = -1 THEN
+  RETURN 'n/a';
+-- Scores are the same
+ELSIF p_score_1 = p_score_2 THEN
+  RETURN 'No Change';
 -- Score improved; return a green arrow and difference
 ELSIF p_score_1 > p_score_2 THEN
   RETURN '<span style="color:green;font-weight:bold;">&#8593;' || (p_score_1 - p_score_2) || '%</span>';
@@ -28,6 +31,11 @@ ELSIF p_score_1 < p_score_2 THEN
 ELSE
   RETURN NULL;
 END IF;
+
+EXCEPTION
+  WHEN OTHERS THEN
+    logger.log_error;
+    raise_application_error(-20000, DBMS_UTILITY.FORMAT_ERROR_BACKTRACE);
 
 END calc_score_diff;
 
@@ -49,6 +57,7 @@ IS
   l_pending_score            vc_t;
   l_raw_score                vc_t;
   l_application_name         VARCHAR2(1000);
+  l_prev_score_found         BOOLEAN := FALSE;
 BEGIN
 
 -- Get the scores for the eval
@@ -60,46 +69,56 @@ SELECT approved_score, pending_score, raw_score
 -- Get the scores for the previous eval, if one exists
 FOR zz IN
   (
-  SELECT
-    LEAD(approved_score,0) OVER (ORDER BY app_eval_id DESC) approved_score,
-    LEAD(pending_score,0)  OVER (ORDER BY app_eval_id DESC) pending_score,
-    LEAD(raw_score,0)      OVER (ORDER BY app_eval_id DESC) raw_score
-  FROM 
-    sv_sec_app_evals 
+  SELECT * FROM
+    (
+    SELECT
+      LEAD(approved_score,1) OVER (ORDER BY app_eval_id DESC) approved_score,
+      LEAD(pending_score,1)  OVER (ORDER BY app_eval_id DESC) pending_score,
+      LEAD(raw_score,1)      OVER (ORDER BY app_eval_id DESC) raw_score
+    FROM 
+      sv_sec_app_evals 
+    WHERE 
+      attribute_set_id =  p_attribute_set_id
+      AND application_id = p_application_id
+    ORDER BY 
+      app_eval_id DESC
+    )
   WHERE 
-    attribute_set_id = p_attribute_set_id
-    AND application_id = p_application_id
-    AND app_eval_id < p_app_eval_id
-    AND eval_date < (SYSDATE - 1)
+    rownum = 1
   )
 LOOP
   l_approved_score(2) := zz.approved_score;
   l_pending_score(2)  := zz.pending_score;
   l_raw_score(2)      := zz.raw_score; 
-  EXIT;
 END LOOP;
       
 -- Get the Application Name
 SELECT application_name INTO l_application_name FROM apex_applications WHERE application_id = p_application_id;
 
 -- Calculate the differences
-l_approved_score(3) := calc_score_diff(p_score_1 => l_approved_score(1), p_score_2 => l_approved_score(2));
-l_pending_score(3)  := calc_score_diff(p_score_1 => l_pending_score(1),  p_score_2 => l_pending_score(2));
-l_raw_score(3)      := calc_score_diff(p_score_1 => l_raw_score(1),      p_score_2 => l_raw_score(2));
+l_approved_score(3) := calc_score_diff(p_score_1 => l_approved_score(1), p_score_2 => NVL(l_approved_score(2),-1));
+l_pending_score(3)  := calc_score_diff(p_score_1 => l_pending_score(1),  p_score_2 => NVL(l_pending_score(2), -1));
+l_raw_score(3)      := calc_score_diff(p_score_1 => l_raw_score(1),      p_score_2 => NVL(l_raw_score(2),     -1));
 
 -- Add the specific result to the e-mail
-p_rows := p_rows || '<tr><td class="dataAlt" style="text-align:left;">' || p_application_id || ' ' 
-  || l_application_name || '</td>'
+p_rows := p_rows 
+  || '<tr>'
+  || '<td class="dataAlt" style="text-align:left;">' || p_application_id || ' ' || l_application_name     || '</td>'
   || '<td class="dataAlt">' || l_approved_score(1) || '%</td><td class="dataAlt">' || l_approved_score(3) || '</td>'
   || '<td class="dataAlt">' || l_pending_score(1)  || '%</td><td class="dataAlt">' || l_pending_score(3)  || '</td>'
   || '<td class="dataAlt">' || l_raw_score(1)      || '%</td><td class="dataAlt">' || l_raw_score(3)      || '</td>'
   || '</tr>';
-    
+
+EXCEPTION
+  WHEN OTHERS THEN
+    logger.log_error;
+    raise_application_error(-20000, DBMS_UTILITY.FORMAT_ERROR_BACKTRACE);
+  
 END get_eval_scores;
 
 
 --------------------------------------------------------------------------------
--- PROCEDURE: R U N _ S C H E D _E V A L S
+-- PROCEDURE: R U N _ S C H E D _ E V A L S
 --------------------------------------------------------------------------------
 -- Runs all scheduled evaluations
 --------------------------------------------------------------------------------
@@ -120,7 +139,12 @@ IS
   l_file_count               NUMBER := 1;
   l_email_id                 NUMBER;
   l_email                    VARCHAR2(1000);
+  l_sched_grp_name           VARCHAR2(255);
+  l_cgi_var_name             owa.vc_arr;
+  l_cgi_var_val              owa.vc_arr;  
 BEGIN
+
+logger.log('START: SCHEDULED EVALS');
 
 -- Snapshot the Time of Day in case of long running processes
 l_time_of_day := TO_CHAR(SYSDATE,'HH24');
@@ -136,13 +160,46 @@ SELECT snippet INTO l_email_arr(3) FROM sv_sec_snippets WHERE snippet_key = 'EMA
 SELECT snippet INTO l_email_arr(4) FROM sv_sec_snippets WHERE snippet_key = 'EMAIL_CSS';
 SELECT snippet INTO l_email_arr(5) FROM sv_sec_snippets WHERE snippet_key = 'EMAIL_FOOTER';
 
+-- Get the e-mail FROM address
 l_email_arr(6) := 'noreply@noreply.com';
-
 FOR x IN (SELECT * FROM sv_sec_snippets WHERE snippet_key = 'EVAL_NOTIFICATION_FROM' AND snippet IS NOT NULL)
 LOOP
   l_email_arr(6) := x.snippet;
 END LOOP;
 
+-- Define the App Session
+l_app_session := -(APEX_CUSTOM_AUTH.GET_NEXT_SESSION_ID);
+
+-- Initialize the buffer for an APEX session
+htp.init;
+l_cgi_var_name(1) := 'REQUEST_PROTOCOL';
+l_cgi_var_val(1) := 'HTTP';
+
+owa.init_cgi_env
+  (
+  num_params => 1,
+  param_name => l_cgi_var_name,
+  param_val  => l_cgi_var_val 
+  );
+
+-- Set the APEX Security Group
+wwv_flow_api.set_security_group_id(l_workspace_id);
+
+-- Set the APEX Session ID, App ID and Page ID
+apex_application.g_instance := l_app_session;
+apex_application.g_flow_id := l_sert_app_id;
+apex_application.g_flow_step_id := 1;
+
+-- Create the APEX session
+apex_custom_auth.post_login
+  (
+  p_uname => 'ADMIN',
+  p_session_id => l_app_session,
+  p_app_page => apex_application.g_flow_id||':'||1
+  );
+
+-- Set the APEX item G_WORKSPACE_ID so that the views that reference it will work
+apex_util.set_session_state('G_WORKSPACE_ID',l_workspace_id);
 
 -- Run All Individual App Evals
 FOR x IN
@@ -151,18 +208,17 @@ FOR x IN
     * 
   FROM 
     sv_sec_sched_evals
-  WHERE 
+  WHERE
     (eval_interval = 'DAILY' AND TO_CHAR(time_of_day) = l_time_of_day)
     OR (eval_interval = 'WEEKLY' AND TO_CHAR(time_of_day) = l_time_of_day AND day_of_week = TO_CHAR(SYSDATE,'DY'))
   )
 LOOP
 
+  logger.log('START: APP ' || x.application_id);
+
   -- Clear out the previous e-mail and body
   l_email := NULL;
   l_rows := NULL;
-
-  -- Define the App Session
-  l_app_session := -(APEX_CUSTOM_AUTH.GET_NEXT_SESSION_ID);
 
   -- Define the APP_EVAL_ID
   SELECT sv_sec_app_eval_seq.NEXTVAL INTO l_app_eval_id FROM dual;
@@ -194,34 +250,6 @@ LOOP
       p_scheduled_eval           => 'Y'
       );
 
-    IF x.save_pdf = 'Y' THEN
-
-      -- PRINTING PLACEHOLDER
-      NULL;
-      /**
-
-      sv_sec_rpt_moar.print
-        (
-        p_classifications     => 'SETTINGS:PAGE_ACCESS:SQL_INJECTION:CROSS_SITE_SCRIPTING:URL_TAMPERING',
-        p_statuses            => 'PASS:FAIL:APPROVED:PENDING:REJECTED:STALE',
-        p_application_id      => x.application_id,
-        p_sert_app_id         => l_sert_app_id,
-        p_attribute_set_id    => x.attribute_set_id,
-        p_app_session         => l_app_session,
-        p_print               => FALSE,
-        p_app_user            => x.scheduled_by,
-        p_workspace_id        => y.workspace_id,
-        p_scoring_method      => x.scoring_method,
-        p_app_eval_id         => l_app_eval_id
-        );
-
-      -- Record the ID
-      SELECT TO_CHAR(file_id) INTO l_file_id
-        FROM sv_sec_scheduled_results WHERE app_eval_id = l_app_eval_id;
-      **/
-
-    END IF;
-
     get_eval_scores
       (
       p_app_eval_id       => l_app_eval_id,
@@ -242,39 +270,22 @@ LOOP
     -- Assemble the e-mail
     l_msg := l_email_arr(1) || l_email_arr(2) || l_rows || l_email_arr(3) || l_email_arr(4) || l_email_arr(5);
 
-    -- Create an APEX session    
-    wwv_flow_api.set_security_group_id(l_workspace_id);
-
     -- Create the body of the email
     l_email_id := apex_mail.send
       (
       p_to            => l_email,
       p_from          => l_email_arr(6),
-      p_subj          => 'APEX-SERT Scheduled Evaluation Results',
+      p_subj          => 'APEX-SERT Scheduled Evaluation Results - Application ' || x.application_id,
       p_body          => 'Please use an HTML-capable e-mail client to view this message.',
       p_body_html     => l_msg
       );
         
-    -- Add the attachment
-    FOR zz IN 
-      (
-      SELECT * FROM sv_sec_scheduled_results WHERE file_id = l_file_id
-      )
-    LOOP
-      IF x.save_pdf = 'Y' THEN
-        apex_mail.add_attachment
-          (
-          p_mail_id       => l_email_id,
-          p_attachment    => zz.file_contents,
-          p_filename      => zz.file_name,
-          p_mime_type     => zz.mime_type
-          );
-      END IF;
-    END LOOP;
   END IF;
   
   -- Clean up the colleciton
   DELETE FROM sv_sec_collection WHERE app_user = x.scheduled_by AND app_id = x.application_id AND app_session = l_app_session;
+
+  logger.log('END: APP ' || x.application_id);
 
 END LOOP;
 
@@ -288,18 +299,15 @@ FOR x IN
     * 
   FROM 
     sv_sec_sched_grp_evals
-  WHERE 
-    (eval_interval = 'DAILY' AND TO_CHAR(time_of_day) = l_time_of_day)
-    OR (eval_interval = 'WEEKLY' AND TO_CHAR(time_of_day) = l_time_of_day AND day_of_week = TO_CHAR(SYSDATE,'DY'))
+  WHERE 1=1
+    --(eval_interval = 'DAILY' AND TO_CHAR(time_of_day) = l_time_of_day)
+    --OR (eval_interval = 'WEEKLY' AND TO_CHAR(time_of_day) = l_time_of_day AND day_of_week = TO_CHAR(SYSDATE,'DY'))
   )
 LOOP
 
   -- Run through all matching groups
   FOR y IN (SELECT * FROM sv_sec_sched_grp_apps WHERE sched_grp_id = x.sched_grp_id ORDER BY application_id)
   LOOP
-
-    -- Define the App Session
-    l_app_session := -(APEX_CUSTOM_AUTH.GET_NEXT_SESSION_ID);
 
     -- Define the APP_EVAL_ID
     SELECT sv_sec_app_eval_seq.NEXTVAL INTO l_app_eval_id FROM dual;
@@ -331,38 +339,6 @@ LOOP
         p_scheduled_eval           => 'Y'
         );
 
-      IF y.save_pdf = 'Y' THEN
-        
-        -- PRINTING PLACEHOLDER
-        NULL;
-        /**
-  
-        sv_sec_rpt_moar.print
-          (
-          p_classifications     => 'SETTINGS:PAGE_ACCESS:SQL_INJECTION:CROSS_SITE_SCRIPTING:URL_TAMPERING',
-          p_statuses            => 'PASS:FAIL:APPROVED:PENDING:REJECTED:STALE',
-          p_application_id      => y.application_id,
-          p_sert_app_id         => l_sert_app_id,
-          p_attribute_set_id    => y.attribute_set_id,
-          p_app_session         => l_app_session,
-          p_print               => FALSE,
-          p_app_user            => y.created_by,
-          p_workspace_id        => z.workspace_id,
-          p_scoring_method      => y.scoring_method,
-          p_app_eval_id         => l_app_eval_id
-          );
-
-        -- Record the ID
-        SELECT TO_CHAR(file_id) INTO l_file_id_arr(l_file_count) 
-          FROM sv_sec_scheduled_results WHERE app_eval_id = l_app_eval_id;
-        
-        -- Increment the Counter
-        l_file_count := l_file_count + 1;
-        
-        **/
-
-      END IF;
-
       -- Genrate the e-mail body
       get_eval_scores
         (
@@ -382,8 +358,8 @@ LOOP
   -- Assemble the e-mail
   l_msg := l_email_arr(1) || l_email_arr(2) || l_rows || l_email_arr(3) || l_email_arr(4) || l_email_arr(5);
 
-  -- Create an APEX session    
-  wwv_flow_api.set_security_group_id(l_workspace_id);
+  -- Get the Name of the Group
+  SELECT sched_grp_name INTO l_sched_grp_name FROM sv_sec_sched_grp WHERE sched_grp_id = x.sched_grp_id;
 
   -- Send the e-mails
   FOR y IN
@@ -409,35 +385,23 @@ LOOP
       (
       p_to            => y.email,
       p_from          => l_email_arr(6),
-      p_subj          => 'APEX-SERT Scheduled Evaluation Results',
+      p_subj          => 'APEX-SERT Scheduled Group Evaluation Results - ' || l_sched_grp_name,
       p_body          => 'Please use an HTML-capable e-mail client to view this message.',
       p_body_html     => l_msg
       );
-        
-    -- Add the attachments
-    FOR z IN 1..l_file_id_arr.COUNT
-    LOOP
-      FOR zz IN 
-        (
-        SELECT * FROM sv_sec_scheduled_results WHERE file_id = l_file_id_arr(z)
-        )
-      LOOP
-        IF y.include_pdfs = 'Y' THEN
-          apex_mail.add_attachment
-            (
-            p_mail_id       => l_email_id,
-            p_attachment    => zz.file_contents,
-            p_filename      => zz.file_name,
-            p_mime_type     => zz.mime_type
-            );
-        END IF;
-      END LOOP;
-    END LOOP;  
+            
   END LOOP;
 END LOOP;
 
+logger.log('END: SCHEDULED EVALS');
+
 -- Flush the mail queue to send out the emails
 apex_mail.push_queue;
+
+EXCEPTION
+  WHEN OTHERS THEN
+    logger.log_error;
+    raise_application_error(-20000, DBMS_UTILITY.FORMAT_ERROR_BACKTRACE);
 
 END run_sched_evals;
 
@@ -525,6 +489,11 @@ IF p_save_pdf = 'Y' THEN
   
 END IF;
 
+EXCEPTION
+  WHEN OTHERS THEN
+    logger.log_error;
+    raise_application_error(-20000, DBMS_UTILITY.FORMAT_ERROR_BACKTRACE);
+
 END run_eval;
 
 
@@ -576,6 +545,11 @@ VALUES
   CASE WHEN p_eval_interval = 'DAILY' THEN NULL ELSE p_day_of_week END
   );
 
+EXCEPTION
+  WHEN OTHERS THEN
+    logger.log_error;
+    raise_application_error(-20000, DBMS_UTILITY.FORMAT_ERROR_BACKTRACE);
+
 END schedule_eval;
 
 
@@ -617,6 +591,10 @@ VALUES
   p_scheduled_ws
   );
 
+EXCEPTION
+  WHEN OTHERS THEN
+    logger.log_error;
+    raise_application_error(-20000, DBMS_UTILITY.FORMAT_ERROR_BACKTRACE);
 
 END schedule_group_eval;
 
