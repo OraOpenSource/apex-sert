@@ -9,4 +9,4 @@
 @cfg/sv_sec_snippets.sql "^admin_email_address"
 --@cfg/sv_sec_info_fix_pdf.sql
 @cfg/sv_sec_css_data.sql
-@cfg/sv_sert_eval_job.sql "^parse_as_user"  -- Needs to be last b/c of schema change
+@cfg/sv_sert_eval_job.sql

@@ -1,3 +1,5 @@
+alter session set current_schema = SV_SERT_@SV_VERSION@;
+
 BEGIN
     DBMS_SCHEDULER.CREATE_JOB (
             job_name            => 'SV_SERT_@SV_VERSION@.SV_SERT_EVAL_JOB',
