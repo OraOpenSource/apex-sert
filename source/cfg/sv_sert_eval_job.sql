@@ -1,9 +1,6 @@
--- Switch back to Parse As schema
-alter session set current_schema = @SV_PARSE_AS@;
-
 BEGIN
     DBMS_SCHEDULER.CREATE_JOB (
-            job_name            => '@SV_PARSE_AS@.SV_SERT_EVAL_JOB',
+            job_name            => 'SV_SERT_@SV_PARSE_AS@.SV_SERT_EVAL_JOB',
             job_type            => 'STORED_PROCEDURE',
             job_action          => 'SV_SERT_@SV_VERSION@.SV_SEC_SCHEDULER.RUN_SCHED_EVALS',
             number_of_arguments => 0,
@@ -15,11 +12,11 @@ BEGIN
             comments            => 'APEX-SERT Hourly Job for Scheduled Notifications');
 
     DBMS_SCHEDULER.SET_ATTRIBUTE( 
-            name      => '@SV_PARSE_AS@.SV_SERT_EVAL_JOB', 
+            name      => 'SV_SERT_@SV_PARSE_AS@.SV_SERT_EVAL_JOB', 
             attribute => 'logging_level',
             value     => DBMS_SCHEDULER.LOGGING_OFF);
           
     DBMS_SCHEDULER.enable(
-             name => '@SV_PARSE_AS@.SV_SERT_EVAL_JOB');
+             name => 'SV_SERT_@SV_PARSE_AS@.SV_SERT_EVAL_JOB');
 END;
 /
