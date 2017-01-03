@@ -299,9 +299,9 @@ FOR x IN
     * 
   FROM 
     sv_sec_sched_grp_evals
-  WHERE 1=1
-    --(eval_interval = 'DAILY' AND TO_CHAR(time_of_day) = l_time_of_day)
-    --OR (eval_interval = 'WEEKLY' AND TO_CHAR(time_of_day) = l_time_of_day AND day_of_week = TO_CHAR(SYSDATE,'DY'))
+  WHERE
+    (eval_interval = 'DAILY' AND TO_CHAR(time_of_day) = l_time_of_day)
+    OR (eval_interval = 'WEEKLY' AND TO_CHAR(time_of_day) = l_time_of_day AND day_of_week = TO_CHAR(SYSDATE,'DY'))
   )
 LOOP
 
