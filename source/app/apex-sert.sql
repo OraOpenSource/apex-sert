@@ -27,7 +27,7 @@ prompt APPLICATION 159 - APEX-SERT
 -- Application Export:
 --   Application:     159
 --   Name:            APEX-SERT
---   Date and Time:   15:31 Monday January 2, 2017
+--   Date and Time:   22:58 Monday January 2, 2017
 --   Exported By:     ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -97,7 +97,7 @@ wwv_flow_api.create_flow(
 ,p_alias=>nvl(wwv_flow_application_install.get_application_alias,'SERT')
 ,p_page_view_logging=>'YES'
 ,p_page_protection_enabled_y_n=>'Y'
-,p_checksum_salt_last_reset=>'20170102135256'
+,p_checksum_salt_last_reset=>'20170102224528'
 ,p_bookmark_checksum_function=>'MD5'
 ,p_max_session_length_sec=>9999
 ,p_max_session_idle_sec=>1999
@@ -133,7 +133,7 @@ wwv_flow_api.create_flow(
 ,p_rejoin_existing_sessions=>'N'
 ,p_csv_encoding=>'Y'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20170102135256'
+,p_last_upd_yyyymmddhh24miss=>'20170102224528'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>30
 ,p_ui_type_name => null
@@ -107380,7 +107380,7 @@ wwv_flow_api.create_page(
 ,p_autocomplete_on_off=>'OFF'
 ,p_page_template_options=>'#DEFAULT#'
 ,p_required_role=>wwv_flow_api.id(543954253682696930)
-,p_dialog_height=>'800'
+,p_dialog_height=>'600'
 ,p_dialog_width=>'900'
 ,p_dialog_chained=>'Y'
 ,p_overwrite_navigation_list=>'N'
@@ -107388,7 +107388,7 @@ wwv_flow_api.create_page(
 ,p_protection_level=>'C'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20170102091011'
+,p_last_upd_yyyymmddhh24miss=>'20170102224528'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(88342129109350340)

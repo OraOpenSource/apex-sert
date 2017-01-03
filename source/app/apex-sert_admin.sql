@@ -27,7 +27,7 @@ prompt APPLICATION 160 - APEX-SERT Administration
 -- Application Export:
 --   Application:     160
 --   Name:            APEX-SERT Administration
---   Date and Time:   15:31 Monday January 2, 2017
+--   Date and Time:   22:59 Monday January 2, 2017
 --   Exported By:     ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -43,7 +43,7 @@ prompt APPLICATION 160 - APEX-SERT Administration
 --     Processes:               32
 --     Regions:                 27
 --     Buttons:                 18
---     Dynamic Actions:         25
+--     Dynamic Actions:         26
 --   Shared Components:
 --     Logic:
 --       Items:                  2
@@ -94,7 +94,7 @@ wwv_flow_api.create_flow(
 ,p_alias=>nvl(wwv_flow_application_install.get_application_alias,'SERT_ADMIN')
 ,p_page_view_logging=>'YES'
 ,p_page_protection_enabled_y_n=>'Y'
-,p_checksum_salt_last_reset=>'20170102095901'
+,p_checksum_salt_last_reset=>'20170102201827'
 ,p_bookmark_checksum_function=>'MD5'
 ,p_max_session_length_sec=>9999
 ,p_max_session_idle_sec=>1999
@@ -122,7 +122,7 @@ wwv_flow_api.create_flow(
 ,p_rejoin_existing_sessions=>'N'
 ,p_csv_encoding=>'Y'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20170102095901'
+,p_last_upd_yyyymmddhh24miss=>'20170102201827'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_ui_type_name => null
 );
@@ -17054,8 +17054,8 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'N'
 ,p_protection_level=>'C'
 ,p_cache_mode=>'NOCACHE'
-,p_last_updated_by=>'SSPENDOL'
-,p_last_upd_yyyymmddhh24miss=>'20160504071918'
+,p_last_updated_by=>'ADMIN'
+,p_last_upd_yyyymmddhh24miss=>'20170102201827'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(813911742527269862)
@@ -17260,14 +17260,12 @@ wwv_flow_api.create_page_button(
 ,p_button_sequence=>10
 ,p_button_plug_id=>wwv_flow_api.id(67942362777565203)
 ,p_button_name=>'PURGE_LOGS'
-,p_button_action=>'REDIRECT_URL'
+,p_button_action=>'DEFINED_BY_DA'
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>wwv_flow_api.id(33676969712756605)
 ,p_button_is_hot=>'Y'
 ,p_button_image_alt=>'Purge Logs'
 ,p_button_position=>'REGION_TEMPLATE_PREVIOUS'
-,p_button_redirect_url=>'javascript:confirmDelete(''Are you sure? \n\nPurging the log will remove all entries, and can not be undone.'', ''PURGE'');'||wwv_flow.LF||
-''
 );
 wwv_flow_api.create_page_branch(
  p_id=>wwv_flow_api.id(813916439815341714)
@@ -17277,6 +17275,34 @@ wwv_flow_api.create_page_branch(
 ,p_branch_sequence=>10
 ,p_branch_comment=>'Created 05-JAN-2011 09:14 by SSPENDOL'
 );
+wwv_flow_api.create_page_da_event(
+ p_id=>wwv_flow_api.id(88412101367660018)
+,p_name=>'Purge Logs'
+,p_event_sequence=>10
+,p_triggering_element_type=>'BUTTON'
+,p_triggering_button_id=>wwv_flow_api.id(813915857346337289)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'click'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(88412202924660019)
+,p_event_id=>wwv_flow_api.id(88412101367660018)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_CONFIRM'
+,p_attribute_01=>'Are you sure that you want to purge the logs?'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(88412326041660020)
+,p_event_id=>wwv_flow_api.id(88412101367660018)
+,p_event_result=>'TRUE'
+,p_action_sequence=>20
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_SUBMIT_PAGE'
+,p_attribute_01=>'PURGE_LOGS'
+,p_attribute_02=>'Y'
+);
 wwv_flow_api.create_page_process(
  p_id=>wwv_flow_api.id(813916545356343303)
 ,p_process_sequence=>10
@@ -17284,6 +17310,7 @@ wwv_flow_api.create_page_process(
 ,p_process_type=>'NATIVE_PLSQL'
 ,p_process_name=>'Purge Logs'
 ,p_process_sql_clob=>'delete from logger_logs;'
+,p_process_when_button_id=>wwv_flow_api.id(813915857346337289)
 ,p_process_success_message=>'Logs Purged.'
 );
 end;
