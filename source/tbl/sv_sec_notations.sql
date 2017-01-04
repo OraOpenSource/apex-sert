@@ -33,6 +33,6 @@ END IF;
 IF :NEW.created_on IS NULL THEN
   :NEW.created_on := SYSDATE;
 END IF;
+:NEW.created_ws := v('G_WORKSPACE_ID');
 END;
 /
-
