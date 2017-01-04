@@ -244,7 +244,7 @@ CREATE OR REPLACE VIEW ^parse_as_user.sv_sec_sched_grp_apps AS SELECT * FROM sv_
 /
 
 PROMPT == SV_SEC_SCHED_LISTS
-GRANT SELECT, INSERT, DELETE ON sv_sert_@SV_VERSION@.sv_sec_sched_lists TO ^parse_as_user
+GRANT SELECT, INSERT, UPDATE, DELETE ON sv_sert_@SV_VERSION@.sv_sec_sched_lists TO ^parse_as_user
 /
 CREATE OR REPLACE VIEW ^parse_as_user.sv_sec_sched_lists AS SELECT * FROM sv_sert_@SV_VERSION@.sv_sec_sched_lists
 /
