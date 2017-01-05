@@ -301,9 +301,25 @@ FOR x IN
   )
 LOOP
 
+  -- Create the APEX session
+  apex_custom_auth.post_login
+    (
+    p_uname      => x.scheduled_by,
+    p_session_id => l_app_session,
+    p_app_page   => l_sert_app_id || ':' || 1
+    );
+
+  -- Set the APEX item G_WORKSPACE_ID so that the views that reference it will work
+  apex_util.set_session_state('G_WORKSPACE_ID',x.scheduled_ws);
+
+  -- Get the Name of the Group
+  SELECT sched_grp_name INTO l_sched_grp_name FROM sv_sec_sched_grp WHERE sched_grp_id = x.sched_grp_id;
+
   -- Run through all matching groups
   FOR y IN (SELECT * FROM sv_sec_sched_grp_apps WHERE sched_grp_id = x.sched_grp_id ORDER BY application_id)
   LOOP
+
+    logger.log('START: APP ' || y.application_id || ' - GROUP: ' || l_sched_grp_name);
 
     -- Define the APP_EVAL_ID
     SELECT sv_sec_app_eval_seq.NEXTVAL INTO l_app_eval_id FROM dual;
@@ -349,13 +365,12 @@ LOOP
     -- Clean up the colleciton
     DELETE FROM sv_sec_collection WHERE app_user = y.created_by AND app_id = y.application_id AND app_session = l_app_session;
 
+    logger.log('END: APP ' || y.application_id || ' - GROUP: ' || l_sched_grp_name);
+
   END LOOP;
 
   -- Assemble the e-mail
   l_msg := l_email_arr(1) || l_email_arr(2) || l_rows || l_email_arr(3) || l_email_arr(4) || l_email_arr(5);
-
-  -- Get the Name of the Group
-  SELECT sched_grp_name INTO l_sched_grp_name FROM sv_sec_sched_grp WHERE sched_grp_id = x.sched_grp_id;
 
   -- Send the e-mails
   FOR y IN
