@@ -115877,7 +115877,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_UI_RPT',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 2,
   p_active_flag           => 'Y'
   );
 end;
@@ -115889,7 +115889,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_APP_AVAILIBILITY_STATUS',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -115925,7 +115925,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_APP_ALIAS',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -115937,7 +115937,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_APP_UNAVAILABLE_MESSAGE',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -115949,7 +115949,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_APP_RPT',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -115961,7 +115961,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_COMPATIBILITY_MODE',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 2,
   p_active_flag           => 'Y'
   );
 end;
@@ -115973,7 +115973,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_EMAIL_FROM_ADDRESS',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -115985,7 +115985,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_APP_VERSION',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -115997,7 +115997,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_APP_APPLICATION_NAME',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -116009,7 +116009,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_APP_SCHEMA_NAME',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -116021,7 +116021,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -116033,7 +116033,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -116045,7 +116045,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -116081,7 +116081,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_SEC_CLEANUP_PLSQL',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 2,
   p_active_flag           => 'Y'
   );
 end;
@@ -116129,7 +116129,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_APP_PARSE_AS_SCHEMA',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -116141,7 +116141,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_UI_DESKTOP_APP_HOME_LINK',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 2,
   p_active_flag           => 'Y'
   );
 end;
@@ -116165,7 +116165,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_APP_PUBLIC_USER',
   p_time_to_fix           => 1,
-  p_severity_level        => 2,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -116177,7 +116177,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_SEC_VPD',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 2,
   p_active_flag           => 'Y'
   );
 end;
@@ -116621,7 +116621,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_PS_DUP_SUBMISSION',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -117077,7 +117077,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_AUTH_PAGE_SENTRY',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -117089,7 +117089,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_AUTH_PRE_AUTHENTICATION',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -117101,7 +117101,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_AUTH_AUTHENTICATION_FUNCTION',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -117113,7 +117113,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_AUTH_SESSION_VERIFY',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -117125,7 +117125,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_AUTH_COOKIE_NAME',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -117137,7 +117137,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_AUTH_INVALID_SESSION_URL',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -117149,7 +117149,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_AUTH_LOGOUT_URL',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -117161,7 +117161,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_AUTH_INVALID_SESSION_PAGE',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 2,
   p_active_flag           => 'Y'
   );
 end;
@@ -117173,7 +117173,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_AUTH_COOKIE_DOMAIN',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -117185,7 +117185,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_AUTH_COOKIE_PATH',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -117197,7 +117197,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_AUTH_POST_AUTHENTICATION',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -117209,7 +117209,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_AUTH_RPT',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -117233,7 +117233,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_PS_RPT_EXP_DATA',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 2,
   p_active_flag           => 'Y'
   );
 end;
@@ -117245,7 +117245,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_PS_RPT_MAX_ROWS',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 2,
   p_active_flag           => 'Y'
   );
 end;
@@ -117365,7 +117365,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_PS_BROWSER_CACHE',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 2,
   p_active_flag           => 'Y'
   );
 end;
@@ -117509,7 +117509,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_AUTH_POST_LOGOUT_PROC',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -117533,7 +117533,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_SEC_REJOIN_SESSIONS',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 2,
   p_active_flag           => 'Y'
   );
 end;
@@ -117545,7 +117545,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_SEC_HTTP_RESPONSE_HEADERS',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 2,
   p_active_flag           => 'Y'
   );
 end;
@@ -117629,7 +117629,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_PS_REJOIN_SESSION',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 2,
   p_active_flag           => 'Y'
   );
 end;
@@ -117641,7 +117641,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_DEFAULT_ERROR_DISPLAY_LOCATION',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
@@ -117665,7 +117665,7 @@ sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SET_GLOBAL_NOTIFICATION',
   p_time_to_fix           => 1,
-  p_severity_level        => 1,
+  p_severity_level        => 3,
   p_active_flag           => 'Y'
   );
 end;
