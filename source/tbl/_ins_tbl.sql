@@ -50,3 +50,4 @@
 @tbl/sv_sec_cookie_sessions.sql
 @tbl/sv_sec_user_roles.sql
 @tbl/sv_sec_user_notif_prefs.sql
+@tbl/sv_sec_rpt_generic_cols.sql

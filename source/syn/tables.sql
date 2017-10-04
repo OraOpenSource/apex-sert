@@ -279,6 +279,12 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON sv_sert_@SV_VERSION@.sv_sec_user_notif_p
 CREATE OR REPLACE VIEW ^parse_as_user.sv_sec_user_notif_prefs AS SELECT * FROM sv_sert_@SV_VERSION@.sv_sec_user_notif_prefs
 /
 
+PROMPT == SV_SEC_RPT_GENERIC_COLS
+GRANT SELECT, INSERT, UPDATE, DELETE ON sv_sert_@SV_VERSION@.sv_sec_rpt_generic_cols TO ^parse_as_user
+/
+CREATE OR REPLACE VIEW ^parse_as_user.sv_sec_rpt_generic_cols AS SELECT * FROM sv_sert_@SV_VERSION@.sv_sec_rpt_generic_cols
+/
+
 -- LOGGER tables
 
 PROMPT == LOGGER_PREFS

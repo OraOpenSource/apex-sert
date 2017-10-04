@@ -3,3 +3,9 @@ PROMPT == LAUNCH_APEX-SERT
 /
 SHOW ERRORS 
 /
+
+PROMPT == HTPC
+@prc/htpc.pls
+/
+SHOW ERRORS 
+/

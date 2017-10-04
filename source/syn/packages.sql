@@ -91,4 +91,22 @@ GRANT EXECUTE on sv_sert_@SV_VERSION@.sv_sec_admin to ^parse_as_user
 CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_admin FOR sv_sert_@SV_VERSION@.sv_sec_admin
 /
 
+PROMPT == SV_SEC_RPT_GENERIC
+GRANT EXECUTE on sv_sert_@SV_VERSION@.sv_sec_rpt_generic to ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_rpt_generic FOR sv_sert_@SV_VERSION@.sv_sec_rpt_generic
+/
+
+PROMPT == SV_SEC_RPT_UTIL
+GRANT EXECUTE on sv_sert_@SV_VERSION@.sv_sec_rpt_util to ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_rpt_util FOR sv_sert_@SV_VERSION@.sv_sec_rpt_util
+/
+
+PROMPT == SV_SEC_RPT_GENERIC
+GRANT EXECUTE on sv_sert_@SV_VERSION@.sv_sec_rpt_generic to ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_rpt_generic FOR sv_sert_@SV_VERSION@.sv_sec_rpt_generic
+/
+
 set concat on
