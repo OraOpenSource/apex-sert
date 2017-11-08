@@ -27,7 +27,7 @@ prompt APPLICATION 159 - APEX-SERT
 -- Application Export:
 --   Application:     159
 --   Name:            APEX-SERT
---   Date and Time:   17:40 Wednesday October 4, 2017
+--   Date and Time:   13:43 Wednesday November 8, 2017
 --   Exported By:     ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -97,7 +97,7 @@ wwv_flow_api.create_flow(
 ,p_alias=>nvl(wwv_flow_application_install.get_application_alias,'SERT')
 ,p_page_view_logging=>'YES'
 ,p_page_protection_enabled_y_n=>'Y'
-,p_checksum_salt_last_reset=>'20171004173951'
+,p_checksum_salt_last_reset=>'20171108134234'
 ,p_bookmark_checksum_function=>'MD5'
 ,p_max_session_length_sec=>9999
 ,p_max_session_idle_sec=>1999
@@ -133,7 +133,7 @@ wwv_flow_api.create_flow(
 ,p_rejoin_existing_sessions=>'N'
 ,p_csv_encoding=>'Y'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20171004173951'
+,p_last_upd_yyyymmddhh24miss=>'20171108134234'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>30
 ,p_ui_type_name => null
@@ -20069,7 +20069,7 @@ wwv_flow_api.create_page(
 ,p_protection_level=>'C'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20170303122235'
+,p_last_upd_yyyymmddhh24miss=>'20171108133940'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(34378875599994346)
@@ -21098,6 +21098,7 @@ wwv_flow_api.create_page_button(
 ,p_button_sequence=>9060
 ,p_button_plug_id=>wwv_flow_api.id(581381295362435425)
 ,p_button_name=>'SUBMIT_MULTIPLE'
+,p_button_static_id=>'submitMultiple'
 ,p_button_action=>'REDIRECT_URL'
 ,p_button_template_options=>'#DEFAULT#'
 ,p_button_template_id=>wwv_flow_api.id(33850841902431291)
@@ -21416,8 +21417,8 @@ wwv_flow_api.create_page_da_event(
 ,p_name=>'Refresh Regions after Exception/Notation'
 ,p_event_sequence=>10
 ,p_triggering_element_type=>'JQUERY_SELECTOR'
-,p_triggering_element=>'#exceptionReport'
-,p_bind_type=>'bind'
+,p_triggering_element=>'#rpt'
+,p_bind_type=>'live'
 ,p_bind_event_type=>'apexafterclosedialog'
 );
 wwv_flow_api.create_page_da_action(
@@ -21428,7 +21429,7 @@ wwv_flow_api.create_page_da_action(
 ,p_execute_on_page_init=>'N'
 ,p_action=>'NATIVE_ADD_CLASS'
 ,p_affected_elements_type=>'JQUERY_SELECTOR'
-,p_affected_elements=>'#exceptionReport_control_panel'
+,p_affected_elements=>'#rpt_control_panel'
 ,p_attribute_01=>'is-collapsed'
 );
 wwv_flow_api.create_page_da_action(
@@ -21439,7 +21440,7 @@ wwv_flow_api.create_page_da_action(
 ,p_execute_on_page_init=>'N'
 ,p_action=>'NATIVE_REMOVE_CLASS'
 ,p_affected_elements_type=>'JQUERY_SELECTOR'
-,p_affected_elements=>'#exceptionReport_control_panel'
+,p_affected_elements=>'#rpt_control_panel'
 ,p_attribute_01=>'is-expanded'
 );
 wwv_flow_api.create_page_da_action(
@@ -21462,7 +21463,7 @@ wwv_flow_api.create_page_da_action(
 ,p_execute_on_page_init=>'N'
 ,p_action=>'NATIVE_REFRESH'
 ,p_affected_elements_type=>'JQUERY_SELECTOR'
-,p_affected_elements=>'#exceptionReport'
+,p_affected_elements=>'#rpt'
 );
 wwv_flow_api.create_page_da_action(
  p_id=>wwv_flow_api.id(51415584619199376)
@@ -21508,9 +21509,9 @@ wwv_flow_api.create_page_da_event(
  p_id=>wwv_flow_api.id(51734915187875146)
 ,p_name=>'Refresh Regions after Batch Exception Submit/Approval'
 ,p_event_sequence=>20
-,p_triggering_element_type=>'JQUERY_SELECTOR'
-,p_triggering_element=>'#submitMultiple'
-,p_bind_type=>'bind'
+,p_triggering_element_type=>'BUTTON'
+,p_triggering_button_id=>wwv_flow_api.id(545736754674289456)
+,p_bind_type=>'live'
 ,p_bind_event_type=>'apexafterclosedialog'
 );
 wwv_flow_api.create_page_da_action(
@@ -21521,7 +21522,7 @@ wwv_flow_api.create_page_da_action(
 ,p_execute_on_page_init=>'N'
 ,p_action=>'NATIVE_ADD_CLASS'
 ,p_affected_elements_type=>'JQUERY_SELECTOR'
-,p_affected_elements=>'#exceptionReport_control_panel'
+,p_affected_elements=>'#rpt_control_panel'
 ,p_attribute_01=>'is-collapsed'
 );
 wwv_flow_api.create_page_da_action(
@@ -21532,7 +21533,7 @@ wwv_flow_api.create_page_da_action(
 ,p_execute_on_page_init=>'N'
 ,p_action=>'NATIVE_REMOVE_CLASS'
 ,p_affected_elements_type=>'JQUERY_SELECTOR'
-,p_affected_elements=>'#exceptionReport_control_panel'
+,p_affected_elements=>'#rpt_control_panel'
 ,p_attribute_01=>'is-expanded'
 );
 wwv_flow_api.create_page_da_action(
@@ -21555,7 +21556,7 @@ wwv_flow_api.create_page_da_action(
 ,p_execute_on_page_init=>'N'
 ,p_action=>'NATIVE_REFRESH'
 ,p_affected_elements_type=>'JQUERY_SELECTOR'
-,p_affected_elements=>'#exceptionReport'
+,p_affected_elements=>'#rpt'
 );
 wwv_flow_api.create_page_da_action(
  p_id=>wwv_flow_api.id(51735100543875148)
@@ -21696,8 +21697,8 @@ wwv_flow_api.create_page(
 ,p_cache_mode=>'NOCACHE'
 ,p_cache_timeout_seconds=>21600
 ,p_help_text=>'No help is available for this page.'
-,p_last_updated_by=>'SSPENDOL'
-,p_last_upd_yyyymmddhh24miss=>'20160830200657'
+,p_last_updated_by=>'ADMIN'
+,p_last_upd_yyyymmddhh24miss=>'20171108134113'
 );
 wwv_flow_api.create_report_region(
  p_id=>wwv_flow_api.id(38283616363727590)
@@ -22084,7 +22085,7 @@ wwv_flow_api.create_report_region(
 ,p_display_point=>'BODY'
 ,p_source=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
 'SELECT',
-'  ''<div style="font-size:12px;"><i class="fa fa-warning fa-lg" style="color:orange;"></i>&nbsp;A current evaluation for Application '' || app_id || '' was created '' ',
+'  ''<div style="font-size:14px;"><i class="fa fa-warning fa-lg" style="color:orange;"></i>&nbsp;A current evaluation for Application '' || app_id || '' was created '' ',
 '  || sv_sec_util.stale_eval(created_on) || '' ago. ''',
 '  || ''<a href="f?p=&APP_ID.:800:&SESSION.">View Now</a></div>'' curr_eval',
 'FROM',
@@ -22674,8 +22675,8 @@ wwv_flow_api.create_page(
 ,p_protection_level=>'C'
 ,p_cache_mode=>'NOCACHE'
 ,p_cache_timeout_seconds=>21600
-,p_last_updated_by=>'SSPENDOL'
-,p_last_upd_yyyymmddhh24miss=>'20160901081318'
+,p_last_updated_by=>'ADMIN'
+,p_last_upd_yyyymmddhh24miss=>'20171108134157'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(50677790945840345)
@@ -22871,7 +22872,7 @@ wwv_flow_api.create_page_item(
 'END IF;',
 'END;'))
 ,p_read_only_when_type=>'FUNCTION_BODY'
-,p_field_template=>wwv_flow_api.id(33850401181431288)
+,p_field_template=>wwv_flow_api.id(33850608442431288)
 ,p_item_template_options=>'#DEFAULT#'
 ,p_attribute_01=>'N'
 ,p_attribute_02=>'N'
@@ -25320,8 +25321,8 @@ wwv_flow_api.create_page(
 ,p_protection_level=>'C'
 ,p_cache_mode=>'NOCACHE'
 ,p_cache_timeout_seconds=>21600
-,p_last_updated_by=>'SSPENDOL'
-,p_last_upd_yyyymmddhh24miss=>'20160901065424'
+,p_last_updated_by=>'ADMIN'
+,p_last_upd_yyyymmddhh24miss=>'20171108134234'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(50911354055606037)
@@ -25517,7 +25518,7 @@ wwv_flow_api.create_page_item(
 ,p_cSize=>70
 ,p_cMaxlength=>4000
 ,p_cHeight=>5
-,p_field_template=>wwv_flow_api.id(33850401181431288)
+,p_field_template=>wwv_flow_api.id(33850608442431288)
 ,p_item_template_options=>'#DEFAULT#'
 ,p_attribute_01=>'Y'
 ,p_attribute_02=>'N'
