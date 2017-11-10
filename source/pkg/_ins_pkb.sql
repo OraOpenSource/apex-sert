@@ -88,3 +88,21 @@ PROMPT == SV_SEC_ADMIN
 SHOW ERRORS 
 /
 
+PROMPT == PL_FPDF
+@pkg/pl_fpdf.pkb
+/
+SHOW ERRORS
+/
+
+PROMPT == SV_SEC_RPT_UTIL
+@pkg/sv_sec_rpt_util.pkb
+/
+SHOW ERRORS
+/
+
+PROMPT == SV_SEC_RPT_GENERIC
+@pkg/sv_sec_rpt_generic.pkb
+/
+SHOW ERRORS
+/
+

@@ -93,3 +93,22 @@ PROMPT == SV_SEC_ADMIN
 /
 SHOW ERRORS 
 /
+
+PROMPT == PL_FPDF
+@pkg/pl_fpdf.pks
+/
+SHOW ERRORS
+/
+
+PROMPT == SV_SEC_RPT_UTIL
+@pkg/sv_sec_rpt_util.pks
+/
+SHOW ERRORS
+/
+
+PROMPT == SV_SEC_RPT_GENERIC
+@pkg/sv_sec_rpt_generic.pks
+/
+SHOW ERRORS
+/
+

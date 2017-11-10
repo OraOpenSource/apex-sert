@@ -59292,9 +59292,9 @@ a:=a||'page,'||chr(10)||
 '  apex_application_lists'||chr(10)||
 'WHERE'||chr(10)||
 '  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND list_type_code = ''SQ';
+'  AND list_type_code IN(''F';
 
-a:=a||'L_QUERY''';
+a:=a||'UNCTION_RETURNING_SQL_QUERY'', ''SQL_QUERY'')';
 
 sv_sec_import.score_collection(
   p_collection_name       => 'SV_SQLI_LST_DBMS',
@@ -59373,7 +59373,7 @@ a:=a||'page,'||chr(10)||
 '  application_id = #APPLICATION_ID#'||chr(10)||
 '  AND list_t';
 
-a:=a||'ype_code = ''SQL_QUERY''';
+a:=a||'ype_code IN(''FUNCTION_RETURNING_SQL_QUERY'', ''SQL_QUERY'')';
 
 sv_sec_import.score_collection(
   p_collection_name       => 'SV_SQLI_LST_EXEC',
@@ -59450,9 +59450,9 @@ a:=a||'page,'||chr(10)||
 '  apex_application_lists'||chr(10)||
 'WHERE'||chr(10)||
 '  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND list_type_code =';
+'  AND list_type_code I';
 
-a:=a||' ''SQL_QUERY''';
+a:=a||'N(''FUNCTION_RETURNING_SQL_QUERY'', ''SQL_QUERY'')';
 
 sv_sec_import.score_collection(
   p_collection_name       => 'SV_SQLI_LST_ITEM',
@@ -110429,15 +110429,16 @@ a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
 '  c003,'||chr(10)||
 '  c004,'||chr(10)||
 '  c005,'||chr(10)||
+'  c006,'||chr(10)||
 '  result,'||chr(10)||
 '  val,'||chr(10)||
 '  checksum,'||chr(10)||
 '  component_name,'||chr(10)||
 '  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELE';
+'';
 
-a:=a||'CT'||chr(10)||
+a:=a||'  )'||chr(10)||
+'SELECT'||chr(10)||
 '  ''#COLLECTION_NAME#'','||chr(10)||
 '  #COLLECTION_ID#,'||chr(10)||
 '  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
@@ -110449,9 +110450,9 @@ a:=a||'CT'||chr(10)||
 '  page_id,'||chr(10)||
 '  region_id,'||chr(10)||
 '  column_id,'||chr(10)||
-'  last_up';
+' ';
 
-a:=a||'dated_by,'||chr(10)||
+a:=a||' last_updated_by,'||chr(10)||
 '  last_updated_on,'||chr(10)||
 '  component_signature,'||chr(10)||
 '  ''Edit'' edit,'||chr(10)||
@@ -110464,14 +110465,15 @@ a:=a||'dated_by,'||chr(10)||
 '  region_name,'||chr(10)||
 '  column_alias,'||chr(10)||
 '  column_label,'||chr(10)||
+'  html_expression,'||chr(10)||
 '  report_type,'||chr(10)||
 '  sv_sec_rules.check_xss(html_expression) result,'||chr(10)||
 '  html_expression val,'||chr(10)||
-'  sv_sec_util.get_checksum(html_expression) checksum,'||chr(10)||
-'  region_name,'||chr(10)||
-'  colum';
+'  sv_sec_util.get_checksum(html_expression) check';
 
-a:=a||'n_alias'||chr(10)||
+a:=a||'sum,'||chr(10)||
+'  region_name,'||chr(10)||
+'  column_alias'||chr(10)||
 'FROM'||chr(10)||
 '  ('||chr(10)||
 '  SELECT'||chr(10)||
@@ -110490,9 +110492,9 @@ a:=a||'n_alias'||chr(10)||
 '    component_signature,'||chr(10)||
 '    422 link_page,'||chr(10)||
 '    ''RP,4651,960,420,422'' link_cc,'||chr(10)||
-'    ''FB_FLOW_ID,FB_FLOW_PAGE_ID,P422_COLU';
+'    ''FB_FLOW_I';
 
-a:=a||'MN_ID,P420_REGION_ID,F4000_P4651_ID,P960_ID:'' '||chr(10)||
+a:=a||'D,FB_FLOW_PAGE_ID,P422_COLUMN_ID,P420_REGION_ID,F4000_P4651_ID,P960_ID:'' '||chr(10)||
 '    || application_id || '','' || page_id || '','' || region_report_column_id || '','' || region_id link'||chr(10)||
 '  FROM'||chr(10)||
 '    apex_application_page_rpt_cols'||chr(10)||
@@ -110504,11 +110506,11 @@ a:=a||'MN_ID,P420_REGION_ID,F4000_P4651_ID,P960_ID:'' '||chr(10)||
 '    c.column_alias,'||chr(10)||
 '    c.report_label column_label,'||chr(10)||
 '    c.html_expression,'||chr(10)||
-'    ''Interactive'' report_type,'||chr(10)||
-'    c.page_id,'||chr(10)||
-'    r.';
+'    ''Interactive'' report_';
 
-a:=a||'page_name,'||chr(10)||
+a:=a||'type,'||chr(10)||
+'    c.page_id,'||chr(10)||
+'    r.page_name,'||chr(10)||
 '    c.region_id,'||chr(10)||
 '    r.region_name,'||chr(10)||
 '    c.application_id,'||chr(10)||
@@ -110519,10 +110521,10 @@ a:=a||'page_name,'||chr(10)||
 '    ''687,601,4651'' link_cc,'||chr(10)||
 '    ''FB_FLOW_ID,FB_FLOW_PAGE_ID,P687_ID,P601_REGION_ID,P601_ID:'''||chr(10)||
 '      || c.application_id || '','' || c.page_id || '','' || c.column_id || '','' || r.region_id link'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_p';
+'  ';
 
-a:=a||'age_ir_col c,'||chr(10)||
+a:=a||'FROM'||chr(10)||
+'    apex_application_page_ir_col c,'||chr(10)||
 '    apex_application_page_regions r'||chr(10)||
 '  WHERE'||chr(10)||
 '    c.region_id = r.region_id'||chr(10)||
