@@ -27,7 +27,7 @@ prompt APPLICATION 159 - APEX-SERT
 -- Application Export:
 --   Application:     159
 --   Name:            APEX-SERT
---   Date and Time:   13:43 Wednesday November 8, 2017
+--   Date and Time:   10:27 Friday November 10, 2017
 --   Exported By:     ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -97,7 +97,7 @@ wwv_flow_api.create_flow(
 ,p_alias=>nvl(wwv_flow_application_install.get_application_alias,'SERT')
 ,p_page_view_logging=>'YES'
 ,p_page_protection_enabled_y_n=>'Y'
-,p_checksum_salt_last_reset=>'20171108134234'
+,p_checksum_salt_last_reset=>'20171110101018'
 ,p_bookmark_checksum_function=>'MD5'
 ,p_max_session_length_sec=>9999
 ,p_max_session_idle_sec=>1999
@@ -133,7 +133,7 @@ wwv_flow_api.create_flow(
 ,p_rejoin_existing_sessions=>'N'
 ,p_csv_encoding=>'Y'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20171108134234'
+,p_last_upd_yyyymmddhh24miss=>'20171110101018'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>30
 ,p_ui_type_name => null
@@ -15610,6 +15610,7 @@ wwv_flow_api.create_build_option(
  p_id=>wwv_flow_api.id(252185082164800230)
 ,p_build_option_name=>'Printing'
 ,p_build_option_status=>'INCLUDE'
+,p_default_on_export=>'INCLUDE'
 );
 wwv_flow_api.create_build_option(
  p_id=>wwv_flow_api.id(557953380896519475)
