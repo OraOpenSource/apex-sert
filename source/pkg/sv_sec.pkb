@@ -1084,7 +1084,7 @@ THEN
 
   -- Add the HTML for FAILed attributes
   UPDATE sv_sec_collection_data 
-    SET exception = '<i class="fa fa-lg fa-plus-circle" style="color:green;" title="Add Exception"></i>',
+    SET exception = '<i class="fa fa-plus-circle" style="color:green;" title="Add Exception"></i>',
         exception_url = 'f?p=' || p_sert_app_id || ':10:' || p_app_session || ':::10:P10_EXCEPTION_PK:' || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id
     WHERE 
       result = 'FAIL' 

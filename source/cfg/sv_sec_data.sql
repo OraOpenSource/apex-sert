@@ -372,563 +372,6 @@ END;
 
 -- FINISH: C O M P O N E N T _ S I G N A T U R E S
 -- START: S Q L _ T E M P L A T E S
-PROMPT == COL_TEMPLATE: Application Settings
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,  '||chr(10)||
-'  component_signature,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'  SELECT'||chr(10)||
-'    ''#COLLECTION_NAME#'' collection_name,'||chr(10)||
-'    #COLLECTION_ID# collection_id,'||chr(10)||
-'    (SELECT category_key ';
-
-a:=a||'FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'      (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''#ATTRIBUTE_KEY#'')'||chr(10)||
-'    ) category_key,'||chr(10)||
-'    a.application_id application_id,'||chr(10)||
-'      (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''#ATTRIBUTE_KEY#'') '||chr(10)||
-'      attribute_id,'||chr(10)||
-'    -1 page_id,'||chr(10)||
-'    4001 link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    NULL link_cc,'||chr(10)||
-'    ''Application Setting';
-
-a:=a||'s'' link_desc,'||chr(10)||
-'    ''FB_FLOW_ID:'' || application_id link,'||chr(10)||
-'    a.component_signature,'||chr(10)||
-'    (SELECT attribute_name FROM sv_sec_attributes WHERE attribute_id ='||chr(10)||
-'      (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = '||chr(10)||
-'        ''#ATTRIBUTE_KEY#'')) setting_name,'||chr(10)||
-'    a.#COLUMN_NAME# setting_value,'||chr(10)||
-'    sv_sec.get_recommended_value'||chr(10)||
-'      ('||chr(10)||
-'      #ATTRIBUTE_SET_ID#,'||chr(10)||
-'      ''#ATTRIBUTE_KEY#'''||chr(10)||
-'     ';
-
-a:=a||' ) recommended_value,'||chr(10)||
-'    ''Fix'' fix,'||chr(10)||
-'    ''Info'' info,'||chr(10)||
-'    sv_sec.get_result '||chr(10)||
-'      ('||chr(10)||
-'      ''#ATTRIBUTE_KEY#'','||chr(10)||
-'      #ATTRIBUTE_SET_ID#,'||chr(10)||
-'      a.#COLUMN_NAME#,'||chr(10)||
-'      NULL,'||chr(10)||
-'      ''N'','||chr(10)||
-'      ''Y'','||chr(10)||
-'      0'||chr(10)||
-'      ) result,'||chr(10)||
-'    a.#COLUMN_NAME# val,'||chr(10)||
-'    sv_sec_util.get_checksum(TO_CHAR(a.#COLUMN_NAME#)) checksum'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_applications a'||chr(10)||
-'  WHERE'||chr(10)||
-'    a.application_id = #APP_ID#';
-
-sv_sec_import.col_template(
-  p_table_name            => 'APEX_APPLICATIONS',
-  p_col_template_name     => 'Application Settings',
-  p_col_template_key      => 'SV_APPLICATION_SETTINGS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_col_template          => a
-  );
-end;
-/
-
--->>END
-
-PROMPT == COL_TEMPLATE: Authentication Schemes
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,  '||chr(10)||
-'  component_signature,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'  SELECT'||chr(10)||
-'    ''#COLLECTION_NAME#'' collection_name,'||chr(10)||
-'    #COLLECTION_ID# collection_id,'||chr(10)||
-'    (SELECT category_key ';
-
-a:=a||'FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'      (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''#ATTRIBUTE_KEY#'')'||chr(10)||
-'    ) category_key,'||chr(10)||
-'    a.application_id application_id,'||chr(10)||
-'      (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''#ATTRIBUTE_KEY#'') '||chr(10)||
-'      attribute_id,'||chr(10)||
-'    -1 page_id,'||chr(10)||
-'    4495 link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''RP'' link_cc,'||chr(10)||
-'    ''Authentication Sche';
-
-a:=a||'me'' link_desc,'||chr(10)||
-'    ''FB_FLOW_ID,P4495_ID:'' || a.application_id || '','' || aa.authentication_scheme_id link,'||chr(10)||
-'    aa.component_signature,'||chr(10)||
-'    (SELECT attribute_name FROM sv_sec_attributes WHERE attribute_id ='||chr(10)||
-'      (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = '||chr(10)||
-'        ''#ATTRIBUTE_KEY#'')) setting_name,'||chr(10)||
-'    aa.#COLUMN_NAME# setting_value,'||chr(10)||
-'    sv_sec.get_recommended_value'||chr(10)||
-'      ('||chr(10)||
-'   ';
-
-a:=a||'   #ATTRIBUTE_SET_ID#,'||chr(10)||
-'      ''#ATTRIBUTE_KEY#'''||chr(10)||
-'      ) recommended_value,'||chr(10)||
-'    ''Fix'' fix,'||chr(10)||
-'    ''Info'' info,'||chr(10)||
-'    sv_sec.get_result '||chr(10)||
-'      ('||chr(10)||
-'      ''#ATTRIBUTE_KEY#'','||chr(10)||
-'      #ATTRIBUTE_SET_ID#,'||chr(10)||
-'      aa.#COLUMN_NAME#,'||chr(10)||
-'      NULL,'||chr(10)||
-'      ''N'','||chr(10)||
-'      ''Y'','||chr(10)||
-'      0'||chr(10)||
-'      ) result,'||chr(10)||
-'    aa.#COLUMN_NAME# val,'||chr(10)||
-'    sv_sec_util.get_checksum(TO_CHAR(aa.#COLUMN_NAME#)) checksum'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_applications a,'||chr(10)||
-'    ape';
-
-a:=a||'x_application_auth aa'||chr(10)||
-'  WHERE'||chr(10)||
-'    a.application_id = #APP_ID#'||chr(10)||
-'    AND aa.authentication_scheme_id = a.authentication_scheme_id'||chr(10)||
-'    AND a.application_id = aa.application_id';
-
-sv_sec_import.col_template(
-  p_table_name            => 'APEX_APPLICATION_AUTH',
-  p_col_template_name     => 'Authentication Schemes',
-  p_col_template_key      => 'SV_AUTHENTICATION',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_col_template          => a
-  );
-end;
-/
-
--->>END
-
-PROMPT == COL_TEMPLATE: Security Settings
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,  '||chr(10)||
-'  component_signature,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'  SELECT'||chr(10)||
-'    ''#COLLECTION_NAME#'' collection_name,'||chr(10)||
-'    #COLLECTION_ID# collection_id,'||chr(10)||
-'    (SELECT category_key ';
-
-a:=a||'FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'      (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''#ATTRIBUTE_KEY#'')'||chr(10)||
-'    ) category_key,'||chr(10)||
-'    a.application_id application_id,'||chr(10)||
-'      (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''#ATTRIBUTE_KEY#'') '||chr(10)||
-'      attribute_id,'||chr(10)||
-'    -1 page_id,'||chr(10)||
-'    509 link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    509 link_cc,'||chr(10)||
-'    ''Security Settings'' li';
-
-a:=a||'nk_desc,'||chr(10)||
-'    ''FB_FLOW_ID,F4000_P1_FLOW,509_FB_UPD_ID,FB_FLOW_PAGE_ID:'' '||chr(10)||
-'      || application_id || '','' || application_id || '','' || application_id '||chr(10)||
-'      || '',1'' link,'||chr(10)||
-'    a.component_signature,'||chr(10)||
-'    (SELECT attribute_name FROM sv_sec_attributes WHERE attribute_id ='||chr(10)||
-'      (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = '||chr(10)||
-'        ''#ATTRIBUTE_KEY#'')) setting_name,'||chr(10)||
-'    a.#COLUMN_NAME# ';
-
-a:=a||'setting_value,'||chr(10)||
-'    sv_sec.get_recommended_value'||chr(10)||
-'      ('||chr(10)||
-'      #ATTRIBUTE_SET_ID#,'||chr(10)||
-'      ''#ATTRIBUTE_KEY#'''||chr(10)||
-'      ) recommended_value,'||chr(10)||
-'    ''Fix'' fix,'||chr(10)||
-'    ''Info'' info,'||chr(10)||
-'    sv_sec.get_result '||chr(10)||
-'      ('||chr(10)||
-'      ''#ATTRIBUTE_KEY#'','||chr(10)||
-'      #ATTRIBUTE_SET_ID#,'||chr(10)||
-'      a.#COLUMN_NAME#,'||chr(10)||
-'      NULL,'||chr(10)||
-'      ''N'','||chr(10)||
-'      ''Y'','||chr(10)||
-'      0'||chr(10)||
-'      ) result,'||chr(10)||
-'    a.#COLUMN_NAME# val,'||chr(10)||
-'    sv_sec_util.get_checksum(TO_CHAR(a.#COLUMN_';
-
-a:=a||'NAME#)) checksum'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_applications a'||chr(10)||
-'  WHERE'||chr(10)||
-'    a.application_id = #APP_ID#';
-
-sv_sec_import.col_template(
-  p_table_name            => 'APEX_APPLICATIONS',
-  p_col_template_name     => 'Security Settings',
-  p_col_template_key      => 'SV_APEX_APP_SECURITY_SETTINGS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_col_template          => a
-  );
-end;
-/
-
--->>END
-
-PROMPT == COL_TEMPLATE: User Interface Settings: Desktop
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,  '||chr(10)||
-'  component_signature,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  c006,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'  SELECT'||chr(10)||
-'    ''#COLLECTION_NAME#'' collection_name,'||chr(10)||
-'    #COLLECTION_ID# collection_id,'||chr(10)||
-'    (SELECT categ';
-
-a:=a||'ory_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'      (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''#ATTRIBUTE_KEY#'')'||chr(10)||
-'    ) category_key,'||chr(10)||
-'    a.application_id application_id,'||chr(10)||
-'      (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''#ATTRIBUTE_KEY#'') '||chr(10)||
-'      attribute_id,'||chr(10)||
-'    -1 page_id,'||chr(10)||
-'    197 link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    197 link_cc,'||chr(10)||
-'    ''User Interfac';
-
-a:=a||'e Settings'' link_desc,'||chr(10)||
-'    ''FB_FLOW_ID,F4000_P1_FLOW,509_FB_UPD_ID,FB_FLOW_PAGE_ID:'' '||chr(10)||
-'      || application_id || '','' || application_id || '','' || application_id '||chr(10)||
-'      || '',1'' link,'||chr(10)||
-'    NULL component_signature,'||chr(10)||
-'    (SELECT attribute_name FROM sv_sec_attributes WHERE attribute_id ='||chr(10)||
-'      (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = '||chr(10)||
-'        ''#ATTRIBUTE_KEY#'')) setting_name,'||chr(10)||
-'   ';
-
-a:=a||' a.#COLUMN_NAME# setting_value,'||chr(10)||
-'    sv_sec.get_recommended_value'||chr(10)||
-'      ('||chr(10)||
-'      #ATTRIBUTE_SET_ID#,'||chr(10)||
-'      ''#ATTRIBUTE_KEY#'''||chr(10)||
-'      ) recommended_value,'||chr(10)||
-'    ''Fix'' fix,'||chr(10)||
-'    ''Info'' info,'||chr(10)||
-'    a.ui_type_name,'||chr(10)||
-'    sv_sec.get_result '||chr(10)||
-'      ('||chr(10)||
-'      ''#ATTRIBUTE_KEY#'','||chr(10)||
-'      #ATTRIBUTE_SET_ID#,'||chr(10)||
-'      a.#COLUMN_NAME#,'||chr(10)||
-'      NULL,'||chr(10)||
-'      ''N'','||chr(10)||
-'      ''Y'','||chr(10)||
-'      0'||chr(10)||
-'      ) result,'||chr(10)||
-'    a.#COLUMN_NAME# val,'||chr(10)||
-'    sv_sec';
-
-a:=a||'_util.get_checksum(TO_CHAR(a.#COLUMN_NAME#)) checksum'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_appl_user_interfaces a'||chr(10)||
-'  WHERE'||chr(10)||
-'    a.application_id = #APP_ID#'||chr(10)||
-'    AND a.ui_type_name = ''DESKTOP''';
-
-sv_sec_import.col_template(
-  p_table_name            => 'APEX_APPLICATIONS',
-  p_col_template_name     => 'User Interface Settings: Desktop',
-  p_col_template_key      => 'SV_UI_SETTINGS_DESKTOP',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_col_template          => a
-  );
-end;
-/
-
--->>END
-
-PROMPT == COL_TEMPLATE: Page Settings
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  d001,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'  SELECT'||chr(10)||
-'    ''#COLLECTION_NAME#'' collection_name,'||chr(10)||
-'    #COLLECTION_ID# collection_id,'||chr(10)||
-'    (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'      (SELECT c';
-
-a:=a||'ategory_id FROM sv_sec_attributes WHERE attribute_key = ''#ATTRIBUTE_KEY#'')'||chr(10)||
-'    ) category_key,'||chr(10)||
-'    ap.application_id application_id,'||chr(10)||
-'      (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''#ATTRIBUTE_KEY#'') '||chr(10)||
-'      attribute_id,'||chr(10)||
-'    ap.page_id page_id,'||chr(10)||
-'    ap.component_signature,'||chr(10)||
-'    ''Edit'' edit,'||chr(10)||
-'    ap.page_name,'||chr(10)||
-'    ap.last_updated_by,'||chr(10)||
-'    ap.last_updated_on,'||chr(10)||
-'    ap.#COLUMN_NAME#';
-
-a:=a||','||chr(10)||
-'    sv_sec.get_result '||chr(10)||
-'      ('||chr(10)||
-'      ''#ATTRIBUTE_KEY#'','||chr(10)||
-'      #ATTRIBUTE_SET_ID#,'||chr(10)||
-'      ap.#COLUMN_NAME#,'||chr(10)||
-'      NULL,'||chr(10)||
-'      ''N'','||chr(10)||
-'      ''Y'','||chr(10)||
-'      ap.page_id'||chr(10)||
-'      ) result,'||chr(10)||
-'    ap.#COLUMN_NAME# val,'||chr(10)||
-'    sv_sec_util.get_checksum(ap.#COLUMN_NAME#) checksum'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_pages ap'||chr(10)||
-'  WHERE'||chr(10)||
-'    ap.application_id = #APP_ID#'||chr(10)||
-'    AND ap.page_id NOT IN '||chr(10)||
-'      ('||chr(10)||
-'      SELECT NVL(global_page_i';
-
-a:=a||'d,0) '||chr(10)||
-'        FROM APEX_APPL_USER_INTERFACES '||chr(10)||
-'        WHERE application_id = #APP_ID#'||chr(10)||
-'      )';
-
-sv_sec_import.col_template(
-  p_table_name            => 'APEX_APPLICATION_PAGES',
-  p_col_template_name     => 'Page Settings',
-  p_col_template_key      => 'SV_PAGE_SETTINGS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_col_template          => a
-  );
-end;
-/
-
--->>END
-
-PROMPT == COL_TEMPLATE: User Interface Settings: Mobile
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,  '||chr(10)||
-'  component_signature,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'  SELECT'||chr(10)||
-'    ''#COLLECTION_NAME#'' collection_name,'||chr(10)||
-'    #COLLECTION_ID# collection_id,'||chr(10)||
-'    (SELECT category_key ';
-
-a:=a||'FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'      (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''#ATTRIBUTE_KEY#'')'||chr(10)||
-'    ) category_key,'||chr(10)||
-'    a.application_id application_id,'||chr(10)||
-'      (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''#ATTRIBUTE_KEY#'') '||chr(10)||
-'      attribute_id,'||chr(10)||
-'    -1 page_id,'||chr(10)||
-'    197 link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    197 link_cc,'||chr(10)||
-'    ''User Interface Settin';
-
-a:=a||'gs'' link_desc,'||chr(10)||
-'    ''FB_FLOW_ID,F4000_P1_FLOW,509_FB_UPD_ID,FB_FLOW_PAGE_ID:'' '||chr(10)||
-'      || application_id || '','' || application_id || '','' || application_id '||chr(10)||
-'      || '',1'' link,'||chr(10)||
-'    NULL component_signature,'||chr(10)||
-'    (SELECT attribute_name FROM sv_sec_attributes WHERE attribute_id ='||chr(10)||
-'      (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = '||chr(10)||
-'        ''#ATTRIBUTE_KEY#'')) setting_name,'||chr(10)||
-'    a.#COLU';
-
-a:=a||'MN_NAME# setting_value,'||chr(10)||
-'    sv_sec.get_recommended_value'||chr(10)||
-'      ('||chr(10)||
-'      #ATTRIBUTE_SET_ID#,'||chr(10)||
-'      ''#ATTRIBUTE_KEY#'''||chr(10)||
-'      ) recommended_value,'||chr(10)||
-'    ''Fix'' fix,'||chr(10)||
-'    ''Info'' info,'||chr(10)||
-'    sv_sec.get_result '||chr(10)||
-'      ('||chr(10)||
-'      ''#ATTRIBUTE_KEY#'','||chr(10)||
-'      #ATTRIBUTE_SET_ID#,'||chr(10)||
-'      a.#COLUMN_NAME#,'||chr(10)||
-'      NULL,'||chr(10)||
-'      ''N'','||chr(10)||
-'      ''Y'','||chr(10)||
-'      0'||chr(10)||
-'      ) result,'||chr(10)||
-'    a.#COLUMN_NAME# val,'||chr(10)||
-'    sv_sec_util.get_checksum(TO_CHAR(a';
-
-a:=a||'.#COLUMN_NAME#)) checksum'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_appl_user_interfaces a'||chr(10)||
-'  WHERE'||chr(10)||
-'    a.application_id = #APP_ID#'||chr(10)||
-'    AND a.ui_type_name = ''JQM_SMARTPHONE''';
-
-sv_sec_import.col_template(
-  p_table_name            => 'APEX_APPLICATIONS',
-  p_col_template_name     => 'User Interface Settings: Mobile',
-  p_col_template_key      => 'SV_UI_SETTINGS_MOBILE',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_col_template          => a
-  );
-end;
-/
-
--->>END
-
 -- FINISH: S Q L _ T E M P L A T E S
 -- START: C A T E G O R I E S
 PROMPT == CATEGORY: Settings: Application Settings
@@ -949,6 +392,3241 @@ end;
 
 -->>END
 
+PROMPT == ..ATTRIBUTE: Restrict to comma separated user list 
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>'||chr(10)||
+'	If the <strong>Application Status</strong> is set to <strong>Restricted Access</strong>, this attribute should contain a comma-separated list of authorized users that are allowed to access the application.&nbsp; If any user not in this list attempts to sign on, they will be denied access to the application.</p>'||chr(10)||
+'<p>'||chr(10)||
+'	This attribute has no meaning for any other value of <strong>Application&nbsp';
+
+b:=b||';Status</strong>.</p>'||chr(10)||
+'';
+
+c:=c||'<p>'||chr(10)||
+'	n/a</p>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
+  p_attribute_name           => 'Restrict to comma separated user list ',
+  p_attribute_key            => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLUMN',
+  p_rule_type                => 'NONE',
+  p_table_name               => 'APEX_APPLICATIONS',
+  p_column_name              => 'RESTRICT_TO_USER',
+  p_view_name                => 'SV_SEC_COL_SET_SEC_SETTINGS_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'APPLICATION',
+  p_component_sig_key        => '',
+  p_help_page                => 'bldr_attr.htm#CHDHIEIH',
+  p_seq                      => 99,
+
+  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
+
+  p_display_page_id          => 210,
+
+  p_summary_page_id          => 200,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_SEC_RESTRICTED_USER_LIST: APPROVED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'APPROVED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: APPROVED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_BY',
+  p_label                 => 'Approved By',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: APPROVED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_ON',
+  p_label                 => 'Approved On',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 40,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_SEC_RESTRICTED_USER_LIST: ATTRIBUTE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'ATTRIBUTE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_SEC_RESTRICTED_USER_LIST: PENDING
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'PENDING'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 45,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_SEC_RESTRICTED_USER_LIST: REJECTED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'REJECTED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: REJECTED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_BY',
+  p_label                 => 'Rejected By',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: REJECTED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_ON',
+  p_label                 => 'Rejected On',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: REJECTION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTION',
+  p_label                 => 'Rejection',
+  p_seq                   => 10,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_SEC_RESTRICTED_USER_LIST: STALE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'STALE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'STALE',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'STALE',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'STALE',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'STALE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
+  p_report_key            => 'STALE',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 60,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..ATTRIBUTE: Proxy Server
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>The&nbsp;<strong>Proxy Server</strong>&nbsp;attribute stores the URL to a proxy server, should one be necessary. &nbsp;The&nbsp;<strong>Proxy Server</strong>&nbsp;is only necessary when APEX needs to make an outgoing HTTP call, such as a URL region or Web Service, and that type of traffic must pass through a proxy server to access the public Internet. &nbsp;In most cases, this attribute is left';
+
+b:=b||' blank.</p>'||chr(10)||
+''||chr(10)||
+'<p>&nbsp;</p>'||chr(10)||
+''||chr(10)||
+'<p>&nbsp;</p>'||chr(10)||
+'';
+
+c:=c||'<p>&nbsp;To change the&nbsp;<strong>Proxy Server</strong>&nbsp;of your application:</p>'||chr(10)||
+''||chr(10)||
+'<ol>'||chr(10)||
+'	<li>Navigate to your application&#39;s&nbsp;<strong>Shared Components</strong>.</li>'||chr(10)||
+'	<li>In the&nbsp;<u>Application Logic</u>&nbsp;region, click on&nbsp;<strong>Application Definition Attributes</strong>.</li>'||chr(10)||
+'	<li>In the&nbsp;<u>Properties</u>&nbsp;region, set the value of&nbsp;<u>Proxy Server</u>&nbsp';
+
+c:=c||';to the desired value.</li>'||chr(10)||
+'	<li>Click&nbsp;<strong>Apply Changes</strong>.</li>'||chr(10)||
+'</ol>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
+  p_attribute_name           => 'Proxy Server',
+  p_attribute_key            => 'SV_SET_APP_PROXY_SERVER',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLUMN',
+  p_rule_type                => 'NONE',
+  p_table_name               => 'APEX_APPLICATIONS',
+  p_column_name              => 'PROXY_SERVER',
+  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'APPLICATION',
+  p_component_sig_key        => '',
+  p_help_page                => 'advnc_web_services.htm#HTMDB25884',
+  p_seq                      => 99,
+
+  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
+
+  p_display_page_id          => 210,
+
+  p_summary_page_id          => 200,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_PROXY_SERVER: APPROVED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'APPROVED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: APPROVED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_BY',
+  p_label                 => 'Approved By',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: APPROVED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_ON',
+  p_label                 => 'Approved On',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 40,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_PROXY_SERVER: ATTRIBUTE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'ATTRIBUTE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_PROXY_SERVER: PENDING
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'PENDING'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 45,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_PROXY_SERVER: REJECTED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'REJECTED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: REJECTED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_BY',
+  p_label                 => 'Rejected By',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: REJECTED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_ON',
+  p_label                 => 'Rejected On',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: REJECTION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTION',
+  p_label                 => 'Rejection',
+  p_seq                   => 10,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_PROXY_SERVER: STALE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'STALE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'STALE',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'STALE',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'STALE',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'STALE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
+  p_report_key            => 'STALE',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 60,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..ATTRIBUTE: Build Status
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>Build Status determines whether or not APEX&nbsp;developers will be able to develop within an application.&nbsp; If set to <strong>Run and Build Application</strong>, then any APEX&nbsp;developer will be able to both run and develop within the application.&nbsp; Setting it to <strong>Run Application Only</strong> will allow the application to run, but developers will no longer be able to make c';
+
+b:=b||'hanges.</p>'||chr(10)||
+''||chr(10)||
+'<p>For developement, this should be set to <strong>Run and Build Application</strong>. &nbsp;For most other environments - QA, Training, Production - it is recommended that this be set to <strong>Run Application Only</strong>. &nbsp;This will prevent any APEX developer from being able to make changes to the application itself.</p>'||chr(10)||
+''||chr(10)||
+'<p><strong>Note</strong>:&nbsp;Once set to <strong>Ru';
+
+b:=b||'n Application Only</strong>, the only way that it can be changed back is by a Workspace Administrator.</p>'||chr(10)||
+''||chr(10)||
+'<p>To manage all build statuses, as a Workspace Administrator, navigate to:</p>'||chr(10)||
+''||chr(10)||
+'<p><strong>Home &gt; Administration &gt; Manage Services &gt; Application Build Status&nbsp;</strong></p>'||chr(10)||
+''||chr(10)||
+'<p>Here, you can set the Build Status for any application within your Workspace.</p>'||chr(10)||
+'';
+
+c:=c||'<p>&nbsp;To change the&nbsp;<strong>Build Status</strong>&nbsp;of your application:</p>'||chr(10)||
+''||chr(10)||
+'<ol>'||chr(10)||
+'	<li>Navigate to your application&#39;s&nbsp;<strong>Shared Components</strong>.</li>'||chr(10)||
+'	<li>In the&nbsp;<u>Application Logic</u>&nbsp;region, click on&nbsp;<strong>Application Definition Attributes</strong>.</li>'||chr(10)||
+'	<li>In the&nbsp;<u>Availibility</u>&nbsp;region, set the value of&nbsp;<u>Build Status</u>&nb';
+
+c:=c||'sp;to the desired value.</li>'||chr(10)||
+'	<li>Click&nbsp;<strong>Apply Changes</strong>.</li>'||chr(10)||
+'</ol>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
+  p_attribute_name           => 'Build Status',
+  p_attribute_key            => 'SV_SET_APP_BUILD_STATUS',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLUMN',
+  p_rule_type                => 'COMPARISON',
+  p_table_name               => 'APEX_APPLICATIONS',
+  p_column_name              => 'BUILD_STATUS',
+  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'APPLICATION',
+  p_component_sig_key        => '',
+  p_help_page                => 'bldr_attr.htm#CHDHIEIH',
+  p_seq                      => 99,
+
+  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
+
+  p_display_page_id          => 210,
+
+  p_summary_page_id          => 200,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ....ATTRIBUTE VALUE: Build Status
+BEGIN
+
+sv_sec_import.attribute_value(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_attribute_set_key     => 'DEFAULT',
+  p_value                 => 'Run Only',
+  p_result                => 'PASS',
+  p_active_flag           => 'Y'
+  );
+END;
+/
+
+-->>END
+PROMPT == ....ATTRIBUTE VALUE: Build Status
+BEGIN
+
+sv_sec_import.attribute_value(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_attribute_set_key     => 'DEFAULT',
+  p_value                 => 'Run and Develop',
+  p_result                => 'FAIL',
+  p_active_flag           => 'Y'
+  );
+END;
+/
+
+-->>END
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_BUILD_STATUS: APPROVED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'APPROVED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: APPROVED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_BY',
+  p_label                 => 'Approved By',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: APPROVED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_ON',
+  p_label                 => 'Approved On',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 40,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_BUILD_STATUS: ATTRIBUTE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'ATTRIBUTE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_BUILD_STATUS: PENDING
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'PENDING'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 45,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_BUILD_STATUS: REJECTED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'REJECTED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: REJECTED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_BY',
+  p_label                 => 'Rejected By',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: REJECTED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_ON',
+  p_label                 => 'Rejected On',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: REJECTION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTION',
+  p_label                 => 'Rejection',
+  p_seq                   => 10,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_BUILD_STATUS: STALE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'STALE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'STALE',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'STALE',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'STALE',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'STALE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
+  p_report_key            => 'STALE',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 60,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..ATTRIBUTE: Compatibility Mode
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>The Compatibility Mode setting is used to determine specific behaviors based on the version of APEX selected.&nbsp; There are three possible settings:</p>'||chr(10)||
+''||chr(10)||
+'<ul>'||chr(10)||
+'	<li><strong>Pre-4.1</strong></li>'||chr(10)||
+'</ul>'||chr(10)||
+''||chr(10)||
+'<p style="margin-left:40px">When set to <strong>Pre-4.1</strong>, if a DML Fetch process is mapped to a non-existent column, then the page will render as normal without reporting any errors.&nbs';
+
+b:=b||'p; The associated item will not have its value set in session state.&nbsp; Also, when set to <strong>Pre-4.1</strong>, the security attributes for <strong>Browser Cache</strong> and <strong>Embed in Frames</strong> will automatically be set to <strong>Enabled</strong> and <strong>Allowed</strong>, respectively.&nbsp;</p>'||chr(10)||
+''||chr(10)||
+'<ul>'||chr(10)||
+'	<li><strong>4.1</strong></li>'||chr(10)||
+'</ul>'||chr(10)||
+''||chr(10)||
+'<p style="margin-left:40px">When ';
+
+b:=b||'set to <strong>4.1</strong>, DML Fetch processes will raise an error should the associated column of an item not be in the corresponding table or view.&nbsp; Also, the <strong>Browser Cache</strong> and <strong>Embed in Frames</strong> attributes will respect their settings as defined in the application.</p>'||chr(10)||
+''||chr(10)||
+'<ul>'||chr(10)||
+'	<li><strong>4.2</strong></li>'||chr(10)||
+'</ul>'||chr(10)||
+''||chr(10)||
+'<p style="margin-left:40px">When set to 4.2, c';
+
+b:=b||'ertain actions are taken to ensure that items are arranged properly within a specific region.&nbsp; Computations and processes with a processing point set to &quot;Before Regions&quot; or &quot;After Regions&quot; will now execute either before or after any region is rendered, respectively.&nbsp; In previous versions, these process points would be executed only just before or after the display poi';
+
+b:=b||'nt &quot;Page Template Body (1-3)&quot;.</p>'||chr(10)||
+''||chr(10)||
+'<ul>'||chr(10)||
+'	<li><strong>5.0</strong></li>'||chr(10)||
+'</ul>'||chr(10)||
+''||chr(10)||
+'<p style="margin-left:40px">When set to 5.0, static file references are changed to use <strong>#APP_IMAGES#</strong>. Older calls to <strong>wwv_flow_custom_auth_std</strong> have been removed and an error will be displayed if encountered. &nbsp;Changes have also been made to the Data Upload process to ensure ';
+
+b:=b||'that the Unique Column is also uploaded. &nbsp;Application session timeouts are also handed better by displaying an error vs. redirecting to the home page of the application. Lastly, page items that map to a database column whose <u>Source Used</u>&nbsp;property is set to <strong>Only when current value in session state is null</strong> will throw an error message.</p>'||chr(10)||
+''||chr(10)||
+'<p>It is recommended to set';
+
+b:=b||' <strong>Compatibility Mode</strong> to <strong>5.0</strong>&nbsp;to ensure compatibility with the most recent version of APEX.</p>'||chr(10)||
+'';
+
+c:=c||'<p>&nbsp;To change the <strong>Compatibility Mode</strong> of your application:</p>'||chr(10)||
+''||chr(10)||
+'<ol>'||chr(10)||
+'	<li>Navigate to your application&#39;s <strong>Shared Components</strong>.</li>'||chr(10)||
+'	<li>In the <u>Application Logic</u>&nbsp;region, click on <strong>Application Definition Attributes</strong>.</li>'||chr(10)||
+'	<li>In the <u>Properties</u> region, set the value of <u>Compatibility Mode</u> to&nbsp;<strong>5.0</strong>.</l';
+
+c:=c||'i>'||chr(10)||
+'	<li>Click <strong>Apply Changes</strong>.</li>'||chr(10)||
+'</ol>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
+  p_attribute_name           => 'Compatibility Mode',
+  p_attribute_key            => 'SV_SET_COMPATIBILITY_MODE',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLUMN',
+  p_rule_type                => 'COMPARISON',
+  p_table_name               => 'APEX_APPLICATIONS',
+  p_column_name              => 'COMPATIBILITY_MODE',
+  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'APPLICATION',
+  p_component_sig_key        => '',
+  p_help_page                => 'bldr_attr.htm#CHDFAIEC',
+  p_seq                      => 99,
+
+  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
+
+  p_display_page_id          => 210,
+
+  p_summary_page_id          => 200,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ....ATTRIBUTE VALUE: Compatibility Mode
+BEGIN
+
+sv_sec_import.attribute_value(
+  p_attribute_key         => 'SV_SET_COMPATIBILITY_MODE',
+  p_attribute_set_key     => 'DEFAULT',
+  p_value                 => '5.0',
+  p_result                => 'PASS',
+  p_active_flag           => 'Y'
+  );
+END;
+/
+
+-->>END
+PROMPT == ..ATTRIBUTE: Application E-Mail From Address
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>The <strong>Application E-Mail From Address</strong> will be used when sending e-mails from Interactive Reports directly or via a subscription.&nbsp; It can be set to any e-mail address, but should be set as per the specific application&#39;s requirements.</p>'||chr(10)||
+'';
+
+c:=c||'<p>To change an application&#39;s&nbsp;<strong>Application From E-Mail Address</strong>:</p>'||chr(10)||
+''||chr(10)||
+'<ul>'||chr(10)||
+'	<li>Edit the application&#39;s&nbsp;<strong>Shared Components</strong>.</li>'||chr(10)||
+'	<li>In the&nbsp;<u>Application Logic</u>&nbsp;region, click&nbsp;<strong>Application&nbsp;Definition Attributes</strong>.</li>'||chr(10)||
+'	<li>In the&nbsp;<u>Properties</u>&nbsp;region, set the&nbsp;<u>Application From E-Mail Address';
+
+c:=c||'</u>&nbsp;to&nbsp;the desired value.</li>'||chr(10)||
+'	<li>Click&nbsp;<strong>Apply Changes</strong>.</li>'||chr(10)||
+'</ul>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
+  p_attribute_name           => 'Application E-Mail From Address',
+  p_attribute_key            => 'SV_SET_EMAIL_FROM_ADDRESS',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLUMN',
+  p_rule_type                => 'NONE',
+  p_table_name               => 'APEX_APPLICATIONS',
+  p_column_name              => 'EMAIL_FROM',
+  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => '',
+  p_component_sig_key        => '',
+  p_help_page                => 'bldr_attr.htm#CHDFAIEC',
+  p_seq                      => 99,
+
+  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
+
+  p_display_page_id          => 210,
+
+  p_summary_page_id          => 200,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ..ATTRIBUTE: Version
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>'||chr(10)||
+'	This attribute stores the version number of an APEX&nbsp;application.&nbsp; While there is no direct relationship between this attribute and any external source code management system, it is recommended that every effort be made to keep them synchronized.</p>'||chr(10)||
+'<p>'||chr(10)||
+'	To update the Version:</p>'||chr(10)||
+'<ol>'||chr(10)||
+'	<li>'||chr(10)||
+'		Edit your application&#39;s <strong>Shared Components</strong>.</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		Under the <u>';
+
+b:=b||'Tasks</u> region, click on <strong>Edit&nbsp;Definition</strong>.</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		The <u>Version</u> attribute can be found in the <u>Name</u> region.</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		Click <strong>Apply Changes</strong>.</li>'||chr(10)||
+'</ol>'||chr(10)||
+'<p>'||chr(10)||
+'	Any external system that referes to this version number will also have to be updated manually.</p>'||chr(10)||
+'';
+
+c:=c||'<p>'||chr(10)||
+'	n/a</p>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
+  p_attribute_name           => 'Version',
+  p_attribute_key            => 'SV_SET_APP_VERSION',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLUMN',
+  p_rule_type                => 'NONE',
+  p_table_name               => 'APEX_APPLICATIONS',
+  p_column_name              => 'VERSION',
+  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'APPLICATION',
+  p_component_sig_key        => '',
+  p_help_page                => 'bldr_attr.htm#CHDFBAFA',
+  p_seq                      => 10,
+
+  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
+
+  p_display_page_id          => 210,
+
+  p_summary_page_id          => 200,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_VERSION: APPROVED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'APPROVED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: APPROVED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_BY',
+  p_label                 => 'Approved By',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: APPROVED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_ON',
+  p_label                 => 'Approved On',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 40,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_VERSION: ATTRIBUTE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'ATTRIBUTE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_VERSION: PENDING
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'PENDING'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 45,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_VERSION: REJECTED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'REJECTED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: REJECTED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_BY',
+  p_label                 => 'Rejected By',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: REJECTED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_ON',
+  p_label                 => 'Rejected On',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: REJECTION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTION',
+  p_label                 => 'Rejection',
+  p_seq                   => 10,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_VERSION: STALE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'STALE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'STALE',
+  p_column_name           => 'SETTING_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'STALE',
+  p_column_name           => 'SETTING_VALUE',
+  p_label                 => 'Value',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RECOMMENDED_VALUE
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'STALE',
+  p_column_name           => 'RECOMMENDED_VALUE',
+  p_label                 => 'Recommended',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'STALE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_report_key            => 'STALE',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 60,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..ATTRIBUTE: Default Error Display Location
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>The <strong>Default Error Display Location</strong> attribute determines where errors messages will render. &nbsp;There are three options to select from:</p>'||chr(10)||
+''||chr(10)||
+'<ul>'||chr(10)||
+'	<li><strong>Inline with Field and in Notification</strong><br />'||chr(10)||
+'	Error messages will appear both next ot the related item and in the notification region.</li>'||chr(10)||
+'	<li><strong>Inline with Field</strong><br />'||chr(10)||
+'	Error messages will only ';
+
+b:=b||'appear&nbsp;next to the related item.</li>'||chr(10)||
+'	<li><strong>Inline in Notification</strong><br />'||chr(10)||
+'	Error messages will only appear in the notification&nbsp;region.</li>'||chr(10)||
+'</ul>'||chr(10)||
+''||chr(10)||
+'<p>The best setting of this attribute largely depends on aesthetics and functionality vs. security. &nbsp;Different applications may have different options set. &nbsp;Also,&nbsp;APEX components such as validations can override t';
+
+b:=b||'he application-level setting for error display location.</p>'||chr(10)||
+'';
+
+c:=c||'<p>&nbsp;To change the&nbsp;<strong>Default Error Display Location</strong>&nbsp;of your application:</p>'||chr(10)||
+''||chr(10)||
+'<ol>'||chr(10)||
+'	<li>Navigate to your application&#39;s&nbsp;<strong>Shared Components</strong>.</li>'||chr(10)||
+'	<li>In the&nbsp;<u>Application Logic</u>&nbsp;region, click on&nbsp;<strong>Application Definition Attributes</strong>.</li>'||chr(10)||
+'	<li>In the&nbsp;<u>Error Handling</u>&nbsp;region, set the value of&nbsp;<u';
+
+c:=c||'>Default Error Display Location</u>&nbsp;to the desired value.</li>'||chr(10)||
+'	<li>Click&nbsp;<strong>Apply Changes</strong>.</li>'||chr(10)||
+'</ol>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
+  p_attribute_name           => 'Default Error Display Location',
+  p_attribute_key            => 'SV_SET_DEFAULT_ERROR_DISPLAY_LOCATION',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLUMN',
+  p_rule_type                => 'NONE',
+  p_table_name               => 'APEX_APPLICATIONS',
+  p_column_name              => 'DEFAULT_ERROR_DISPLAY_LOCATION',
+  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'APPLICATION',
+  p_component_sig_key        => '',
+  p_help_page                => 'bldr_attr.htm#CHDFBAFA',
+  p_seq                      => 99,
+
+  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
+
+  p_display_page_id          => 210,
+
+  p_summary_page_id          => 200,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ..ATTRIBUTE: Error Handling Function
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>The <strong>Error Handling Function</strong> is a function that will be called when an error is raised from an APEX application. &nbsp;This function can be set to handle specific errors, suppress sensitive information from error messages, and even send notifications when errors occur. &nbsp;This application can be set at the application and page lever, where a page-level setting will override a';
+
+b:=b||'n application-level one.</p>'||chr(10)||
+''||chr(10)||
+'<p>While APEX will work just fine without one, it is strongly recommended that a custom function be deployed and deployed with all applications. &nbsp;The Sample Database Application contains a sample error handling function that can be expanded upon.</p>'||chr(10)||
+''||chr(10)||
+'<div style="background:0px 0px; border:0px; padding:0px">'||chr(10)||
+'<div>'||chr(10)||
+'<div>'||chr(10)||
+'<p>The <strong>Error&nbsp;Handling Function';
+
+b:=b||'s</strong> must adhere to the following signature:</p>'||chr(10)||
+''||chr(10)||
+'<pre>'||chr(10)||
+'function &lt;function name&gt; '||chr(10)||
+'&nbsp; ('||chr(10)||
+'  p_error in apex_error.t_error '||chr(10)||
+'&nbsp; )'||chr(10)||
+'return apex_error.t_error_result'||chr(10)||
+'</pre>'||chr(10)||
+''||chr(10)||
+'<p>See the <u>Oracle APEX API Reference</u> for more details on how to create an <strong>Error Handling Function</strong>.</p>'||chr(10)||
+'</div>'||chr(10)||
+'</div>'||chr(10)||
+'</div>'||chr(10)||
+'';
+
+c:=c||'<p>&nbsp;To change the&nbsp;<strong>Error Handling Function</strong>&nbsp;of your application:</p>'||chr(10)||
+''||chr(10)||
+'<ol>'||chr(10)||
+'	<li>Navigate to your application&#39;s&nbsp;<strong>Shared Components</strong>.</li>'||chr(10)||
+'	<li>In the&nbsp;<u>Application Logic</u>&nbsp;region, click on&nbsp;<strong>Application Definition Attributes</strong>.</li>'||chr(10)||
+'	<li>In the&nbsp;<u>Error Handling</u>&nbsp;region, set the value of&nbsp;<u>Error ';
+
+c:=c||'Handling Function</u>&nbsp;to the desired value.</li>'||chr(10)||
+'	<li>Click&nbsp;<strong>Apply Changes</strong>.</li>'||chr(10)||
+'</ol>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
+  p_attribute_name           => 'Error Handling Function',
+  p_attribute_key            => 'SV_SET_ERROR_HANDLING_FUNCTION',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLUMN',
+  p_rule_type                => 'NOT_NULL',
+  p_table_name               => 'APEX_APPLICATIONS',
+  p_column_name              => 'ERROR_HANDLING_FUNCTION',
+  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'PASS',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'APPLICATION',
+  p_component_sig_key        => '',
+  p_help_page                => 'bldr_attr.htm#CHDFBAFA',
+  p_seq                      => 99,
+
+  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
+
+  p_display_page_id          => 210,
+
+  p_summary_page_id          => 200,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ..ATTRIBUTE: #GLOBAL_NOTIFICATION# Message
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>The <strong>#GLOBAL_NOTIFICATION#</strong> attribute provides developers with a way to display a message on every page of an application - so as long as that page contains a reference to the <strong>#GLOBAL_NOTIFICATION# </strong>substitution string in the page template.</p>'||chr(10)||
+''||chr(10)||
+'<p>This can be used to communicate information such as server outage alerts and other information that pertain to an app';
+
+b:=b||'lication&#39;s users.</p>'||chr(10)||
+'';
+
+c:=c||'<p>&nbsp;To change the&nbsp;<strong>#GLOBAL_NOTIFICATION# Message</strong>&nbsp;of your application:</p>'||chr(10)||
+''||chr(10)||
+'<ol>'||chr(10)||
+'	<li>Navigate to your application&#39;s&nbsp;<strong>Shared Components</strong>.</li>'||chr(10)||
+'	<li>In the&nbsp;<u>Application Logic</u>&nbsp;region, click on&nbsp;<strong>Application Definition Attributes</strong>.</li>'||chr(10)||
+'	<li>In the&nbsp;<u>Global Notification</u>&nbsp;region, set the value of&nbs';
+
+c:=c||'p;<u>Message to be displayed in page #GLOBAL_NOTIFICATION# substitution string</u>&nbsp;to&nbsp;the desired value.</li>'||chr(10)||
+'	<li>Click&nbsp;<strong>Apply Changes</strong>.</li>'||chr(10)||
+'</ol>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
+  p_attribute_name           => '#GLOBAL_NOTIFICATION# Message',
+  p_attribute_key            => 'SV_SET_GLOBAL_NOTIFICATION',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLUMN',
+  p_rule_type                => 'NONE',
+  p_table_name               => 'APEX_APPLICATIONS',
+  p_column_name              => 'GLOBAL_NOTIFICATION',
+  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'APPLICATION',
+  p_component_sig_key        => '',
+  p_help_page                => 'bldr_attr.htm#CHDFBAFA',
+  p_seq                      => 99,
+
+  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
+
+  p_display_page_id          => 210,
+
+  p_summary_page_id          => 200,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ..ATTRIBUTE: Allow Feedback
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>APEX applications can easily collect feedback from end users and pass that data to Team Development. &nbsp;In order for this feature to work, the <strong>Allow Feedback</strong> attribute must be set to Yes and a Feedback page must exist in your application.</p>'||chr(10)||
+'';
+
+c:=c||'<p>&nbsp;To change the&nbsp;<strong>Allow Feedback</strong>&nbsp;setting of your application:</p>'||chr(10)||
+''||chr(10)||
+'<ol>'||chr(10)||
+'	<li>Navigate to your application&#39;s&nbsp;<strong>Shared Components</strong>.</li>'||chr(10)||
+'	<li>In the&nbsp;<u>Application Logic</u>&nbsp;region, click on&nbsp;<strong>Application Definition Attributes</strong>.</li>'||chr(10)||
+'	<li>In the&nbsp;<u>Properties</u>&nbsp;region, set the value of&nbsp;<u>Allow Feedb';
+
+c:=c||'ack</u>&nbsp;to the desired value.</li>'||chr(10)||
+'	<li>Click&nbsp;<strong>Apply Changes</strong>.</li>'||chr(10)||
+'</ol>'||chr(10)||
+''||chr(10)||
+'<p>Note: A feedback page must be created for feedback to work; setting this value to Yes is not enough.</p>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
+  p_attribute_name           => 'Allow Feedback',
+  p_attribute_key            => 'SV_SET_APP_FEEDBACK',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLUMN',
+  p_rule_type                => 'NONE',
+  p_table_name               => 'APEX_APPLICATIONS',
+  p_column_name              => 'FEEDBACK',
+  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'APPLICATION',
+  p_component_sig_key        => '',
+  p_help_page                => '',
+  p_seq                      => 99,
+
+  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
+
+  p_display_page_id          => 210,
+
+  p_summary_page_id          => 200,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
 PROMPT == ..ATTRIBUTE: Debugging
 DECLARE
   a CLOB;
@@ -5962,3241 +8640,6 @@ end;
 
 -->>END
 
-PROMPT == ..ATTRIBUTE: Restrict to comma separated user list 
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>'||chr(10)||
-'	If the <strong>Application Status</strong> is set to <strong>Restricted Access</strong>, this attribute should contain a comma-separated list of authorized users that are allowed to access the application.&nbsp; If any user not in this list attempts to sign on, they will be denied access to the application.</p>'||chr(10)||
-'<p>'||chr(10)||
-'	This attribute has no meaning for any other value of <strong>Application&nbsp';
-
-b:=b||';Status</strong>.</p>'||chr(10)||
-'';
-
-c:=c||'<p>'||chr(10)||
-'	n/a</p>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
-  p_attribute_name           => 'Restrict to comma separated user list ',
-  p_attribute_key            => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_active_flag              => 'Y',
-  p_rule_source              => 'COLUMN',
-  p_rule_type                => 'NONE',
-  p_table_name               => 'APEX_APPLICATIONS',
-  p_column_name              => 'RESTRICT_TO_USER',
-  p_view_name                => 'SV_SEC_COL_SET_SEC_SETTINGS_V',
-  p_component_table          => '',
-  p_component_column_id      => '',
-  p_component_column_display => '',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'APPLICATION',
-  p_component_sig_key        => '',
-  p_help_page                => 'bldr_attr.htm#CHDHIEIH',
-  p_seq                      => 99,
-
-  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
-
-  p_display_page_id          => 210,
-
-  p_summary_page_id          => 200,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_SEC_RESTRICTED_USER_LIST: APPROVED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'APPROVED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: APPROVED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_BY',
-  p_label                 => 'Approved By',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: APPROVED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_ON',
-  p_label                 => 'Approved On',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 40,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_SEC_RESTRICTED_USER_LIST: ATTRIBUTE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'ATTRIBUTE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_SEC_RESTRICTED_USER_LIST: PENDING
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'PENDING'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 45,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_SEC_RESTRICTED_USER_LIST: REJECTED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'REJECTED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: REJECTED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_BY',
-  p_label                 => 'Rejected By',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: REJECTED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_ON',
-  p_label                 => 'Rejected On',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: REJECTION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTION',
-  p_label                 => 'Rejection',
-  p_seq                   => 10,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_SEC_RESTRICTED_USER_LIST: STALE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'STALE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'STALE',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'STALE',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'STALE',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'STALE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_SEC_RESTRICTED_USER_LIST: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_SEC_RESTRICTED_USER_LIST',
-  p_report_key            => 'STALE',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 60,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..ATTRIBUTE: Proxy Server
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>The&nbsp;<strong>Proxy Server</strong>&nbsp;attribute stores the URL to a proxy server, should one be necessary. &nbsp;The&nbsp;<strong>Proxy Server</strong>&nbsp;is only necessary when APEX needs to make an outgoing HTTP call, such as a URL region or Web Service, and that type of traffic must pass through a proxy server to access the public Internet. &nbsp;In most cases, this attribute is left';
-
-b:=b||' blank.</p>'||chr(10)||
-''||chr(10)||
-'<p>&nbsp;</p>'||chr(10)||
-''||chr(10)||
-'<p>&nbsp;</p>'||chr(10)||
-'';
-
-c:=c||'<p>&nbsp;To change the&nbsp;<strong>Proxy Server</strong>&nbsp;of your application:</p>'||chr(10)||
-''||chr(10)||
-'<ol>'||chr(10)||
-'	<li>Navigate to your application&#39;s&nbsp;<strong>Shared Components</strong>.</li>'||chr(10)||
-'	<li>In the&nbsp;<u>Application Logic</u>&nbsp;region, click on&nbsp;<strong>Application Definition Attributes</strong>.</li>'||chr(10)||
-'	<li>In the&nbsp;<u>Properties</u>&nbsp;region, set the value of&nbsp;<u>Proxy Server</u>&nbsp';
-
-c:=c||';to the desired value.</li>'||chr(10)||
-'	<li>Click&nbsp;<strong>Apply Changes</strong>.</li>'||chr(10)||
-'</ol>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
-  p_attribute_name           => 'Proxy Server',
-  p_attribute_key            => 'SV_SET_APP_PROXY_SERVER',
-  p_active_flag              => 'Y',
-  p_rule_source              => 'COLUMN',
-  p_rule_type                => 'NONE',
-  p_table_name               => 'APEX_APPLICATIONS',
-  p_column_name              => 'PROXY_SERVER',
-  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
-  p_component_table          => '',
-  p_component_column_id      => '',
-  p_component_column_display => '',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'APPLICATION',
-  p_component_sig_key        => '',
-  p_help_page                => 'advnc_web_services.htm#HTMDB25884',
-  p_seq                      => 99,
-
-  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
-
-  p_display_page_id          => 210,
-
-  p_summary_page_id          => 200,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_PROXY_SERVER: APPROVED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'APPROVED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: APPROVED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_BY',
-  p_label                 => 'Approved By',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: APPROVED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_ON',
-  p_label                 => 'Approved On',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 40,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_PROXY_SERVER: ATTRIBUTE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'ATTRIBUTE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_PROXY_SERVER: PENDING
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'PENDING'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 45,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_PROXY_SERVER: REJECTED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'REJECTED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: REJECTED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_BY',
-  p_label                 => 'Rejected By',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: REJECTED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_ON',
-  p_label                 => 'Rejected On',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: REJECTION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTION',
-  p_label                 => 'Rejection',
-  p_seq                   => 10,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_PROXY_SERVER: STALE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'STALE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'STALE',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'STALE',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'STALE',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'STALE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_PROXY_SERVER: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_PROXY_SERVER',
-  p_report_key            => 'STALE',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 60,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..ATTRIBUTE: Build Status
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>Build Status determines whether or not APEX&nbsp;developers will be able to develop within an application.&nbsp; If set to <strong>Run and Build Application</strong>, then any APEX&nbsp;developer will be able to both run and develop within the application.&nbsp; Setting it to <strong>Run Application Only</strong> will allow the application to run, but developers will no longer be able to make c';
-
-b:=b||'hanges.</p>'||chr(10)||
-''||chr(10)||
-'<p>For developement, this should be set to <strong>Run and Build Application</strong>. &nbsp;For most other environments - QA, Training, Production - it is recommended that this be set to <strong>Run Application Only</strong>. &nbsp;This will prevent any APEX developer from being able to make changes to the application itself.</p>'||chr(10)||
-''||chr(10)||
-'<p><strong>Note</strong>:&nbsp;Once set to <strong>Ru';
-
-b:=b||'n Application Only</strong>, the only way that it can be changed back is by a Workspace Administrator.</p>'||chr(10)||
-''||chr(10)||
-'<p>To manage all build statuses, as a Workspace Administrator, navigate to:</p>'||chr(10)||
-''||chr(10)||
-'<p><strong>Home &gt; Administration &gt; Manage Services &gt; Application Build Status&nbsp;</strong></p>'||chr(10)||
-''||chr(10)||
-'<p>Here, you can set the Build Status for any application within your Workspace.</p>'||chr(10)||
-'';
-
-c:=c||'<p>&nbsp;To change the&nbsp;<strong>Build Status</strong>&nbsp;of your application:</p>'||chr(10)||
-''||chr(10)||
-'<ol>'||chr(10)||
-'	<li>Navigate to your application&#39;s&nbsp;<strong>Shared Components</strong>.</li>'||chr(10)||
-'	<li>In the&nbsp;<u>Application Logic</u>&nbsp;region, click on&nbsp;<strong>Application Definition Attributes</strong>.</li>'||chr(10)||
-'	<li>In the&nbsp;<u>Availibility</u>&nbsp;region, set the value of&nbsp;<u>Build Status</u>&nb';
-
-c:=c||'sp;to the desired value.</li>'||chr(10)||
-'	<li>Click&nbsp;<strong>Apply Changes</strong>.</li>'||chr(10)||
-'</ol>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
-  p_attribute_name           => 'Build Status',
-  p_attribute_key            => 'SV_SET_APP_BUILD_STATUS',
-  p_active_flag              => 'Y',
-  p_rule_source              => 'COLUMN',
-  p_rule_type                => 'COMPARISON',
-  p_table_name               => 'APEX_APPLICATIONS',
-  p_column_name              => 'BUILD_STATUS',
-  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
-  p_component_table          => '',
-  p_component_column_id      => '',
-  p_component_column_display => '',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'APPLICATION',
-  p_component_sig_key        => '',
-  p_help_page                => 'bldr_attr.htm#CHDHIEIH',
-  p_seq                      => 99,
-
-  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
-
-  p_display_page_id          => 210,
-
-  p_summary_page_id          => 200,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ....ATTRIBUTE VALUE: Build Status
-BEGIN
-
-sv_sec_import.attribute_value(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_attribute_set_key     => 'DEFAULT',
-  p_value                 => 'Run Only',
-  p_result                => 'PASS',
-  p_active_flag           => 'Y'
-  );
-END;
-/
-
--->>END
-PROMPT == ....ATTRIBUTE VALUE: Build Status
-BEGIN
-
-sv_sec_import.attribute_value(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_attribute_set_key     => 'DEFAULT',
-  p_value                 => 'Run and Develop',
-  p_result                => 'FAIL',
-  p_active_flag           => 'Y'
-  );
-END;
-/
-
--->>END
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_BUILD_STATUS: APPROVED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'APPROVED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: APPROVED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_BY',
-  p_label                 => 'Approved By',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: APPROVED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_ON',
-  p_label                 => 'Approved On',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 40,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_BUILD_STATUS: ATTRIBUTE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'ATTRIBUTE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_BUILD_STATUS: PENDING
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'PENDING'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 45,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_BUILD_STATUS: REJECTED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'REJECTED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: REJECTED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_BY',
-  p_label                 => 'Rejected By',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: REJECTED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_ON',
-  p_label                 => 'Rejected On',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: REJECTION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTION',
-  p_label                 => 'Rejection',
-  p_seq                   => 10,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_BUILD_STATUS: STALE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'STALE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'STALE',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'STALE',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'STALE',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'STALE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_BUILD_STATUS: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_BUILD_STATUS',
-  p_report_key            => 'STALE',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 60,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..ATTRIBUTE: Compatibility Mode
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>The Compatibility Mode setting is used to determine specific behaviors based on the version of APEX selected.&nbsp; There are three possible settings:</p>'||chr(10)||
-''||chr(10)||
-'<ul>'||chr(10)||
-'	<li><strong>Pre-4.1</strong></li>'||chr(10)||
-'</ul>'||chr(10)||
-''||chr(10)||
-'<p style="margin-left:40px">When set to <strong>Pre-4.1</strong>, if a DML Fetch process is mapped to a non-existent column, then the page will render as normal without reporting any errors.&nbs';
-
-b:=b||'p; The associated item will not have its value set in session state.&nbsp; Also, when set to <strong>Pre-4.1</strong>, the security attributes for <strong>Browser Cache</strong> and <strong>Embed in Frames</strong> will automatically be set to <strong>Enabled</strong> and <strong>Allowed</strong>, respectively.&nbsp;</p>'||chr(10)||
-''||chr(10)||
-'<ul>'||chr(10)||
-'	<li><strong>4.1</strong></li>'||chr(10)||
-'</ul>'||chr(10)||
-''||chr(10)||
-'<p style="margin-left:40px">When ';
-
-b:=b||'set to <strong>4.1</strong>, DML Fetch processes will raise an error should the associated column of an item not be in the corresponding table or view.&nbsp; Also, the <strong>Browser Cache</strong> and <strong>Embed in Frames</strong> attributes will respect their settings as defined in the application.</p>'||chr(10)||
-''||chr(10)||
-'<ul>'||chr(10)||
-'	<li><strong>4.2</strong></li>'||chr(10)||
-'</ul>'||chr(10)||
-''||chr(10)||
-'<p style="margin-left:40px">When set to 4.2, c';
-
-b:=b||'ertain actions are taken to ensure that items are arranged properly within a specific region.&nbsp; Computations and processes with a processing point set to &quot;Before Regions&quot; or &quot;After Regions&quot; will now execute either before or after any region is rendered, respectively.&nbsp; In previous versions, these process points would be executed only just before or after the display poi';
-
-b:=b||'nt &quot;Page Template Body (1-3)&quot;.</p>'||chr(10)||
-''||chr(10)||
-'<ul>'||chr(10)||
-'	<li><strong>5.0</strong></li>'||chr(10)||
-'</ul>'||chr(10)||
-''||chr(10)||
-'<p style="margin-left:40px">When set to 5.0, static file references are changed to use <strong>#APP_IMAGES#</strong>. Older calls to <strong>wwv_flow_custom_auth_std</strong> have been removed and an error will be displayed if encountered. &nbsp;Changes have also been made to the Data Upload process to ensure ';
-
-b:=b||'that the Unique Column is also uploaded. &nbsp;Application session timeouts are also handed better by displaying an error vs. redirecting to the home page of the application. Lastly, page items that map to a database column whose <u>Source Used</u>&nbsp;property is set to <strong>Only when current value in session state is null</strong> will throw an error message.</p>'||chr(10)||
-''||chr(10)||
-'<p>It is recommended to set';
-
-b:=b||' <strong>Compatibility Mode</strong> to <strong>5.0</strong>&nbsp;to ensure compatibility with the most recent version of APEX.</p>'||chr(10)||
-'';
-
-c:=c||'<p>&nbsp;To change the <strong>Compatibility Mode</strong> of your application:</p>'||chr(10)||
-''||chr(10)||
-'<ol>'||chr(10)||
-'	<li>Navigate to your application&#39;s <strong>Shared Components</strong>.</li>'||chr(10)||
-'	<li>In the <u>Application Logic</u>&nbsp;region, click on <strong>Application Definition Attributes</strong>.</li>'||chr(10)||
-'	<li>In the <u>Properties</u> region, set the value of <u>Compatibility Mode</u> to&nbsp;<strong>5.0</strong>.</l';
-
-c:=c||'i>'||chr(10)||
-'	<li>Click <strong>Apply Changes</strong>.</li>'||chr(10)||
-'</ol>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
-  p_attribute_name           => 'Compatibility Mode',
-  p_attribute_key            => 'SV_SET_COMPATIBILITY_MODE',
-  p_active_flag              => 'Y',
-  p_rule_source              => 'COLUMN',
-  p_rule_type                => 'COMPARISON',
-  p_table_name               => 'APEX_APPLICATIONS',
-  p_column_name              => 'COMPATIBILITY_MODE',
-  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
-  p_component_table          => '',
-  p_component_column_id      => '',
-  p_component_column_display => '',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'APPLICATION',
-  p_component_sig_key        => '',
-  p_help_page                => 'bldr_attr.htm#CHDFAIEC',
-  p_seq                      => 99,
-
-  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
-
-  p_display_page_id          => 210,
-
-  p_summary_page_id          => 200,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ....ATTRIBUTE VALUE: Compatibility Mode
-BEGIN
-
-sv_sec_import.attribute_value(
-  p_attribute_key         => 'SV_SET_COMPATIBILITY_MODE',
-  p_attribute_set_key     => 'DEFAULT',
-  p_value                 => '5.0',
-  p_result                => 'PASS',
-  p_active_flag           => 'Y'
-  );
-END;
-/
-
--->>END
-PROMPT == ..ATTRIBUTE: Application E-Mail From Address
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>The <strong>Application E-Mail From Address</strong> will be used when sending e-mails from Interactive Reports directly or via a subscription.&nbsp; It can be set to any e-mail address, but should be set as per the specific application&#39;s requirements.</p>'||chr(10)||
-'';
-
-c:=c||'<p>To change an application&#39;s&nbsp;<strong>Application From E-Mail Address</strong>:</p>'||chr(10)||
-''||chr(10)||
-'<ul>'||chr(10)||
-'	<li>Edit the application&#39;s&nbsp;<strong>Shared Components</strong>.</li>'||chr(10)||
-'	<li>In the&nbsp;<u>Application Logic</u>&nbsp;region, click&nbsp;<strong>Application&nbsp;Definition Attributes</strong>.</li>'||chr(10)||
-'	<li>In the&nbsp;<u>Properties</u>&nbsp;region, set the&nbsp;<u>Application From E-Mail Address';
-
-c:=c||'</u>&nbsp;to&nbsp;the desired value.</li>'||chr(10)||
-'	<li>Click&nbsp;<strong>Apply Changes</strong>.</li>'||chr(10)||
-'</ul>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
-  p_attribute_name           => 'Application E-Mail From Address',
-  p_attribute_key            => 'SV_SET_EMAIL_FROM_ADDRESS',
-  p_active_flag              => 'Y',
-  p_rule_source              => 'COLUMN',
-  p_rule_type                => 'NONE',
-  p_table_name               => 'APEX_APPLICATIONS',
-  p_column_name              => 'EMAIL_FROM',
-  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
-  p_component_table          => '',
-  p_component_column_id      => '',
-  p_component_column_display => '',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => '',
-  p_component_sig_key        => '',
-  p_help_page                => 'bldr_attr.htm#CHDFAIEC',
-  p_seq                      => 99,
-
-  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
-
-  p_display_page_id          => 210,
-
-  p_summary_page_id          => 200,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ..ATTRIBUTE: Version
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>'||chr(10)||
-'	This attribute stores the version number of an APEX&nbsp;application.&nbsp; While there is no direct relationship between this attribute and any external source code management system, it is recommended that every effort be made to keep them synchronized.</p>'||chr(10)||
-'<p>'||chr(10)||
-'	To update the Version:</p>'||chr(10)||
-'<ol>'||chr(10)||
-'	<li>'||chr(10)||
-'		Edit your application&#39;s <strong>Shared Components</strong>.</li>'||chr(10)||
-'	<li>'||chr(10)||
-'		Under the <u>';
-
-b:=b||'Tasks</u> region, click on <strong>Edit&nbsp;Definition</strong>.</li>'||chr(10)||
-'	<li>'||chr(10)||
-'		The <u>Version</u> attribute can be found in the <u>Name</u> region.</li>'||chr(10)||
-'	<li>'||chr(10)||
-'		Click <strong>Apply Changes</strong>.</li>'||chr(10)||
-'</ol>'||chr(10)||
-'<p>'||chr(10)||
-'	Any external system that referes to this version number will also have to be updated manually.</p>'||chr(10)||
-'';
-
-c:=c||'<p>'||chr(10)||
-'	n/a</p>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
-  p_attribute_name           => 'Version',
-  p_attribute_key            => 'SV_SET_APP_VERSION',
-  p_active_flag              => 'Y',
-  p_rule_source              => 'COLUMN',
-  p_rule_type                => 'NONE',
-  p_table_name               => 'APEX_APPLICATIONS',
-  p_column_name              => 'VERSION',
-  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
-  p_component_table          => '',
-  p_component_column_id      => '',
-  p_component_column_display => '',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'APPLICATION',
-  p_component_sig_key        => '',
-  p_help_page                => 'bldr_attr.htm#CHDFBAFA',
-  p_seq                      => 10,
-
-  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
-
-  p_display_page_id          => 210,
-
-  p_summary_page_id          => 200,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_VERSION: APPROVED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'APPROVED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: APPROVED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_BY',
-  p_label                 => 'Approved By',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: APPROVED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_ON',
-  p_label                 => 'Approved On',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 40,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_VERSION: ATTRIBUTE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'ATTRIBUTE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_VERSION: PENDING
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'PENDING'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 45,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_VERSION: REJECTED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'REJECTED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: REJECTED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_BY',
-  p_label                 => 'Rejected By',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: REJECTED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_ON',
-  p_label                 => 'Rejected On',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: REJECTION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTION',
-  p_label                 => 'Rejection',
-  p_seq                   => 10,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SET_APP_VERSION: STALE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'STALE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'STALE',
-  p_column_name           => 'SETTING_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: SETTING_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'STALE',
-  p_column_name           => 'SETTING_VALUE',
-  p_label                 => 'Value',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RECOMMENDED_VALUE
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'STALE',
-  p_column_name           => 'RECOMMENDED_VALUE',
-  p_label                 => 'Recommended',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'STALE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SET_APP_VERSION: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SET_APP_VERSION',
-  p_report_key            => 'STALE',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 60,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..ATTRIBUTE: Default Error Display Location
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>The <strong>Default Error Display Location</strong> attribute determines where errors messages will render. &nbsp;There are three options to select from:</p>'||chr(10)||
-''||chr(10)||
-'<ul>'||chr(10)||
-'	<li><strong>Inline with Field and in Notification</strong><br />'||chr(10)||
-'	Error messages will appear both next ot the related item and in the notification region.</li>'||chr(10)||
-'	<li><strong>Inline with Field</strong><br />'||chr(10)||
-'	Error messages will only ';
-
-b:=b||'appear&nbsp;next to the related item.</li>'||chr(10)||
-'	<li><strong>Inline in Notification</strong><br />'||chr(10)||
-'	Error messages will only appear in the notification&nbsp;region.</li>'||chr(10)||
-'</ul>'||chr(10)||
-''||chr(10)||
-'<p>The best setting of this attribute largely depends on aesthetics and functionality vs. security. &nbsp;Different applications may have different options set. &nbsp;Also,&nbsp;APEX components such as validations can override t';
-
-b:=b||'he application-level setting for error display location.</p>'||chr(10)||
-'';
-
-c:=c||'<p>&nbsp;To change the&nbsp;<strong>Default Error Display Location</strong>&nbsp;of your application:</p>'||chr(10)||
-''||chr(10)||
-'<ol>'||chr(10)||
-'	<li>Navigate to your application&#39;s&nbsp;<strong>Shared Components</strong>.</li>'||chr(10)||
-'	<li>In the&nbsp;<u>Application Logic</u>&nbsp;region, click on&nbsp;<strong>Application Definition Attributes</strong>.</li>'||chr(10)||
-'	<li>In the&nbsp;<u>Error Handling</u>&nbsp;region, set the value of&nbsp;<u';
-
-c:=c||'>Default Error Display Location</u>&nbsp;to the desired value.</li>'||chr(10)||
-'	<li>Click&nbsp;<strong>Apply Changes</strong>.</li>'||chr(10)||
-'</ol>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
-  p_attribute_name           => 'Default Error Display Location',
-  p_attribute_key            => 'SV_SET_DEFAULT_ERROR_DISPLAY_LOCATION',
-  p_active_flag              => 'Y',
-  p_rule_source              => 'COLUMN',
-  p_rule_type                => 'NONE',
-  p_table_name               => 'APEX_APPLICATIONS',
-  p_column_name              => 'DEFAULT_ERROR_DISPLAY_LOCATION',
-  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
-  p_component_table          => '',
-  p_component_column_id      => '',
-  p_component_column_display => '',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'APPLICATION',
-  p_component_sig_key        => '',
-  p_help_page                => 'bldr_attr.htm#CHDFBAFA',
-  p_seq                      => 99,
-
-  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
-
-  p_display_page_id          => 210,
-
-  p_summary_page_id          => 200,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ..ATTRIBUTE: Error Handling Function
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>The <strong>Error Handling Function</strong> is a function that will be called when an error is raised from an APEX application. &nbsp;This function can be set to handle specific errors, suppress sensitive information from error messages, and even send notifications when errors occur. &nbsp;This application can be set at the application and page lever, where a page-level setting will override a';
-
-b:=b||'n application-level one.</p>'||chr(10)||
-''||chr(10)||
-'<p>While APEX will work just fine without one, it is strongly recommended that a custom function be deployed and deployed with all applications. &nbsp;The Sample Database Application contains a sample error handling function that can be expanded upon.</p>'||chr(10)||
-''||chr(10)||
-'<div style="background:0px 0px; border:0px; padding:0px">'||chr(10)||
-'<div>'||chr(10)||
-'<div>'||chr(10)||
-'<p>The <strong>Error&nbsp;Handling Function';
-
-b:=b||'s</strong> must adhere to the following signature:</p>'||chr(10)||
-''||chr(10)||
-'<pre>'||chr(10)||
-'function &lt;function name&gt; '||chr(10)||
-'&nbsp; ('||chr(10)||
-'  p_error in apex_error.t_error '||chr(10)||
-'&nbsp; )'||chr(10)||
-'return apex_error.t_error_result'||chr(10)||
-'</pre>'||chr(10)||
-''||chr(10)||
-'<p>See the <u>Oracle APEX API Reference</u> for more details on how to create an <strong>Error Handling Function</strong>.</p>'||chr(10)||
-'</div>'||chr(10)||
-'</div>'||chr(10)||
-'</div>'||chr(10)||
-'';
-
-c:=c||'<p>&nbsp;To change the&nbsp;<strong>Error Handling Function</strong>&nbsp;of your application:</p>'||chr(10)||
-''||chr(10)||
-'<ol>'||chr(10)||
-'	<li>Navigate to your application&#39;s&nbsp;<strong>Shared Components</strong>.</li>'||chr(10)||
-'	<li>In the&nbsp;<u>Application Logic</u>&nbsp;region, click on&nbsp;<strong>Application Definition Attributes</strong>.</li>'||chr(10)||
-'	<li>In the&nbsp;<u>Error Handling</u>&nbsp;region, set the value of&nbsp;<u>Error ';
-
-c:=c||'Handling Function</u>&nbsp;to the desired value.</li>'||chr(10)||
-'	<li>Click&nbsp;<strong>Apply Changes</strong>.</li>'||chr(10)||
-'</ol>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
-  p_attribute_name           => 'Error Handling Function',
-  p_attribute_key            => 'SV_SET_ERROR_HANDLING_FUNCTION',
-  p_active_flag              => 'Y',
-  p_rule_source              => 'COLUMN',
-  p_rule_type                => 'NOT_NULL',
-  p_table_name               => 'APEX_APPLICATIONS',
-  p_column_name              => 'ERROR_HANDLING_FUNCTION',
-  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
-  p_component_table          => '',
-  p_component_column_id      => '',
-  p_component_column_display => '',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'PASS',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'APPLICATION',
-  p_component_sig_key        => '',
-  p_help_page                => 'bldr_attr.htm#CHDFBAFA',
-  p_seq                      => 99,
-
-  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
-
-  p_display_page_id          => 210,
-
-  p_summary_page_id          => 200,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ..ATTRIBUTE: #GLOBAL_NOTIFICATION# Message
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>The <strong>#GLOBAL_NOTIFICATION#</strong> attribute provides developers with a way to display a message on every page of an application - so as long as that page contains a reference to the <strong>#GLOBAL_NOTIFICATION# </strong>substitution string in the page template.</p>'||chr(10)||
-''||chr(10)||
-'<p>This can be used to communicate information such as server outage alerts and other information that pertain to an app';
-
-b:=b||'lication&#39;s users.</p>'||chr(10)||
-'';
-
-c:=c||'<p>&nbsp;To change the&nbsp;<strong>#GLOBAL_NOTIFICATION# Message</strong>&nbsp;of your application:</p>'||chr(10)||
-''||chr(10)||
-'<ol>'||chr(10)||
-'	<li>Navigate to your application&#39;s&nbsp;<strong>Shared Components</strong>.</li>'||chr(10)||
-'	<li>In the&nbsp;<u>Application Logic</u>&nbsp;region, click on&nbsp;<strong>Application Definition Attributes</strong>.</li>'||chr(10)||
-'	<li>In the&nbsp;<u>Global Notification</u>&nbsp;region, set the value of&nbs';
-
-c:=c||'p;<u>Message to be displayed in page #GLOBAL_NOTIFICATION# substitution string</u>&nbsp;to&nbsp;the desired value.</li>'||chr(10)||
-'	<li>Click&nbsp;<strong>Apply Changes</strong>.</li>'||chr(10)||
-'</ol>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
-  p_attribute_name           => '#GLOBAL_NOTIFICATION# Message',
-  p_attribute_key            => 'SV_SET_GLOBAL_NOTIFICATION',
-  p_active_flag              => 'Y',
-  p_rule_source              => 'COLUMN',
-  p_rule_type                => 'NONE',
-  p_table_name               => 'APEX_APPLICATIONS',
-  p_column_name              => 'GLOBAL_NOTIFICATION',
-  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
-  p_component_table          => '',
-  p_component_column_id      => '',
-  p_component_column_display => '',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'APPLICATION',
-  p_component_sig_key        => '',
-  p_help_page                => 'bldr_attr.htm#CHDFBAFA',
-  p_seq                      => 99,
-
-  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
-
-  p_display_page_id          => 210,
-
-  p_summary_page_id          => 200,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ..ATTRIBUTE: Allow Feedback
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>APEX applications can easily collect feedback from end users and pass that data to Team Development. &nbsp;In order for this feature to work, the <strong>Allow Feedback</strong> attribute must be set to Yes and a Feedback page must exist in your application.</p>'||chr(10)||
-'';
-
-c:=c||'<p>&nbsp;To change the&nbsp;<strong>Allow Feedback</strong>&nbsp;setting of your application:</p>'||chr(10)||
-''||chr(10)||
-'<ol>'||chr(10)||
-'	<li>Navigate to your application&#39;s&nbsp;<strong>Shared Components</strong>.</li>'||chr(10)||
-'	<li>In the&nbsp;<u>Application Logic</u>&nbsp;region, click on&nbsp;<strong>Application Definition Attributes</strong>.</li>'||chr(10)||
-'	<li>In the&nbsp;<u>Properties</u>&nbsp;region, set the value of&nbsp;<u>Allow Feedb';
-
-c:=c||'ack</u>&nbsp;to the desired value.</li>'||chr(10)||
-'	<li>Click&nbsp;<strong>Apply Changes</strong>.</li>'||chr(10)||
-'</ol>'||chr(10)||
-''||chr(10)||
-'<p>Note: A feedback page must be created for feedback to work; setting this value to Yes is not enough.</p>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_SET_APPLICATION_SETTINGS',
-  p_attribute_name           => 'Allow Feedback',
-  p_attribute_key            => 'SV_SET_APP_FEEDBACK',
-  p_active_flag              => 'Y',
-  p_rule_source              => 'COLUMN',
-  p_rule_type                => 'NONE',
-  p_table_name               => 'APEX_APPLICATIONS',
-  p_column_name              => 'FEEDBACK',
-  p_view_name                => 'SV_SEC_COL_SET_APP_SETTINGS_V',
-  p_component_table          => '',
-  p_component_column_id      => '',
-  p_component_column_display => '',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'APPLICATION',
-  p_component_sig_key        => '',
-  p_help_page                => '',
-  p_seq                      => 99,
-
-  p_col_template_key         => 'SV_APPLICATION_SETTINGS',
-
-  p_display_page_id          => 210,
-
-  p_summary_page_id          => 200,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
 PROMPT == CATEGORY: Page Settings: Deep Linking
 BEGIN
 
@@ -9215,118 +8658,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_PS_DEEP_LINKING
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  d001,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT categor';
-
-a:=a||'y_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_PS_DEEP_LINKING'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_PS_DEEP_LINKING'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  NULL link_';
-
-a:=a||'req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  ''Settings - Deep Linking'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  page_name,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  deep_linking,'||chr(10)||
-'  sv_sec.get_result '||chr(10)||
-'    ('||chr(10)||
-'    ''SV_PS_DEEP_LINKING'','||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-'    deep_linking,'||chr(10)||
-'    NULL,'||chr(10)||
-'    ''N'','||chr(10)||
-'    ''Y'','||chr(10)||
-'    NULL'||chr(10)||
-'    ) result,'||chr(10)||
-'  deep_linking val,'||chr(10)||
-'  sv_sec_util.get_checksum(deep_linking) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    ap.application_id,'||chr(10)||
-'';
-
-a:=a||'    ap.page_id,'||chr(10)||
-'    page_name,'||chr(10)||
-'    CASE '||chr(10)||
-'      WHEN ap.deep_linking = ''Application Default'' THEN aa.deep_linking '||chr(10)||
-'      ELSE ap.deep_linking END deep_linking,'||chr(10)||
-'    420 link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''RP,420,960,4651'' link_cc,'||chr(10)||
-'    ''FB_FLOW_ID,FB_FLOW_PAGE_ID,P420_REGION_ID:'' || ap.application_id || '','' '||chr(10)||
-'      || ap.page_id link,'||chr(10)||
-'    ap.last_updated_by,'||chr(10)||
-'    ap.last_updated_on,'||chr(10)||
-'    ap.component_sig';
-
-a:=a||'nature'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_pages ap,'||chr(10)||
-'    apex_applications aa'||chr(10)||
-'  WHERE'||chr(10)||
-'    aa.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND ap.application_id = aa.application_id'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_PS_DEEP_LINKING',
-  p_collection_key        => 'SV_PS_DEEP_LINKING',
-  p_category_key          => 'SV_PS_DEEP_LINKING',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Deep Linking
 DECLARE
   a CLOB;
@@ -10170,120 +9501,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_PS_RPT_RESTFUL_ACCESS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-' ';
-
-a:=a||' (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_PS_RPT_RESTFUL_ACCESS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_PS_RPT_RESTFUL_ACCESS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,';
-
-a:=a||''||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  ''Settings - RESTful Access'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  source_type,'||chr(10)||
-'  rest_enabled,'||chr(10)||
-'  sv_sec.get_result '||chr(10)||
-'    ('||chr(10)||
-'    ''SV_PS_RPT_RESTFUL_ACCESS'','||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-'    rest_enabled,'||chr(10)||
-'    NULL,'||chr(10)||
-'    ''N'','||chr(10)||
-'    ''Y'','||chr(10)||
-'    NULL'||chr(10)||
-'    ) result,'||chr(10)||
-'  rest_enabled val,'||chr(10)||
-'  sv_sec_util.get';
-
-a:=a||'_checksum(rest_enabled) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    page_id,'||chr(10)||
-'    region_id,'||chr(10)||
-'    page_name,'||chr(10)||
-'    region_name,'||chr(10)||
-'    source_type,'||chr(10)||
-'    rest_enabled,'||chr(10)||
-'    ''4651'' link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''4651,960,420'' link_cc,'||chr(10)||
-'    ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'      || application_id || '','' || page_id link,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    c';
-
-a:=a||'omponent_signature'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_regions'||chr(10)||
-'  WHERE'||chr(10)||
-'    source_type_code IN (''UPDATABLE_SQL_QUERY'', ''SQL_QUERY'', ''FUNCTION_RETURNING_SQL_QUERY'', ''STRUCTURED_QUERY'', ''DYNAMIC_QUERY'')'||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_PS_RPT_RESTFUL_ACCESS',
-  p_collection_key        => 'SV_PS_RPT_RESTFUL_ACCESS',
-  p_category_key          => 'SV_PS_RESTFUL_ACCESS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: RESTful Access
 DECLARE
   a CLOB;
@@ -11202,102 +10419,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_UNESCAPED_ITEMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAM';
-
-a:=a||'E#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_UNESCAPED_ITEMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_UNESCAPED_ITEMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  item_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  c';
-
-a:=a||'omponent_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4311'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4311'' link_cc,'||chr(10)||
-'  ''F4000_P4311_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || item_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Unescaped Items'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  item_name,'||chr(10)||
-'  display_as,'||chr(10)||
-'  escape_on_http_output,'||chr(10)||
-'  sv_sec.get_result '||chr(10)||
-'    ('||chr(10)||
-'    ''SV_XSS_UNESCAPED_ITEMS'','||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-'    escape_on_h';
-
-a:=a||'ttp_output,'||chr(10)||
-'    NULL,'||chr(10)||
-'    ''N'','||chr(10)||
-'    ''Y'','||chr(10)||
-'    NULL'||chr(10)||
-'    ) result,'||chr(10)||
-'  escape_on_http_output val,'||chr(10)||
-'  sv_sec_util.get_checksum(escape_on_http_output) checksum,'||chr(10)||
-'  region,'||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'    apex_application_page_items'||chr(10)||
-'WHERE '||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND display_as_code IN (''NATIVE_DISPLAY_ONLY'', ''NATIVE_CHECKBOX'', ''NATIVE_RADIOGROUP'', ''NATIVE_AUTO_COMPLETE'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_UNESCAPED_ITEMS',
-  p_collection_key        => 'SV_XSS_UNESCAPED_ITEMS',
-  p_category_key          => 'SV_XSS_UNESCAPED_ITEMS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Item Contains Unescaped Output
 DECLARE
   a CLOB;
@@ -13821,90 +12942,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_PLSQL_OUTPUT
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PLSQL_OUTPUT'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PLSQL_OUTPUT'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  item_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' ';
-
-a:=a||'edit,'||chr(10)||
-'  ''4311'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4311'' link_cc,'||chr(10)||
-'  ''F4000_P4311_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || item_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Display Only PL/SQL Output'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  item_name,'||chr(10)||
-'  attribute_03 plsql_output,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(attribute_03) result,'||chr(10)||
-'  attribute_03 val,'||chr(10)||
-'  sv_sec_util.get_checksum(attribute_03) checksum';
-
-a:=a||','||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'    apex_application_page_items'||chr(10)||
-'WHERE '||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND display_as_code = ''NATIVE_DISPLAY_ONLY'' '||chr(10)||
-'  AND attribute_02 = ''PLSQL''';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_PLSQL_OUTPUT',
-  p_collection_key        => 'SV_XSS_PLSQL_OUTPUT',
-  p_category_key          => 'SV_XSS_PLSQL_OUTPUT',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: PL/SQL Output
 DECLARE
   a CLOB;
@@ -13994,116 +13031,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_LINK_ICON
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_LINK_ICON'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_LINK_ICON'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit';
-
-a:=a||','||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  detail_link_text,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'('||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,'||chr(10)||
-'  ''601'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || apr.region_id || '','' '||chr(10)||
-'    || ap.application_id || '','' || ap.page_id link,'||chr(10)||
-'  ''XSS - IR Link Icon'' link_';
-
-a:=a||'desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  ap.page_name,'||chr(10)||
-'  r.region_name,'||chr(10)||
-'  apr.detail_link_text,'||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  r.last_updated_by,'||chr(10)||
-'  r.last_updated_on,'||chr(10)||
-'  r.component_signature,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(apr.detail_link_text) result,'||chr(10)||
-'  apr.detail_link_text val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.detail_link_text) checksum'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_ir apr,'||chr(10)||
-'    apex_application_pages ap,'||chr(10)||
-'    apex_applicat';
-
-a:=a||'ion_page_regions r'||chr(10)||
-'  WHERE'||chr(10)||
-'    apr.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.page_id = ap.page_id'||chr(10)||
-'    AND ap.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.region_id = r.region_id'||chr(10)||
-')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_LINK_ICON',
-  p_collection_key        => 'SV_XSS_LINK_ICON',
-  p_category_key          => 'SV_XSS_LINK_ICON',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Link Icon
 DECLARE
   a CLOB;
@@ -14188,120 +13115,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_SHOW_NULL
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-''||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLEC';
-
-a:=a||'TION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_SHOW_NULL'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_SHOW_NULL'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''E';
-
-a:=a||'dit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  region_name_esc,'||chr(10)||
-'  val show_nulls_as,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'('||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,'||chr(10)||
-'  ''601'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || apr.region_id || '','' '||chr(10)||
-'    || ap.application_id || '','' || ap.page_id link,';
-
-a:=a||''||chr(10)||
-'  ''XSS - IR Show NULL As'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  ap.page_name,'||chr(10)||
-'  r.region_name,'||chr(10)||
-'  apex_escape.html(r.region_name) region_name_esc,'||chr(10)||
-'  apr.detail_link_text,'||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  r.last_updated_by,'||chr(10)||
-'  r.last_updated_on,'||chr(10)||
-'  r.component_signature,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(apr.show_nulls_as) result,'||chr(10)||
-'  apr.show_nulls_as val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.show_nulls_as) checksum'||chr(10)||
-'  FROM'||chr(10)||
-'    apex';
-
-a:=a||'_application_page_ir apr,'||chr(10)||
-'    apex_application_pages ap,'||chr(10)||
-'    apex_application_page_regions r'||chr(10)||
-'  WHERE'||chr(10)||
-'    apr.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.page_id = ap.page_id'||chr(10)||
-'    AND ap.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.region_id = r.region_id'||chr(10)||
-')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_SHOW_NULL',
-  p_collection_key        => 'SV_XSS_SHOW_NULL',
-  p_category_key          => 'SV_XSS_SHOW_NULL',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Show NULL
 DECLARE
   a CLOB;
@@ -14369,155 +13182,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_MORE_DATA
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  ';
-
-a:=a||'#COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_MORE_DATA'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_MORE_DATA'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signatur';
-
-a:=a||'e,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  region_name_esc,'||chr(10)||
-'  report_type,'||chr(10)||
-'  more_data_found,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'('||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || apr.region_id || '','' '||chr(10)||
-'    || ap.application_id || '',';
-
-a:=a||''' || ap.page_id link,'||chr(10)||
-'  ''XSS: More Data Found - Interactive Reports'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  ap.page_name,'||chr(10)||
-'  r.region_name,'||chr(10)||
-'  htf.escape_sc(r.region_name) region_name_esc,'||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  ''Interactive'' report_type,'||chr(10)||
-'  apr.max_row_count_message more_data_found,'||chr(10)||
-'  r.last_updated_by,'||chr(10)||
-'  r.last_updated_on,'||chr(10)||
-'  r.component_signature,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(apr.max_row_count_message) result';
-
-a:=a||','||chr(10)||
-'  apr.max_row_count_message val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.max_row_count_message) checksum'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_ir apr,'||chr(10)||
-'    apex_application_pages ap,'||chr(10)||
-'    apex_application_page_regions r'||chr(10)||
-'  WHERE'||chr(10)||
-'    apr.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.page_id = ap.page_id'||chr(10)||
-'    AND ap.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.region_id = r.region_id'||chr(10)||
-'UNION ALL'||chr(10)||
-'SELECT'||chr(10)||
-'  apr.applica';
-
-a:=a||'tion_id,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || apr.region_id || '','' '||chr(10)||
-'    || apr.application_id || '','' || apr.page_id link,'||chr(10)||
-'  ''XSS: More Data Found - Classic Reports'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  apr.page_name,'||chr(10)||
-'  apr.region_name,'||chr(10)||
-'  htf.escape_sc(apr.region_name) region_name_esc,'||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  ''Classic'' report_type,'||chr(10)||
-'  mor';
-
-a:=a||'e_data_found_message more_data_found,'||chr(10)||
-'  apr.last_updated_by,'||chr(10)||
-'  apr.last_updated_on,'||chr(10)||
-'  apr.component_signature,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(apr.more_data_found_message) result,'||chr(10)||
-'  apr.more_data_found_message val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.more_data_found_message) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions apr'||chr(10)||
-'WHERE'||chr(10)||
-'  apr.source_type = ''Report'''||chr(10)||
-'  AND apr.application_id = #APPLICATION_ID#';
-
-a:=a||''||chr(10)||
-')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_MORE_DATA',
-  p_collection_key        => 'SV_XSS_MORE_DATA',
-  p_category_key          => 'SV_XSS_MORE_DATA',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: More Data Found
 DECLARE
   a CLOB;
@@ -14585,153 +13249,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_NO_DATA
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  ';
-
-a:=a||'#COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_NO_DATA'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_NO_DATA'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-' ';
-
-a:=a||' ''Edit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  region_name_esc,'||chr(10)||
-'  report_type,'||chr(10)||
-'  no_data_found,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'('||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || apr.region_id || '','' '||chr(10)||
-'    || ap.application_id || '','' || a';
-
-a:=a||'p.page_id link,'||chr(10)||
-'  ''XSS: More Data Found - Interactive Reports'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  ap.page_name,'||chr(10)||
-'  r.region_name,'||chr(10)||
-'  htf.escape_sc(r.region_name) region_name_esc,'||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  ''Interactive'' report_type,'||chr(10)||
-'  apr.no_data_found_message no_data_found,'||chr(10)||
-'  r.last_updated_by,'||chr(10)||
-'  r.last_updated_on,'||chr(10)||
-'  r.component_signature,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(apr.no_data_found_message) result,'||chr(10)||
-'  apr.';
-
-a:=a||'no_data_found_message val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.no_data_found_message) checksum'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_ir apr,'||chr(10)||
-'    apex_application_pages ap,'||chr(10)||
-'    apex_application_page_regions r'||chr(10)||
-'  WHERE'||chr(10)||
-'    apr.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.page_id = ap.page_id'||chr(10)||
-'    AND ap.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.region_id = r.region_id'||chr(10)||
-'UNION ALL'||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,';
-
-a:=a||''||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || apr.region_id || '','' '||chr(10)||
-'    || apr.application_id || '','' || apr.page_id link,'||chr(10)||
-'  ''XSS: More Data Found - Classic Reports'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  apr.page_name,'||chr(10)||
-'  apr.region_name,'||chr(10)||
-'  htf.escape_sc(apr.region_name) region_name_esc,'||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  ''Classic'' report_type,'||chr(10)||
-'  no_data_fou';
-
-a:=a||'nd_message no_data_found,'||chr(10)||
-'  apr.last_updated_by,'||chr(10)||
-'  apr.last_updated_on,'||chr(10)||
-'  apr.component_signature,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(apr.no_data_found_message) result,'||chr(10)||
-'  apr.no_data_found_message val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.no_data_found_message) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions apr'||chr(10)||
-'WHERE'||chr(10)||
-'  apr.source_type = ''Report'''||chr(10)||
-'  AND apr.application_id = #APPLICATION_ID#'||chr(10)||
-')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_NO_DATA',
-  p_collection_key        => 'SV_XSS_NO_DATA',
-  p_category_key          => 'SV_XSS_NO_DATA',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: No Data Found
 DECLARE
   a CLOB;
@@ -14799,92 +13316,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_REG_HEAD_FOOT
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  ';
-
-a:=a||'#COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_REG_HEAD_FOOT'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_REG_HEAD_FOOT'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_';
-
-a:=a||'signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Region Header and Footer'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  region_header_text,'||chr(10)||
-'  region_footer_text,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(';
-
-a:=a||'region_header_text || region_footer_text) result,'||chr(10)||
-'  region_name val,'||chr(10)||
-'  sv_sec_util.get_checksum(region_header_text || region_footer_text) checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions apr'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_REG_HEAD_FOOT',
-  p_collection_key        => 'SV_XSS_REG_HEAD_FOOT',
-  p_category_key          => 'SV_XSS_REG_HEAD_FOOT',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Region Header and Footer
 DECLARE
   a CLOB;
@@ -14952,115 +13383,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_LIST_ATTR
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  c006,'||chr(10)||
-'  c007,'||chr(10)||
-'  c008,'||chr(10)||
-'  c009,'||chr(10)||
-'  c010,'||chr(10)||
-'  c011,'||chr(10)||
-'  c012,'||chr(10)||
-'  c013,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-' ';
-
-a:=a||' checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_LIST_ATTR'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_LIST_ATTR'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0';
-
-a:=a||' page_id,'||chr(10)||
-'  list_entry_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4052'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4050,4052'' link_cc,'||chr(10)||
-'  ''F4000_P4052_ID,F4000_P4050_LIST_ID,FB_FLOW_ID:'' || list_entry_id || '','' '||chr(10)||
-'    || list_id || '','' || application_id link,'||chr(10)||
-'  ''XSS - List Entry Attributes'' link_desc,'||chr(10)||
-'  list_name,'||chr(10)||
-'  entry_text,'||chr(10)||
-'  htf.escape_sc(entry_text) entry_text_esc,'||chr(10)||
-' ';
-
-a:=a||' entry_attribute_01,'||chr(10)||
-'  entry_attribute_02,'||chr(10)||
-'  entry_attribute_03,'||chr(10)||
-'  entry_attribute_04,'||chr(10)||
-'  entry_attribute_05,'||chr(10)||
-'  entry_attribute_06,'||chr(10)||
-'  entry_attribute_07,'||chr(10)||
-'  entry_attribute_08,'||chr(10)||
-'  entry_attribute_09,'||chr(10)||
-'  entry_attribute_10,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(entry_attribute_01 || entry_attribute_02 || entry_attribute_03 || entry_attribute_04 || entry_attribute_05 || entry_attribute_06 || entry_attribute_';
-
-a:=a||'07 || entry_attribute_08 || entry_attribute_09 || entry_attribute_10) result,'||chr(10)||
-'  entry_target val,'||chr(10)||
-'  sv_sec_util.get_checksum(entry_attribute_01 || entry_attribute_02 || entry_attribute_03 || entry_attribute_04 || entry_attribute_05 || entry_attribute_06 || entry_attribute_07 || entry_attribute_08 || entry_attribute_09 || entry_attribute_10) checksum,'||chr(10)||
-'  list_name,'||chr(10)||
-'  entry_text'||chr(10)||
-'FROM'||chr(10)||
-'  apex_applicati';
-
-a:=a||'on_list_entries'||chr(10)||
-'WHERE '||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_LIST_ATTR',
-  p_collection_key        => 'SV_XSS_LIST_ATTR',
-  p_category_key          => 'SV_XSS_LIST_ATTR',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: List Entry Attributes
 DECLARE
   a CLOB;
@@ -15128,92 +13450,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_LIST_URL
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAM';
-
-a:=a||'E#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_LIST_URL'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_LIST_URL'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  list_entry_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  compone';
-
-a:=a||'nt_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4052'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4050,4052'' link_cc,'||chr(10)||
-'  ''F4000_P4052_ID,F4000_P4050_LIST_ID,FB_FLOW_ID:'' || list_entry_id || '','' '||chr(10)||
-'    || list_id || '','' || application_id link,'||chr(10)||
-'  ''XSS - List Entry URL'' link_desc,'||chr(10)||
-'  list_name,'||chr(10)||
-'  entry_text,'||chr(10)||
-'  htf.escape_sc(entry_text) entry_text_esc,'||chr(10)||
-'  entry_target,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(entry_target) result,'||chr(10)||
-'  entry_tar';
-
-a:=a||'get val,'||chr(10)||
-'  sv_sec_util.get_checksum(entry_target) checksum,'||chr(10)||
-'  list_name,'||chr(10)||
-'  entry_target'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_list_entries'||chr(10)||
-'WHERE '||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_LIST_URL',
-  p_collection_key        => 'SV_XSS_LIST_URL',
-  p_category_key          => 'SV_XSS_LIST_URL',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: List Entry URL
 DECLARE
   a CLOB;
@@ -21646,441 +19882,780 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_COMP_ITEM
+PROMPT == ..ATTRIBUTE: Computation Contains EXECUTE IMMEDIATE
 DECLARE
   a CLOB;
-BEGIN 
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
 
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
+a := null;
+b:=b||'<p>'||chr(10)||
+'	While not specifically a risk in itself, the use of <strong>EXECUTE IMMEDIATE</strong> is considered a risk as it can perform virtually any type of action within the parse as schema. Any use of <strong>EXECUTE IMMEDIATE</strong> should be treated with <em><strong>extreme caution.</strong></em></p>'||chr(10)||
+'';
 
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_COMP_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_COMP_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  computation_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edi';
+c:=c||'<p>'||chr(10)||
+'	Either avoid use of EXE<strong>CUTE IMMEDIATE,</strong> or do everything possible to endure that the code that is being executed can not be maliciously influenced by the input of end users. Developers should pay special attention to any use of <strong>EXECUTE IMMEDIATE</strong> that uses values from the APEX Session State as they may be able to be directly or indirectly influenced by end user';
 
-a:=a||'t'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  item_name,'||chr(10)||
-'  computation_type,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''4315'' link_page,'||chr(10)||
-'    ''4315'' link_req,'||chr(10)||
-'    ''4315'' link_cc,'||chr(10)||
-'    ''F4000_P4315_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || computation_id || '','' '||chr(10)||
-'      || application_id || '','' || page_id link,'||chr(10)||
-'    ''SQL Injection - Pa';
+c:=c||'s.</p>';
 
-a:=a||'ge Computations'' link_desc,'||chr(10)||
-'    page_id,'||chr(10)||
-'    computation_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    page_name,'||chr(10)||
-'    item_name,'||chr(10)||
-'    sv_sec_rules.check_item_syntax(computation) result,'||chr(10)||
-'    computation val,'||chr(10)||
-'    sv_sec_util.get_checksum(computation) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'   ''PAGE_COMPUTATION'' computation_type'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_comp'||chr(10)||
-'  WHERE'||chr(10)||
-'    computation_type IN ('||chr(10)||
-'  ';
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SQLI_COMP',
+  p_attribute_name           => 'Computation Contains EXECUTE IMMEDIATE',
+  p_attribute_key            => 'SV_SQLI_COMP_EXEC',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLLECTION',
+  p_rule_type                => 'FUNCTION',
+  p_table_name               => '',
+  p_column_name              => '',
+  p_view_name                => 'SV_SEC_COL_SQLI_COMP_EXEC_V',
+  p_component_table          => 'APEX_APPLICATION_PAGE_COMP',
+  p_component_column_id      => 'COMPUTATION_ID',
+  p_component_column_display => 'ITEM_NAME',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'COMPONENT',
+  p_component_sig_key        => 'COMPUTATION',
+  p_help_page                => '',
+  p_seq                      => 99,
 
-a:=a||'    ''SQL Query (return single value)'', '||chr(10)||
-'      ''SQL Query (return colon separated value)'','||chr(10)||
-'      ''PL/SQL Function Body'', '||chr(10)||
-'      ''PL/SQL Expression'', '||chr(10)||
-'      ''SQL Expression'')'||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  UNION'||chr(10)||
-''||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''4304'' link_page,'||chr(10)||
-'    ''4304'' link_req,'||chr(10)||
-'    ''4304'' link_cc,'||chr(10)||
-'    ''F4000_P4304_ID,FB_FLOW_ID:'' || application_computation_id || '','' '||chr(10)||
-'        || ap';
+  p_collection_name          => 'SV_SQLI_COMP_EXEC',
 
-a:=a||'plication_id link, '||chr(10)||
-'    ''SQL Injection - App Computations'' link_desc,'||chr(10)||
-'    -1 page_id,'||chr(10)||
-'    application_computation_id computation_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    ''Application Computation'' page_name,'||chr(10)||
-'    computation_item item_name,'||chr(10)||
-'    sv_sec_rules.check_item_syntax(computation) result,'||chr(10)||
-'    computation val,'||chr(10)||
-'    sv_sec_util.get_checksum(computation) checksum,'||chr(10)||
-'    component_signature';
+  p_display_page_id          => 732,
 
-a:=a||','||chr(10)||
-'    ''APP_COMPUTATION'' computation_type'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_computations'||chr(10)||
-'  WHERE'||chr(10)||
-'    computation_type IN ('||chr(10)||
-'      ''FUNCTION_BODY'', '||chr(10)||
-'      ''QUERY'', '||chr(10)||
-'      ''PLSQL_EXPRESSION'', '||chr(10)||
-'      ''SQL_EXPRESSION'')'||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
+  p_summary_page_id          => 730,
 
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_COMP_ITEM',
-  p_collection_key        => 'SV_SQLI_COMP_ITEM',
-  p_category_key          => 'SV_SQLI_COMP',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
   );
+END;
+/
+
+-->>END
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_COMP_EXEC: APPROVED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'APPROVED'
+);
 end;
 /
 
 -->>END
-PROMPT == ..COLLECTION: SV_SQLI_COMP_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
 
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_COMP_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_COMP_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  computation_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edi';
-
-a:=a||'t'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  item_name,'||chr(10)||
-'  computation_type,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''4315'' link_page,'||chr(10)||
-'    ''4315'' link_req,'||chr(10)||
-'    ''4315'' link_cc,'||chr(10)||
-'    ''F4000_P4315_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || computation_id || '','' '||chr(10)||
-'      || application_id || '','' || page_id link,'||chr(10)||
-'    ''SQL Injection - Pa';
-
-a:=a||'ge Computations'' link_desc,'||chr(10)||
-'    page_id,'||chr(10)||
-'    computation_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    page_name,'||chr(10)||
-'    item_name,'||chr(10)||
-'    sv_sec_rules.check_exe_imm(computation) result,'||chr(10)||
-'    computation val,'||chr(10)||
-'    sv_sec_util.get_checksum(computation) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'   ''PAGE_COMPUTATION'' computation_type'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_comp'||chr(10)||
-'  WHERE'||chr(10)||
-'    computation_type IN ('||chr(10)||
-'      ';
-
-a:=a||'''SQL Query (return single value)'', '||chr(10)||
-'      ''SQL Query (return colon separated value)'','||chr(10)||
-'      ''PL/SQL Function Body'', '||chr(10)||
-'      ''PL/SQL Expression'', '||chr(10)||
-'      ''SQL Expression'')'||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  UNION'||chr(10)||
-''||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''4304'' link_page,'||chr(10)||
-'    ''4304'' link_req,'||chr(10)||
-'    ''4304'' link_cc,'||chr(10)||
-'    ''F4000_P4304_ID,FB_FLOW_ID:'' || application_computation_id || '','' '||chr(10)||
-'        || applic';
-
-a:=a||'ation_id link, '||chr(10)||
-'    ''SQL Injection - App Computations'' link_desc,'||chr(10)||
-'    -1 page_id,'||chr(10)||
-'    application_computation_id computation_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    ''Application Computation'' page_name,'||chr(10)||
-'    computation_item item_name,'||chr(10)||
-'    sv_sec_rules.check_exe_imm(computation) result,'||chr(10)||
-'    computation val,'||chr(10)||
-'    sv_sec_util.get_checksum(computation) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''A';
-
-a:=a||'PP_COMPUTATION'' computation_type'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_computations'||chr(10)||
-'  WHERE'||chr(10)||
-'    computation_type IN ('||chr(10)||
-'      ''FUNCTION_BODY'', '||chr(10)||
-'      ''QUERY'', '||chr(10)||
-'      ''PLSQL_EXPRESSION'', '||chr(10)||
-'      ''SQL_EXPRESSION'')'||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_COMP_EXEC',
-  p_collection_key        => 'SV_SQLI_COMP_EXEC',
-  p_category_key          => 'SV_SQLI_COMP',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
 end;
 /
 
 -->>END
-PROMPT == ..COLLECTION: SV_SQLI_COMP_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
 
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_COMP_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_COMP_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  computation_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edi';
-
-a:=a||'t'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  item_name,'||chr(10)||
-'  computation_type,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''4315'' link_page,'||chr(10)||
-'    ''4315'' link_req,'||chr(10)||
-'    ''4315'' link_cc,'||chr(10)||
-'    ''F4000_P4315_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || computation_id || '','' '||chr(10)||
-'      || application_id || '','' || page_id link,'||chr(10)||
-'    ''SQL Injection - Pa';
-
-a:=a||'ge Computations'' link_desc,'||chr(10)||
-'    page_id,'||chr(10)||
-'    computation_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    page_name,'||chr(10)||
-'    item_name,'||chr(10)||
-'    sv_sec_rules.check_dyn_sql(computation) result,'||chr(10)||
-'    sv_sec_util.get_checksum(computation) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'   ''PAGE_COMPUTATION'' computation_type,'||chr(10)||
-'    computation val'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_comp'||chr(10)||
-'  WHERE'||chr(10)||
-'    computation_type IN ('||chr(10)||
-'      ';
-
-a:=a||'''SQL Query (return single value)'', '||chr(10)||
-'      ''SQL Query (return colon separated value)'','||chr(10)||
-'      ''PL/SQL Function Body'', '||chr(10)||
-'      ''PL/SQL Expression'', '||chr(10)||
-'      ''SQL Expression'')'||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  UNION'||chr(10)||
-''||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''4304'' link_page,'||chr(10)||
-'    ''4304'' link_req,'||chr(10)||
-'    ''4304'' link_cc,'||chr(10)||
-'    ''F4000_P4304_ID,FB_FLOW_ID:'' || application_computation_id || '','' '||chr(10)||
-'        || applic';
-
-a:=a||'ation_id link, '||chr(10)||
-'    ''SQL Injection - App Computations'' link_desc,'||chr(10)||
-'    -1 page_id,'||chr(10)||
-'    application_computation_id computation_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    ''Application Computation'' page_name,'||chr(10)||
-'    computation_item item_name,'||chr(10)||
-'    sv_sec_rules.check_dyn_sql(computation) result,'||chr(10)||
-'    sv_sec_util.get_checksum(computation) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''APP_COMPUTATION'' compu';
-
-a:=a||'tation_type,'||chr(10)||
-'    computation val'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_computations'||chr(10)||
-'  WHERE'||chr(10)||
-'    computation_type IN ('||chr(10)||
-'      ''FUNCTION_BODY'', '||chr(10)||
-'      ''QUERY'', '||chr(10)||
-'      ''PLSQL_EXPRESSION'', '||chr(10)||
-'      ''SQL_EXPRESSION'')'||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_COMP_DBMS',
-  p_collection_key        => 'SV_SQLI_COMP_DBMS',
-  p_category_key          => 'SV_SQLI_COMP',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
 end;
 /
 
 -->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: ITEM_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'ITEM_NAME',
+  p_label                 => 'Item Name',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: APPROVED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_BY',
+  p_label                 => 'Approved By',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: APPROVED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_ON',
+  p_label                 => 'Approved On',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 40,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_COMP_EXEC: ATTRIBUTE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'ATTRIBUTE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 30,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: ITEM_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'ITEM_NAME',
+  p_label                 => 'Item Name',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: UPDATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'UPDATED_BY',
+  p_label                 => 'Updated By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: UPDATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'UPDATED_ON',
+  p_label                 => 'Updated On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_COMP_EXEC: PENDING
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'PENDING'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: ITEM_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'ITEM_NAME',
+  p_label                 => 'Item Name',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 25,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 50,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_COMP_EXEC: REJECTED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'REJECTED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: ITEM_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'ITEM_NAME',
+  p_label                 => 'Item Name',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: REJECTED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_BY',
+  p_label                 => 'Rejected By',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: REJECTED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_ON',
+  p_label                 => 'Rejected On',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: REJECTION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTION',
+  p_label                 => 'Rejection',
+  p_seq                   => 10,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_COMP_EXEC: STALE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'STALE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'STALE',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'STALE',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: ITEM_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'STALE',
+  p_column_name           => 'ITEM_NAME',
+  p_label                 => 'Item Name',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 25,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'STALE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_report_key            => 'STALE',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 50,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
 PROMPT == ..ATTRIBUTE: Computation Contains &ITEM. Syntax
 DECLARE
   a CLOB;
@@ -23757,780 +22332,6 @@ end;
 
 -->>END
 
-PROMPT == ..ATTRIBUTE: Computation Contains EXECUTE IMMEDIATE
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>'||chr(10)||
-'	While not specifically a risk in itself, the use of <strong>EXECUTE IMMEDIATE</strong> is considered a risk as it can perform virtually any type of action within the parse as schema. Any use of <strong>EXECUTE IMMEDIATE</strong> should be treated with <em><strong>extreme caution.</strong></em></p>'||chr(10)||
-'';
-
-c:=c||'<p>'||chr(10)||
-'	Either avoid use of EXE<strong>CUTE IMMEDIATE,</strong> or do everything possible to endure that the code that is being executed can not be maliciously influenced by the input of end users. Developers should pay special attention to any use of <strong>EXECUTE IMMEDIATE</strong> that uses values from the APEX Session State as they may be able to be directly or indirectly influenced by end user';
-
-c:=c||'s.</p>';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_SQLI_COMP',
-  p_attribute_name           => 'Computation Contains EXECUTE IMMEDIATE',
-  p_attribute_key            => 'SV_SQLI_COMP_EXEC',
-  p_active_flag              => 'Y',
-  p_rule_source              => 'COLLECTION',
-  p_rule_type                => 'FUNCTION',
-  p_table_name               => '',
-  p_column_name              => '',
-  p_view_name                => 'SV_SEC_COL_SQLI_COMP_EXEC_V',
-  p_component_table          => 'APEX_APPLICATION_PAGE_COMP',
-  p_component_column_id      => 'COMPUTATION_ID',
-  p_component_column_display => 'ITEM_NAME',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'COMPONENT',
-  p_component_sig_key        => 'COMPUTATION',
-  p_help_page                => '',
-  p_seq                      => 99,
-
-  p_collection_name          => 'SV_SQLI_COMP_EXEC',
-
-  p_display_page_id          => 732,
-
-  p_summary_page_id          => 730,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_COMP_EXEC: APPROVED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'APPROVED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: ITEM_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'ITEM_NAME',
-  p_label                 => 'Item Name',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: APPROVED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_BY',
-  p_label                 => 'Approved By',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: APPROVED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_ON',
-  p_label                 => 'Approved On',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 40,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_COMP_EXEC: ATTRIBUTE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'ATTRIBUTE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 30,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: ITEM_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'ITEM_NAME',
-  p_label                 => 'Item Name',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: UPDATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'UPDATED_BY',
-  p_label                 => 'Updated By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: UPDATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'UPDATED_ON',
-  p_label                 => 'Updated On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_COMP_EXEC: PENDING
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'PENDING'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: ITEM_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'ITEM_NAME',
-  p_label                 => 'Item Name',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 25,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 50,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_COMP_EXEC: REJECTED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'REJECTED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: ITEM_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'ITEM_NAME',
-  p_label                 => 'Item Name',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: REJECTED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_BY',
-  p_label                 => 'Rejected By',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: REJECTED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_ON',
-  p_label                 => 'Rejected On',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: REJECTION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTION',
-  p_label                 => 'Rejection',
-  p_seq                   => 10,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_COMP_EXEC: STALE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'STALE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'STALE',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'STALE',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: ITEM_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'STALE',
-  p_column_name           => 'ITEM_NAME',
-  p_label                 => 'Item Name',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 25,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'STALE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_COMP_EXEC: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_report_key            => 'STALE',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 50,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
 PROMPT == CATEGORY: SQL Injection: Dynamic Actions
 BEGIN
 
@@ -24549,255 +22350,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_DYN_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  edit,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_DYN_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_DYN_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  action_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit';
-
-a:=a||','||chr(10)||
-'  ''793'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''RP,793'' link_cc,'||chr(10)||
-'  ''SQL Injection - Dynamic Actions'' link_desc,'||chr(10)||
-'  ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P793_ID:'' || application_id || '','' '||chr(10)||
-'    || page_id || '','' || dynamic_action_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  dynamic_action_name,'||chr(10)||
-'  htf.escape_sc(dynamic_action_name) dynamic_action_name_esc,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(attribute_01) result,'||chr(10)||
-'  attribute_01 val,'||chr(10)||
-' ';
-
-a:=a||' sv_sec_util.get_checksum(attribute_01) checksum,'||chr(10)||
-'  dynamic_action_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_da_acts'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND action_code = ''NATIVE_EXECUTE_PLSQL_CODE''';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_DYN_ITEM',
-  p_collection_key        => 'SV_SQLI_DYN_ITEM',
-  p_category_key          => 'SV_SQLI_DYN',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_DYN_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_DYN_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_DYN_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  action_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit';
-
-a:=a||','||chr(10)||
-'  ''793'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''RP,793'' link_cc,'||chr(10)||
-'  ''SQL Injection - Dynamic Actions'' link_desc,'||chr(10)||
-'  ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P793_ID:'' || application_id || '','' '||chr(10)||
-'    || page_id || '','' || dynamic_action_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  dynamic_action_name,'||chr(10)||
-'  htf.escape_sc(dynamic_action_name) dynamic_action_name_esc,'||chr(10)||
-'  sv_sec_rules.check_dyn_sql(attribute_01) result,'||chr(10)||
-'  attribute_01 val,'||chr(10)||
-'  sv_';
-
-a:=a||'sec_util.get_checksum(attribute_01) checksum,'||chr(10)||
-'  dynamic_action_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_da_acts'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND action_code = ''NATIVE_EXECUTE_PLSQL_CODE''';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_DYN_DBMS',
-  p_collection_key        => 'SV_SQLI_DYN_DBMS',
-  p_category_key          => 'SV_SQLI_DYN',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_DYN_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_DYN_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_DYN_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  action_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit';
-
-a:=a||','||chr(10)||
-'  ''793'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''RP,793'' link_cc,'||chr(10)||
-'  ''SQL Injection - Dynamic Actions'' link_desc,'||chr(10)||
-'  ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P793_ID:'' || application_id || '','' '||chr(10)||
-'    || page_id || '','' || dynamic_action_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  dynamic_action_name,'||chr(10)||
-'  htf.escape_sc(dynamic_action_name) dynamic_action_name_esc,'||chr(10)||
-'  sv_sec_rules.check_exe_imm(attribute_01) result,'||chr(10)||
-'  attribute_01 val,'||chr(10)||
-'  sv_';
-
-a:=a||'sec_util.get_checksum(attribute_01) checksum,'||chr(10)||
-'  dynamic_action_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_da_acts'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND action_code = ''NATIVE_EXECUTE_PLSQL_CODE''';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_DYN_EXEC',
-  p_collection_key        => 'SV_SQLI_DYN_EXEC',
-  p_category_key          => 'SV_SQLI_DYN',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Dynamic Action Contains DBMS_SQL
 DECLARE
   a CLOB;
@@ -27266,420 +24818,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_PRC_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PRC_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PRC_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  process_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''E';
-
-a:=a||'dit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  process_name_esc,'||chr(10)||
-'  process_name,'||chr(10)||
-'  proc_type,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  process_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''4312'' link_page,'||chr(10)||
-'    ''4312'' link_req,'||chr(10)||
-'    ''4312'' link_cc,'||chr(10)||
-'    ''F4000_P4312_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || process_id || '','' '||chr(10)||
-'      || application_id || '','' || page_id link,'||chr(10)||
-'    ''S';
-
-a:=a||'QL Injection - Page Processes'' link_desc,'||chr(10)||
-'    page_id,'||chr(10)||
-'    process_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    page_name,'||chr(10)||
-'    htf.escape_sc(process_name) process_name_esc,'||chr(10)||
-'    process_name,'||chr(10)||
-'    sv_sec_rules.check_dyn_sql(process_source) result,'||chr(10)||
-'    process_source val,'||chr(10)||
-'    sv_sec_util.get_checksum(process_source) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''PAGE_PROCESS'' proc_type'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_';
-
-a:=a||'application_page_proc'||chr(10)||
-'  WHERE'||chr(10)||
-'    process_type = ''PL/SQL anonymous block'''||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  UNION ALL'||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''4309'' link_page, '||chr(10)||
-'    NULL   link_req,'||chr(10)||
-'    ''4312'' link_cc,'||chr(10)||
-'    ''F4000_P4309_ID,FB_FLOW_ID:'' '||chr(10)||
-'      || application_process_id || '','' || application_id link,'||chr(10)||
-'    ''SQL Injection - App Processes'' link_desc,'||chr(10)||
-'    -1 page_id,'||chr(10)||
-'    application_pro';
-
-a:=a||'cess_id process_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    ''Application Process'' page_name,'||chr(10)||
-'    htf.escape_sc(''Application Process'') process_name_esc,'||chr(10)||
-'    process_name,'||chr(10)||
-'    sv_sec_rules.check_dyn_sql(process) result,'||chr(10)||
-'    process val,'||chr(10)||
-'    sv_sec_util.get_checksum(process) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''APP_PROCESS'' proc_type'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_processes'||chr(10)||
-'  WHERE'||chr(10)||
-'    applicat';
-
-a:=a||'ion_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_PRC_DBMS',
-  p_collection_key        => 'SV_SQLI_PRC_DBMS',
-  p_category_key          => 'SV_SQLI_PRC',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_PRC_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PRC_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PRC_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  process_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''E';
-
-a:=a||'dit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  process_name_esc,'||chr(10)||
-'  process_name,'||chr(10)||
-'  proc_type,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  process_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''4312'' link_page,'||chr(10)||
-'    ''4312'' link_req,'||chr(10)||
-'    ''4312'' link_cc,'||chr(10)||
-'    ''F4000_P4312_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || process_id || '','' '||chr(10)||
-'      || application_id || '','' || page_id link,'||chr(10)||
-'    ''S';
-
-a:=a||'QL Injection - Page Processes'' link_desc,'||chr(10)||
-'    page_id,'||chr(10)||
-'    process_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    page_name,'||chr(10)||
-'    htf.escape_sc(process_name) process_name_esc,'||chr(10)||
-'    process_name,'||chr(10)||
-'    sv_sec_rules.check_item_syntax(process_source) result,'||chr(10)||
-'    process_source val,'||chr(10)||
-'    sv_sec_util.get_checksum(process_source) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''PAGE_PROCESS'' proc_type'||chr(10)||
-'  FROM'||chr(10)||
-'    a';
-
-a:=a||'pex_application_page_proc'||chr(10)||
-'  WHERE'||chr(10)||
-'    process_type = ''PL/SQL anonymous block'''||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  UNION ALL'||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''4309'' link_page, '||chr(10)||
-'    NULL   link_req,'||chr(10)||
-'    ''4312'' link_cc,'||chr(10)||
-'    ''F4000_P4309_ID,FB_FLOW_ID:'' '||chr(10)||
-'      || application_process_id || '','' || application_id link,'||chr(10)||
-'    ''SQL Injection - App Processes'' link_desc,'||chr(10)||
-'    -1 page_id,'||chr(10)||
-'    application';
-
-a:=a||'_process_id process_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    ''Application Process'' page_name,'||chr(10)||
-'    htf.escape_sc(''Application Process'') process_name_esc,'||chr(10)||
-'    process_name,'||chr(10)||
-'    sv_sec_rules.check_item_syntax(process) result,'||chr(10)||
-'    process val,'||chr(10)||
-'    sv_sec_util.get_checksum(process) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''APP_PROCESS'' proc_type'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_processes'||chr(10)||
-'  WHERE'||chr(10)||
-'    ';
-
-a:=a||'application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_PRC_ITEM',
-  p_collection_key        => 'SV_SQLI_PRC_ITEM',
-  p_category_key          => 'SV_SQLI_PRC',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_PRC_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PRC_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PRC_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  process_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''E';
-
-a:=a||'dit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  process_name_esc,'||chr(10)||
-'  process_name,'||chr(10)||
-'  proc_type,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  process_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''4312'' link_page,'||chr(10)||
-'    ''4312'' link_req,'||chr(10)||
-'    ''4312'' link_cc,'||chr(10)||
-'    ''F4000_P4312_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || process_id || '','' '||chr(10)||
-'      || application_id || '','' || page_id link,'||chr(10)||
-'    ''S';
-
-a:=a||'QL Injection - Page Processes'' link_desc,'||chr(10)||
-'    page_id,'||chr(10)||
-'    process_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    page_name,'||chr(10)||
-'    htf.escape_sc(process_name) process_name_esc,'||chr(10)||
-'    process_name,'||chr(10)||
-'    sv_sec_rules.check_exe_imm(process_source) result,'||chr(10)||
-'    process_source val,'||chr(10)||
-'    sv_sec_util.get_checksum(process_source) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''PAGE_PROCESS'' proc_type'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_';
-
-a:=a||'application_page_proc'||chr(10)||
-'  WHERE'||chr(10)||
-'    process_type = ''PL/SQL anonymous block'''||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  UNION ALL'||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''4309'' link_page, '||chr(10)||
-'    NULL   link_req,'||chr(10)||
-'    ''4312'' link_cc,'||chr(10)||
-'    ''F4000_P4309_ID,FB_FLOW_ID:'' '||chr(10)||
-'      || application_process_id || '','' || application_id link,'||chr(10)||
-'    ''SQL Injection - App Processes'' link_desc,'||chr(10)||
-'    -1 page_id,'||chr(10)||
-'    application_pro';
-
-a:=a||'cess_id process_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    ''Application Process'' page_name,'||chr(10)||
-'    htf.escape_sc(''Application Process'') process_name_esc,'||chr(10)||
-'    process_name,'||chr(10)||
-'    sv_sec_rules.check_exe_imm(process) result,'||chr(10)||
-'    process val,'||chr(10)||
-'    sv_sec_util.get_checksum(process) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''APP_PROCESS'' proc_type'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_processes'||chr(10)||
-'  WHERE'||chr(10)||
-'    applicat';
-
-a:=a||'ion_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_PRC_EXEC',
-  p_collection_key        => 'SV_SQLI_PRC_EXEC',
-  p_category_key          => 'SV_SQLI_PRC',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Process Contains EXECUTE IMMEDIATE
 DECLARE
   a CLOB;
@@ -30149,282 +27287,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_VAL_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_VAL_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_VAL_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  validation_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-' ';
-
-a:=a||' ''Edit'' edit,'||chr(10)||
-'  ''4316'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''RP,4316'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P4316_ID:'' || application_id || '','' '||chr(10)||
-'    || page_id || '','' || validation_id link,'||chr(10)||
-'  ''SQL Injection - Validations'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  validation_name,'||chr(10)||
-'  htf.escape_sc(validation_name) validation_name_esc,'||chr(10)||
-'  validation_type,'||chr(10)||
-'  sv_sec_rules.check_exe_imm(validation_expression1) result,'||chr(10)||
-' ';
-
-a:=a||' validation_expression1 val,'||chr(10)||
-'  sv_sec_util.get_checksum(validation_expression1) checksum,'||chr(10)||
-'  validation_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_val'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND validation_type IN ('||chr(10)||
-'    ''PL/SQL Expression'', '||chr(10)||
-'    ''Function Returning Boolean'', '||chr(10)||
-'    ''Exists'', '||chr(10)||
-'    ''NOT Exists'', '||chr(10)||
-'    ''Function Returning Error Text'', '||chr(10)||
-'    ''SQL_EXPRESSION'', '||chr(10)||
-'    ''PL/SQL Error'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_VAL_EXEC',
-  p_collection_key        => 'SV_SQLI_VAL_EXEC',
-  p_category_key          => 'SV_SQLI_VAL',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_VAL_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_VAL_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_VAL_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  validation_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-' ';
-
-a:=a||' ''Edit'' edit,'||chr(10)||
-'  ''4316'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''RP,4316'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P4316_ID:'' || application_id || '','' '||chr(10)||
-'    || page_id || '','' || validation_id link,'||chr(10)||
-'  ''SQL Injection - Validations'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  validation_name,'||chr(10)||
-'  htf.escape_sc(validation_name) validation_name_esc,'||chr(10)||
-'  validation_type,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(validation_expression1) resul';
-
-a:=a||'t,'||chr(10)||
-'  validation_expression1 val,'||chr(10)||
-'  sv_sec_util.get_checksum(validation_expression1) checksum,'||chr(10)||
-'  validation_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_val'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND validation_type IN ('||chr(10)||
-'    ''PL/SQL Expression'', '||chr(10)||
-'    ''Function Returning Boolean'', '||chr(10)||
-'    ''Exists'', '||chr(10)||
-'    ''NOT Exists'', '||chr(10)||
-'    ''Function Returning Error Text'', '||chr(10)||
-'    ''SQL_EXPRESSION'', '||chr(10)||
-'    ''PL/SQL Error'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_VAL_ITEM',
-  p_collection_key        => 'SV_SQLI_VAL_ITEM',
-  p_category_key          => 'SV_SQLI_VAL',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_VAL_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_VAL_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_VAL_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  validation_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-' ';
-
-a:=a||' ''Edit'' edit,'||chr(10)||
-'  ''4316'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''RP,4316'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P4316_ID:'' || application_id || '','' '||chr(10)||
-'    || page_id || '','' || validation_id link,'||chr(10)||
-'  ''SQL Injection - Validations'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  validation_name,'||chr(10)||
-'  htf.escape_sc(validation_name) validation_name_esc,'||chr(10)||
-'  validation_type,'||chr(10)||
-'  sv_sec_rules.check_dyn_sql(validation_expression1) result,'||chr(10)||
-' ';
-
-a:=a||' validation_expression1 val,'||chr(10)||
-'  sv_sec_util.get_checksum(validation_expression1) checksum,'||chr(10)||
-'  validation_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_val'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND validation_type IN ('||chr(10)||
-'    ''PL/SQL Expression'', '||chr(10)||
-'    ''Function Returning Boolean'', '||chr(10)||
-'    ''Exists'', '||chr(10)||
-'    ''NOT Exists'', '||chr(10)||
-'    ''Function Returning Error Text'', '||chr(10)||
-'    ''SQL_EXPRESSION'', '||chr(10)||
-'    ''PL/SQL Error'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_VAL_DBMS',
-  p_collection_key        => 'SV_SQLI_VAL_DBMS',
-  p_category_key          => 'SV_SQLI_VAL',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Validation Contains EXECUTE IMMEDIATE
 DECLARE
   a CLOB;
@@ -32894,336 +29756,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_ITMS_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAM';
-
-a:=a||'E#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ITMS_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ITMS_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  item_id component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'';
-
-a:=a||'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  4311 link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  4311 link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  ''F4000_P4311_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || item_id || '','' || application_id || '','' || page_id link,   '||chr(10)||
-'  page_name,'||chr(10)||
-'  item_name,'||chr(10)||
-'  type,'||chr(10)||
-'  UPPER(REPLACE(type, '' '', ''_'')),'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region,'||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''SQL Injection - Item Sourc';
-
-a:=a||'e'' link_desc,'||chr(10)||
-'    page_id,'||chr(10)||
-'    item_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    page_name,'||chr(10)||
-'    region,'||chr(10)||
-'    item_name,'||chr(10)||
-'    sv_sec_rules.check_item_syntax(item_source) result,'||chr(10)||
-'    sv_sec_util.get_checksum(item_source) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''Item Source'' type,'||chr(10)||
-'    item_source val'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_items'||chr(10)||
-'  WHERE'||chr(10)||
-'    item_source_type IN ('||chr(10)||
-'      ''SQL Query (return s';
-
-a:=a||'ingle value)'', '||chr(10)||
-'      ''SQL Query (return colon separated value)'','||chr(10)||
-'      ''PL/SQL Expression or Function'','||chr(10)||
-'      ''PL/SQL Function Body'')'||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_ITMS_ITEM',
-  p_collection_key        => 'SV_SQLI_ITMS_ITEM',
-  p_category_key          => 'SV_SQLI_ITMS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_ITMS_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAM';
-
-a:=a||'E#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ITMS_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ITMS_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  item_id component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'';
-
-a:=a||'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  4311 link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  4311 link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  ''F4000_P4311_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || item_id || '','' || application_id || '','' || page_id link,   '||chr(10)||
-'  page_name,'||chr(10)||
-'  item_name,'||chr(10)||
-'  type,'||chr(10)||
-'  UPPER(REPLACE(type, '' '', ''_'')),'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region,'||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''SQL Injection - Item Sourc';
-
-a:=a||'e'' link_desc,'||chr(10)||
-'    page_id,'||chr(10)||
-'    item_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    page_name,'||chr(10)||
-'    region,'||chr(10)||
-'    item_name,'||chr(10)||
-'    sv_sec_rules.check_dyn_sql(item_source) result,'||chr(10)||
-'    sv_sec_util.get_checksum(item_source) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''Item Source'' type,'||chr(10)||
-'    item_source val'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_items'||chr(10)||
-'  WHERE'||chr(10)||
-'    item_source_type IN ('||chr(10)||
-'      ''SQL Query (return singl';
-
-a:=a||'e value)'', '||chr(10)||
-'      ''SQL Query (return colon separated value)'','||chr(10)||
-'      ''PL/SQL Expression or Function'','||chr(10)||
-'      ''PL/SQL Function Body'')'||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_ITMS_DBMS',
-  p_collection_key        => 'SV_SQLI_ITMS_DBMS',
-  p_category_key          => 'SV_SQLI_ITMS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_ITMS_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAM';
-
-a:=a||'E#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ITMS_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ITMS_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  item_id component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'';
-
-a:=a||'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  4311 link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  4311 link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  ''F4000_P4311_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || item_id || '','' || application_id || '','' || page_id link,   '||chr(10)||
-'  page_name,'||chr(10)||
-'  item_name,'||chr(10)||
-'  type,'||chr(10)||
-'  UPPER(REPLACE(type, '' '', ''_'')),'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region,'||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''SQL Injection - Item Sourc';
-
-a:=a||'e'' link_desc,'||chr(10)||
-'    page_id,'||chr(10)||
-'    item_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    page_name,'||chr(10)||
-'    region,'||chr(10)||
-'    item_name,'||chr(10)||
-'    sv_sec_rules.check_exe_imm(item_source) result,'||chr(10)||
-'    sv_sec_util.get_checksum(item_source) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''Item Source'' type,'||chr(10)||
-'    item_source val'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_items'||chr(10)||
-'  WHERE'||chr(10)||
-'    item_source_type IN ('||chr(10)||
-'      ''SQL Query (return singl';
-
-a:=a||'e value)'', '||chr(10)||
-'      ''SQL Query (return colon separated value)'','||chr(10)||
-'      ''PL/SQL Expression or Function'','||chr(10)||
-'      ''PL/SQL Function Body'')'||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_ITMS_EXEC',
-  p_collection_key        => 'SV_SQLI_ITMS_EXEC',
-  p_category_key          => 'SV_SQLI_ITMS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Item Source Contains &ITEM. Syntax
 DECLARE
   a CLOB;
@@ -35504,1424 +32036,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_URL_MIS_STD_COL
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'('||chr(10)||
-'collection_name,'||chr(10)||
-'collection_id,'||chr(10)||
-'category_key,'||chr(10)||
-'application_id,'||chr(10)||
-'attribute_id,'||chr(10)||
-'page_id,'||chr(10)||
-'component_id,'||chr(10)||
-'column_id,'||chr(10)||
-'last_updated_by,'||chr(10)||
-'last_updated_on,'||chr(10)||
-'component_signature,'||chr(10)||
-'edit,'||chr(10)||
-'link_page,'||chr(10)||
-'link_req,'||chr(10)||
-'link_cc,'||chr(10)||
-'link,'||chr(10)||
-'link_desc,'||chr(10)||
-'c001,'||chr(10)||
-'c002,'||chr(10)||
-'c003,'||chr(10)||
-'c004,'||chr(10)||
-'c005,'||chr(10)||
-'c006,'||chr(10)||
-'n001,'||chr(10)||
-'result,'||chr(10)||
-'val,'||chr(10)||
-'checksum,'||chr(10)||
-'component_name,'||chr(10)||
-'column_name'||chr(10)||
-')'||chr(10)||
-'SELECT'||chr(10)||
-'''#COLLECTION_NAME#'','||chr(10)||
-'#COLLECTION_ID#,'||chr(10)||
-'(SELE';
-
-a:=a||'CT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-' (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_STD_COL'')) category_key,'||chr(10)||
-'application_id,'||chr(10)||
-'(SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_STD_COL'') attribute_id,'||chr(10)||
-'page_id,'||chr(10)||
-'region_id,'||chr(10)||
-'column_id,'||chr(10)||
-'last_updated_by,'||chr(10)||
-'last_updated_on,'||chr(10)||
-'component_signature,'||chr(10)||
-'''Edit'' edit,'||chr(10)||
-'link_page,'||chr(10)||
-'link_req,';
-
-a:=a||''||chr(10)||
-'link_cc,'||chr(10)||
-'link,'||chr(10)||
-'''URL Tampering - Inconsistent Columns'' link_desc,'||chr(10)||
-'region_name,'||chr(10)||
-'column_alias,'||chr(10)||
-'heading,'||chr(10)||
-'heading_esc,'||chr(10)||
-'col_auth_scheme,'||chr(10)||
-'page_auth_scheme,'||chr(10)||
-'target_page_id,'||chr(10)||
-'CASE'||chr(10)||
-' WHEN TO_CHAR(col_auth_scheme_id) != page_auth_scheme_id AND TO_CHAR(col_auth_scheme_id) IS NOT NULL AND page_auth_scheme_id IS NOT NULL THEN ''FAIL'''||chr(10)||
-' WHEN TO_CHAR(col_auth_scheme_id) IS NOT NULL AND page_auth_scheme_id IS NULL TH';
-
-a:=a||'EN ''FAIL'''||chr(10)||
-' ELSE ''PASS'' END result,'||chr(10)||
-'  NULL val,'||chr(10)||
-'  NULL checksum,'||chr(10)||
-'region_name,'||chr(10)||
-'column_alias'||chr(10)||
-'FROM'||chr(10)||
-' ('||chr(10)||
-' SELECT'||chr(10)||
-'  c.column_id,'||chr(10)||
-'  c.region_id,'||chr(10)||
-'  c.report_type,'||chr(10)||
-'  c.column_alias,'||chr(10)||
-'  c.page_id,'||chr(10)||
-'  TO_CHAR(c.target_page_id) target_page_id,'||chr(10)||
-'  c.region_name,'||chr(10)||
-'  c.heading,'||chr(10)||
-'  c.heading_esc,'||chr(10)||
-'  c.last_updated_by,'||chr(10)||
-'  c.last_updated_on,'||chr(10)||
-'  c.component_signature,'||chr(10)||
-'  c.application_id,'||chr(10)||
-'  c.authorization_scheme col_auth_sche';
-
-a:=a||'me,'||chr(10)||
-'  c.authorization_scheme_id col_auth_scheme_id,'||chr(10)||
-'  p.authorization_scheme page_auth_scheme,'||chr(10)||
-'  p.authorization_scheme_id page_auth_scheme_id,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link'||chr(10)||
-' FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'   region_report_column_id column_id,'||chr(10)||
-'   ''Standard'' report_type,'||chr(10)||
-'   application_id,'||chr(10)||
-'   page_id,'||chr(10)||
-'   region_id,'||chr(10)||
-'   region_name,'||chr(10)||
-'   column_alias,'||chr(10)||
-'   heading,'||chr(10)||
-'   htf.escape_sc(heading) heading_esc,'||chr(10)||
-'';
-
-a:=a||'   (SUBSTR(column_link_url,'||chr(10)||
-'    INSTR(column_link_url, '':'')+1,'||chr(10)||
-'    INSTR(SUBSTR(column_link_url, INSTR(column_link_url, '':'')+1), '':'', 1)-1'||chr(10)||
-'    )) target_page_id,'||chr(10)||
-'   last_updated_by,'||chr(10)||
-'   last_updated_on,'||chr(10)||
-'   authorization_scheme,'||chr(10)||
-'   authorization_scheme_id,'||chr(10)||
-'   component_signature,'||chr(10)||
-'   ''422'' link_page,'||chr(10)||
-'   NULL link_req,'||chr(10)||
-'   ''RP,4651,960,420,422'' link_cc,'||chr(10)||
-'   ''FB_FLOW_ID,FB_FLOW_PAGE_ID,P422_COLUMN_ID,P42';
-
-a:=a||'0_REGION_ID,F4000_P4651_ID,P960_ID:'' '||chr(10)||
-'    || application_id || '','' || page_id || '','' || region_report_column_id || '','' || region_id link'||chr(10)||
-'   FROM'||chr(10)||
-'    apex_application_page_rpt_cols'||chr(10)||
-'   WHERE'||chr(10)||
-'    application_id = #APPLICATION_ID#'||chr(10)||
-'    AND column_link_url IS NOT NULL'||chr(10)||
-'    AND column_link_url LIKE ''f?p=%'''||chr(10)||
-'   ) c,'||chr(10)||
-'   apex_application_pages p'||chr(10)||
-'  WHERE'||chr(10)||
-'   c.target_page_id = TO_CHAR(p.page_id(+))'||chr(10)||
-'   AND p.app';
-
-a:=a||'lication_id = c.application_id'||chr(10)||
-' )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_URL_MIS_STD_COL',
-  p_collection_key        => 'SV_URL_MIS_STD_COL',
-  p_category_key          => 'SV_URL_AUTH_INCONSISTENCIES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_URL_MIS_AJAX_CB
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_AJAX_CB'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_AJAX_CB'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  process_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'';
-
-a:=a||'  ''Edit'' edit,'||chr(10)||
-'  ''4312'' link_page,'||chr(10)||
-'  ''4312'' link_req,'||chr(10)||
-'  ''4312'' link_cc,'||chr(10)||
-'  ''F4000_P4312_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || process_id || '','' '||chr(10)||
-'      || application_id || '','' || page_id link,'||chr(10)||
-'  ''URL - Ajax Callback'' link_desc,'||chr(10)||
-'  process_name,'||chr(10)||
-'  htf.escape_sc(process_name) process_name_esc,'||chr(10)||
-'  authorization_scheme,'||chr(10)||
-'  page_name,'||chr(10)||
-'  CASE WHEN (authorization_scheme_id IS NULL) THEN ''FAIL'' ELSE ''PASS'' END r';
-
-a:=a||'esult,'||chr(10)||
-'  NULL val,'||chr(10)||
-'  NULL checksum,'||chr(10)||
-'  process_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_proc'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND process_point_code = ''ON_DEMAND'' ';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_URL_MIS_AJAX_CB',
-  p_collection_key        => 'SV_URL_MIS_AJAX_CB',
-  p_category_key          => 'SV_URL_AUTH_INCONSISTENCIES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_URL_MIS_IR_LINK
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'('||chr(10)||
-'collection_name,'||chr(10)||
-'collection_id,'||chr(10)||
-'category_key,'||chr(10)||
-'application_id,'||chr(10)||
-'attribute_id,'||chr(10)||
-'page_id,'||chr(10)||
-'component_id,'||chr(10)||
-'last_updated_by,'||chr(10)||
-'last_updated_on,'||chr(10)||
-'component_signature,'||chr(10)||
-'edit,'||chr(10)||
-'link_page,'||chr(10)||
-'link_req,'||chr(10)||
-'link_cc,'||chr(10)||
-'link,'||chr(10)||
-'link_desc,'||chr(10)||
-'c001,'||chr(10)||
-'c002,'||chr(10)||
-'c003,'||chr(10)||
-'c004,'||chr(10)||
-'c005,'||chr(10)||
-'result,'||chr(10)||
-'val,'||chr(10)||
-'checksum,'||chr(10)||
-'component_name'||chr(10)||
-')'||chr(10)||
-'SELECT'||chr(10)||
-'''#COLLECTION_NAME#'','||chr(10)||
-'#COLLECTION_ID#,'||chr(10)||
-'(SELECT category_key FROM sv_sec_categori';
-
-a:=a||'es WHERE category_id = '||chr(10)||
-' (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_IR_LINK'')) category_key,'||chr(10)||
-'application_id,'||chr(10)||
-'(SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_IR_LINK'') attribute_id,'||chr(10)||
-'page_id,'||chr(10)||
-'region_id,'||chr(10)||
-'last_updated_by,'||chr(10)||
-'last_updated_on,'||chr(10)||
-'component_signature,'||chr(10)||
-'''Edit'' edit,'||chr(10)||
-'link_page,'||chr(10)||
-'link_req,'||chr(10)||
-'link_cc,'||chr(10)||
-'link,'||chr(10)||
-'''URL Tampering - Inconsistent I';
-
-a:=a||'R Links'' link_desc,'||chr(10)||
-'region_name,'||chr(10)||
-'region_auth_scheme,'||chr(10)||
-'page_auth_scheme,'||chr(10)||
-'target_page_id,'||chr(10)||
-'htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'CASE'||chr(10)||
-' WHEN TO_CHAR(region_auth_scheme_id) != page_auth_scheme_id AND TO_CHAR(region_auth_scheme_id) IS NOT NULL AND page_auth_scheme_id IS NOT NULL THEN ''FAIL'''||chr(10)||
-' WHEN TO_CHAR(region_auth_scheme_id) IS NOT NULL AND page_auth_scheme_id IS NULL THEN ''FAIL'''||chr(10)||
-' ELSE ''PASS'' END';
-
-a:=a||' result,'||chr(10)||
-'  NULL val,'||chr(10)||
-'  NULL checksum,'||chr(10)||
-'region_name'||chr(10)||
-'FROM'||chr(10)||
-' ('||chr(10)||
-' SELECT'||chr(10)||
-'  c.region_id,'||chr(10)||
-'  c.report_type,'||chr(10)||
-'  c.page_id,'||chr(10)||
-'  TO_CHAR(c.target_page_id) target_page_id,'||chr(10)||
-'  c.region_name,'||chr(10)||
-'  c.last_updated_by,'||chr(10)||
-'  c.last_updated_on,'||chr(10)||
-'  c.component_signature,'||chr(10)||
-'  c.application_id,'||chr(10)||
-'  c.authorization_scheme region_auth_scheme,'||chr(10)||
-'  c.authorization_scheme_id region_auth_scheme_id,'||chr(10)||
-'  p.authorization_scheme page_auth_scheme,'||chr(10)||
-'  ';
-
-a:=a||'p.authorization_scheme_id page_auth_scheme_id,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link'||chr(10)||
-' FROM'||chr(10)||
-'  ('||chr(10)||
-'   SELECT'||chr(10)||
-'    ''Interactive'' report_type,'||chr(10)||
-'    ir.application_id,'||chr(10)||
-'    ir.page_id,'||chr(10)||
-'    ir.region_id,'||chr(10)||
-'    r.region_name,'||chr(10)||
-'    (SUBSTR('||chr(10)||
-'     detail_link_target,'||chr(10)||
-'     INSTR(detail_link_target, '':'')+1,'||chr(10)||
-'     INSTR(SUBSTR(detail_link_target, INSTR(detail_link_target, '':'')+1), '':'', 1)-1'||chr(10)||
-'     )) target_page_id,';
-
-a:=a||''||chr(10)||
-'    ir.updated_by last_updated_by,'||chr(10)||
-'    ir.updated_on last_updated_on,'||chr(10)||
-'    ir.detail_link_auth_scheme authorization_scheme,'||chr(10)||
-'    ir.detail_link_auth_scheme_id authorization_scheme_id,   '||chr(10)||
-'    ir.component_signature,'||chr(10)||
-'    4651 link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''RP,4651,960,420'' link_cc,'||chr(10)||
-'    ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' '||chr(10)||
-'    || ir.region_id || '','' || ir.application_id || '','' || ir.page_';
-
-a:=a||'id link'||chr(10)||
-'   FROM'||chr(10)||
-'    apex_application_page_ir ir,'||chr(10)||
-'    apex_application_page_regions r'||chr(10)||
-'   WHERE'||chr(10)||
-'    ir.region_id = r.region_id'||chr(10)||
-'    AND detail_link_type = ''Custom Link target'''||chr(10)||
-'    AND detail_link_target LIKE ''f?p=%'''||chr(10)||
-'    AND ir.application_id = #APPLICATION_ID#'||chr(10)||
-'   ) c,'||chr(10)||
-'   apex_application_pages p'||chr(10)||
-'  WHERE'||chr(10)||
-'   c.target_page_id = TO_CHAR(p.page_id(+))'||chr(10)||
-'   AND p.application_id = c.application_id'||chr(10)||
-' )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_URL_MIS_IR_LINK',
-  p_collection_key        => 'SV_URL_MIS_IR_LINK',
-  p_category_key          => 'SV_URL_AUTH_INCONSISTENCIES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_URL_MIS_OD_PROC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELE';
-
-a:=a||'CT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_OD_PROC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_OD_PROC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  application_process_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ';
-
-a:=a||'''Edit'' edit,'||chr(10)||
-'  4309 link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  4312 link_cc,'||chr(10)||
-'  ''F4000_P4309_ID,FB_FLOW_ID:'' || application_process_id || '','' || application_id || '',''  link,'||chr(10)||
-'  ''URL - onDemand Process'' link_desc,'||chr(10)||
-'  process_name,'||chr(10)||
-'  htf.escape_sc(process_name) process_name_esc,'||chr(10)||
-'CASE WHEN ((authorization_scheme_id IS NULL OR authorization_scheme=''MUST_NOT_BE_PUBLIC_USER'') AND condition_type IS NULL) THEN ''FAIL'' ELS';
-
-a:=a||'E ''PASS'' END result,'||chr(10)||
-'  NULL val,'||chr(10)||
-'  NULL checksum,'||chr(10)||
-'  process_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_processes '||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND process_point = ''On Demand: Run this application process when requested by a page process''';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_URL_MIS_OD_PROC',
-  p_collection_key        => 'SV_URL_MIS_OD_PROC',
-  p_category_key          => 'SV_URL_AUTH_INCONSISTENCIES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_URL_MIS_NB
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_NB'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_NB'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  nav_bar_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''';
-
-a:=a||'4308'' link_page,'||chr(10)||
-'  '''' link_req,'||chr(10)||
-'  ''4308'' link_cc,'||chr(10)||
-'  ''F4000_P4308_ID,FB_FLOW_ID:'' || nav_bar_id || '','' '||chr(10)||
-'    || application_id link,'||chr(10)||
-'  ''URL Tampering - Inconsistent Nav Bar Entries'' link_desc,'||chr(10)||
-'  icon_subtext,'||chr(10)||
-'  navbar_auth_scheme,'||chr(10)||
-'  page_auth_scheme,'||chr(10)||
-'  CASE'||chr(10)||
-'    WHEN TO_CHAR(navbar_auth_scheme_id) != page_auth_scheme_id '||chr(10)||
-'      AND TO_CHAR(navbar_auth_scheme_id) IS NOT NULL '||chr(10)||
-'      AND page_auth_scheme';
-
-a:=a||'_id IS NOT NULL THEN ''FAIL'''||chr(10)||
-'    WHEN TO_CHAR(navbar_auth_scheme_id) IS NOT NULL '||chr(10)||
-'      AND page_auth_scheme_id IS NULL THEN ''FAIL'''||chr(10)||
-'    ELSE ''PASS'''||chr(10)||
-'  END result,'||chr(10)||
-'  NULL val,'||chr(10)||
-'  NULL checksum,'||chr(10)||
-'  icon_subtext'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    n.application_id,'||chr(10)||
-'    n.icon_subtext,'||chr(10)||
-'    n.page_id,'||chr(10)||
-'    n.nav_bar_id,'||chr(10)||
-'    n.last_updated_by,'||chr(10)||
-'    n.last_updated_on,'||chr(10)||
-'    n.component_signature,'||chr(10)||
-'    n.authorization_scheme na';
-
-a:=a||'vbar_auth_scheme,'||chr(10)||
-'    n.authorization_scheme_id navbar_auth_scheme_id,'||chr(10)||
-'    p.authorization_scheme page_auth_scheme,'||chr(10)||
-'    p.authorization_scheme_id page_auth_scheme_id'||chr(10)||
-'  FROM'||chr(10)||
-'    ('||chr(10)||
-'    SELECT'||chr(10)||
-'      nb.application_id,'||chr(10)||
-'      nb.icon_subtext,'||chr(10)||
-'      nb.authorization_scheme,'||chr(10)||
-'      nb.authorization_scheme_id,'||chr(10)||
-'      nb.component_signature,'||chr(10)||
-'      nb.nav_bar_id,'||chr(10)||
-'      nb.last_updated_by,'||chr(10)||
-'      nb.last_update';
-
-a:=a||'d_on,'||chr(10)||
-'      SUBSTR'||chr(10)||
-'        ('||chr(10)||
-'        icon_target,'||chr(10)||
-'        INSTR(icon_target, '':'')+1,'||chr(10)||
-'        INSTR(SUBSTR(icon_target, INSTR(icon_target, '':'')+1), '':'', 1)-1'||chr(10)||
-'        ) page_id'||chr(10)||
-'    FROM'||chr(10)||
-'      apex_application_nav_bar nb'||chr(10)||
-'    WHERE'||chr(10)||
-'      LOWER(icon_target) LIKE ''f?p%'''||chr(10)||
-'    ) n,'||chr(10)||
-'    apex_application_pages p'||chr(10)||
-'  WHERE'||chr(10)||
-'    n.page_id = TO_CHAR(p.page_id(+))'||chr(10)||
-'    AND n.application_id = p.application_id'||chr(10)||
-'    AND';
-
-a:=a||' n.application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_URL_MIS_NB',
-  p_collection_key        => 'SV_URL_MIS_NB',
-  p_category_key          => 'SV_URL_AUTH_INCONSISTENCIES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_URL_MIS_PAR_TAB
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  ';
-
-a:=a||'#COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_PAR_TAB'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_PAR_TAB'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  tab_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signatu';
-
-a:=a||'re,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  ''URL Tampering - Inconsistent Tabs'' link_desc,'||chr(10)||
-'  tab_set,'||chr(10)||
-'  tab_label,'||chr(10)||
-'  tab_type,'||chr(10)||
-'  tab_auth_scheme,'||chr(10)||
-'  page_auth_scheme,'||chr(10)||
-'  CASE'||chr(10)||
-'    WHEN TO_CHAR(tab_auth_scheme_id) != page_auth_scheme_id '||chr(10)||
-'      AND TO_CHAR(tab_auth_scheme_id) IS NOT NULL '||chr(10)||
-'      AND page_auth_scheme_id IS NOT NULL THEN ''FAIL'''||chr(10)||
-'    WHEN TO_CHAR(tab_auth_scheme_id) IS ';
-
-a:=a||'NOT NULL '||chr(10)||
-'      AND page_auth_scheme_id IS NULL THEN ''FAIL'''||chr(10)||
-'    ELSE ''PASS'''||chr(10)||
-'  END result,'||chr(10)||
-'  NULL val,'||chr(10)||
-'  NULL checksum,'||chr(10)||
-'  tab_label'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    t.tab_id,'||chr(10)||
-'    t.tab_type,'||chr(10)||
-'    t.tab_set,'||chr(10)||
-'    t.tab_label,'||chr(10)||
-'    t.page_id,'||chr(10)||
-'    t.last_updated_by,'||chr(10)||
-'    t.last_updated_on,'||chr(10)||
-'    t.component_signature,'||chr(10)||
-'    t.application_id,'||chr(10)||
-'    t.authorization_scheme tab_auth_scheme,'||chr(10)||
-'    t.authorization_scheme_id tab_a';
-
-a:=a||'uth_scheme_id,'||chr(10)||
-'    p.authorization_scheme page_auth_scheme,'||chr(10)||
-'    p.authorization_scheme_id page_auth_scheme_id,'||chr(10)||
-'    link_page,'||chr(10)||
-'    link_req,'||chr(10)||
-'    link_cc,'||chr(10)||
-'    link'||chr(10)||
-'  FROM'||chr(10)||
-'    ('||chr(10)||
-'    SELECT'||chr(10)||
-'      parent_tab_id tab_id,'||chr(10)||
-'      application_id,'||chr(10)||
-'      ''Parent'' tab_type,'||chr(10)||
-'      tab_set,'||chr(10)||
-'      tab_label,'||chr(10)||
-'      TO_NUMBER(SUBSTR'||chr(10)||
-'        ('||chr(10)||
-'      tab_target,'||chr(10)||
-'      INSTR(tab_target, '':'')+1,'||chr(10)||
-'      INSTR(SUBSTR(tab_t';
-
-a:=a||'arget, INSTR(tab_target, '':'')+1), '':'', 1)-1'||chr(10)||
-'      )) page_id,'||chr(10)||
-'      authorization_scheme,'||chr(10)||
-'      authorization_scheme_id,'||chr(10)||
-'      last_updated_by,'||chr(10)||
-'      last_updated_on,'||chr(10)||
-'      component_signature,'||chr(10)||
-'      ''4318'' link_page,'||chr(10)||
-'      '''' link_req,'||chr(10)||
-'      ''4318'' link_cc,'||chr(10)||
-'      ''F4000_P4318_ID,F4000_LAST_VIEW,FB_FLOW_ID:'' || parent_tab_id || '',9000,'' || application_id link'||chr(10)||
-'    FROM'||chr(10)||
-'      apex_application_parent';
-
-a:=a||'_tabs'||chr(10)||
-'    WHERE'||chr(10)||
-'      LOWER(tab_target) LIKE ''f?p%'''||chr(10)||
-'      AND application_id = #APPLICATION_ID#'||chr(10)||
-'    ) t,'||chr(10)||
-'    apex_application_pages p'||chr(10)||
-'  WHERE'||chr(10)||
-'    t.page_id = p.page_id(+)'||chr(10)||
-'    AND t.application_id = p.application_id'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_URL_MIS_PAR_TAB',
-  p_collection_key        => 'SV_URL_MIS_PAR_TAB',
-  p_category_key          => 'SV_URL_AUTH_INCONSISTENCIES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_URL_MIS_IR_COL
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'('||chr(10)||
-'collection_name,'||chr(10)||
-'collection_id,'||chr(10)||
-'category_key,'||chr(10)||
-'application_id,'||chr(10)||
-'attribute_id,'||chr(10)||
-'page_id,'||chr(10)||
-'component_id,'||chr(10)||
-'column_id,'||chr(10)||
-'last_updated_by,'||chr(10)||
-'last_updated_on,'||chr(10)||
-'component_signature,'||chr(10)||
-'edit,'||chr(10)||
-'link_page,'||chr(10)||
-'link_req,'||chr(10)||
-'link_cc,'||chr(10)||
-'link,'||chr(10)||
-'link_desc,'||chr(10)||
-'c001,'||chr(10)||
-'c002,'||chr(10)||
-'c003,'||chr(10)||
-'c004,'||chr(10)||
-'c005,'||chr(10)||
-'c006,'||chr(10)||
-'n001,'||chr(10)||
-'result,'||chr(10)||
-'val,'||chr(10)||
-'checksum,'||chr(10)||
-'component_name,'||chr(10)||
-'column_name'||chr(10)||
-')'||chr(10)||
-'SELECT'||chr(10)||
-'''#COLLECTION_NAME#'','||chr(10)||
-'#COLLECTION_ID#,'||chr(10)||
-'(SELE';
-
-a:=a||'CT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-' (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_IR_COL'')) category_key,'||chr(10)||
-'application_id,'||chr(10)||
-'(SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_IR_COL'') attribute_id,'||chr(10)||
-'page_id,'||chr(10)||
-'region_id,'||chr(10)||
-'column_id,'||chr(10)||
-'last_updated_by,'||chr(10)||
-'last_updated_on,'||chr(10)||
-'component_signature,'||chr(10)||
-'''Edit'' edit,'||chr(10)||
-'link_page,'||chr(10)||
-'link_req,'||chr(10)||
-'l';
-
-a:=a||'ink_cc,'||chr(10)||
-'link,'||chr(10)||
-'''URL Tampering - Inconsistent Columns'' link_desc,'||chr(10)||
-'region_name,'||chr(10)||
-'column_alias,'||chr(10)||
-'heading,'||chr(10)||
-'heading_esc,'||chr(10)||
-'col_auth_scheme,'||chr(10)||
-'page_auth_scheme,'||chr(10)||
-'target_page_id,'||chr(10)||
-'CASE'||chr(10)||
-' WHEN TO_CHAR(col_auth_scheme_id) != page_auth_scheme_id AND TO_CHAR(col_auth_scheme_id) IS NOT NULL AND page_auth_scheme_id IS NOT NULL THEN ''FAIL'''||chr(10)||
-' WHEN TO_CHAR(col_auth_scheme_id) IS NOT NULL AND page_auth_scheme_id IS NULL THEN';
-
-a:=a||' ''FAIL'''||chr(10)||
-' ELSE ''PASS'' END result,'||chr(10)||
-'  NULL val,'||chr(10)||
-'  NULL checksum,'||chr(10)||
-'region_name,'||chr(10)||
-'column_alias'||chr(10)||
-'FROM'||chr(10)||
-' ('||chr(10)||
-' SELECT'||chr(10)||
-'  c.column_id,'||chr(10)||
-'  c.region_id,'||chr(10)||
-'  c.report_type,'||chr(10)||
-'  c.column_alias,'||chr(10)||
-'  c.page_id,'||chr(10)||
-'  TO_CHAR(c.target_page_id) target_page_id,'||chr(10)||
-'  c.region_name,'||chr(10)||
-'  c.heading,'||chr(10)||
-'  c.heading_esc,'||chr(10)||
-'  c.last_updated_by,'||chr(10)||
-'  c.last_updated_on,'||chr(10)||
-'  c.component_signature,'||chr(10)||
-'  c.application_id,'||chr(10)||
-'  c.authorization_scheme col_auth_scheme';
-
-a:=a||','||chr(10)||
-'  c.authorization_scheme_id col_auth_scheme_id,'||chr(10)||
-'  p.authorization_scheme page_auth_scheme,'||chr(10)||
-'  p.authorization_scheme_id page_auth_scheme_id,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link'||chr(10)||
-' FROM'||chr(10)||
-'  ('||chr(10)||
-'   SELECT'||chr(10)||
-'    ir.column_id,'||chr(10)||
-'    ''Interactive'' report_type,'||chr(10)||
-'    ir.application_id,'||chr(10)||
-'    ir.page_id,'||chr(10)||
-'    ir.region_id,'||chr(10)||
-'    r.region_name,'||chr(10)||
-'    ir.column_alias,'||chr(10)||
-'    ir.report_label heading,'||chr(10)||
-'    htf.escape_sc(ir';
-
-a:=a||'.report_label) heading_esc,'||chr(10)||
-'    (SUBSTR('||chr(10)||
-'     column_link,'||chr(10)||
-'     INSTR(column_link, '':'')+1,'||chr(10)||
-'     INSTR(SUBSTR(column_link, INSTR(column_link, '':'')+1), '':'', 1)-1'||chr(10)||
-'     )) target_page_id,'||chr(10)||
-'    ir.updated_by last_updated_by,'||chr(10)||
-'    ir.updated_on last_updated_on,'||chr(10)||
-'    ir.authorization_scheme,'||chr(10)||
-'    ir.authorization_scheme_id,'||chr(10)||
-'    ir.component_signature,'||chr(10)||
-'    ''687'' link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''687,601,4651';
-
-a:=a||''' link_cc,'||chr(10)||
-'    ''FB_FLOW_ID,FB_FLOW_PAGE_ID,P687_ID,P601_REGION_ID,P601_ID:'' '||chr(10)||
-'      || ir.application_id || '', '' || ir.page_id || '','' || ir.column_id || '','' || ir.region_id link'||chr(10)||
-'   FROM'||chr(10)||
-'    apex_application_page_ir_col ir,'||chr(10)||
-'    apex_application_page_regions r'||chr(10)||
-'   WHERE'||chr(10)||
-'    ir.region_id = r.region_id'||chr(10)||
-'    AND column_link IS NOT NULL'||chr(10)||
-'    AND column_link LIKE ''f?p=%'''||chr(10)||
-'    AND ir.application_id = #APPLICAT';
-
-a:=a||'ION_ID#'||chr(10)||
-'   ) c,'||chr(10)||
-'   apex_application_pages p'||chr(10)||
-'  WHERE'||chr(10)||
-'   c.target_page_id = TO_CHAR(p.page_id(+))'||chr(10)||
-'   AND p.application_id = c.application_id'||chr(10)||
-' )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_URL_MIS_IR_COL',
-  p_collection_key        => 'SV_URL_MIS_IR_COL',
-  p_category_key          => 'SV_URL_AUTH_INCONSISTENCIES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_URL_MIS_LE
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLEC';
-
-a:=a||'TION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_LE'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_LE'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  list_entry_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  compo';
-
-a:=a||'nent_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4052'' link_page,'||chr(10)||
-'  '''' link_req,'||chr(10)||
-'  ''4052'' link_cc,'||chr(10)||
-'  ''F4000_P4050_LIST_ID,F4000_P4052_ID,FB_FLOW_ID:'' || list_id || '','' '||chr(10)||
-'    || list_entry_id || '','' || application_id link,'||chr(10)||
-'  ''URL Tampering - Inconsistent List Entries'' link_desc,'||chr(10)||
-'  list_name,'||chr(10)||
-'  list_id,'||chr(10)||
-'  entry_text,'||chr(10)||
-'  list_entry_auth_scheme,'||chr(10)||
-'  page_auth_scheme,'||chr(10)||
-'  CASE'||chr(10)||
-'    WHEN TO_CHAR(list_entry_auth_scheme_id) !=';
-
-a:=a||' page_auth_scheme_id '||chr(10)||
-'      AND TO_CHAR(list_entry_auth_scheme_id) IS NOT NULL '||chr(10)||
-'      AND page_auth_scheme_id IS NOT NULL THEN ''FAIL'''||chr(10)||
-'    WHEN TO_CHAR(list_entry_auth_scheme_id) IS NOT NULL '||chr(10)||
-'      AND page_auth_scheme_id IS NULL THEN ''FAIL'''||chr(10)||
-'    ELSE ''PASS'''||chr(10)||
-'  END result,'||chr(10)||
-'  NULL val,'||chr(10)||
-'  NULL checksum,'||chr(10)||
-'  list_name,'||chr(10)||
-'  entry_text'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    l.application_id,'||chr(10)||
-'    l.entry_text,'||chr(10)||
-'    l.page_id,'||chr(10)||
-' ';
-
-a:=a||'   l.list_name,'||chr(10)||
-'    l.list_id,'||chr(10)||
-'    l.list_entry_id,'||chr(10)||
-'    l.last_updated_by,'||chr(10)||
-'    l.last_updated_on,'||chr(10)||
-'    l.component_signature,'||chr(10)||
-'    l.authorization_scheme list_entry_auth_scheme,'||chr(10)||
-'    l.authorization_scheme_id list_entry_auth_scheme_id,'||chr(10)||
-'    p.authorization_scheme page_auth_scheme,'||chr(10)||
-'    p.authorization_scheme_id page_auth_scheme_id'||chr(10)||
-'  FROM'||chr(10)||
-'    ('||chr(10)||
-'    SELECT'||chr(10)||
-'      le.application_id,'||chr(10)||
-'      le.entry_text,'||chr(10)||
-'  ';
-
-a:=a||'    le.list_name,'||chr(10)||
-'      le.list_id,'||chr(10)||
-'      le.authorization_scheme,'||chr(10)||
-'      le.authorization_scheme_id,'||chr(10)||
-'      le.component_signature,'||chr(10)||
-'      le.list_entry_id,'||chr(10)||
-'      le.last_updated_by,'||chr(10)||
-'      le.last_updated_on,'||chr(10)||
-'      SUBSTR'||chr(10)||
-'        ('||chr(10)||
-'        le.entry_target,'||chr(10)||
-'        INSTR(le.entry_target, '':'')+1,'||chr(10)||
-'        INSTR(SUBSTR(le.entry_target, INSTR(le.entry_target, '':'')+1), '':'', 1)-1'||chr(10)||
-'        ) page_id'||chr(10)||
-'    FROM';
-
-a:=a||''||chr(10)||
-'      apex_application_list_entries le'||chr(10)||
-'    WHERE'||chr(10)||
-'      LOWER(entry_target) LIKE ''f?p%'''||chr(10)||
-'    ) l,'||chr(10)||
-'    apex_application_pages p'||chr(10)||
-'  WHERE'||chr(10)||
-'    l.page_id = TO_CHAR(p.page_id(+))'||chr(10)||
-'    AND l.application_id = p.application_id'||chr(10)||
-'    AND l.application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_URL_MIS_LE',
-  p_collection_key        => 'SV_URL_MIS_LE',
-  p_category_key          => 'SV_URL_AUTH_INCONSISTENCIES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_URL_MIS_PROC_BUTT
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  ';
-
-a:=a||'#COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_PROC_BUTT'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  p.application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_PROC_BUTT'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  p.page_id,'||chr(10)||
-'  p.process_id,'||chr(10)||
-'  b.last_updated_by,'||chr(10)||
-'  b.last_updated_on,'||chr(10)||
-' ';
-
-a:=a||' b.component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4312'' link_page,'||chr(10)||
-'  '''' link_req,'||chr(10)||
-'  ''4312'' link_cc,'||chr(10)||
-'  ''F4000_P4312_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || p.process_id || '','' '||chr(10)||
-'    || p.application_id || '','' || p.page_id link,'||chr(10)||
-'  ''URL Tampering - Insecure Processes'' link_desc,'||chr(10)||
-'  p.page_name,'||chr(10)||
-'  b.button_name, '||chr(10)||
-'  b.authorization_scheme, '||chr(10)||
-'  p.process_name, '||chr(10)||
-'  p.authorization_scheme,'||chr(10)||
-'  CASE'||chr(10)||
-'    WHEN b.authorization_';
-
-a:=a||'scheme_id != p.authorization_scheme_id THEN ''FAIL'''||chr(10)||
-'    WHEN b.authorization_scheme_id IS NOT NULL AND p.authorization_scheme_id IS NULL THEN ''FAIL'''||chr(10)||
-'    ELSE ''PASS'''||chr(10)||
-'  END result,'||chr(10)||
-'  NULL val,'||chr(10)||
-'  NULL checksum,'||chr(10)||
-'  b.button_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_proc p, '||chr(10)||
-'  apex_application_page_buttons b'||chr(10)||
-'WHERE '||chr(10)||
-'  p.application_id = #APPLICATION_ID#'||chr(10)||
-'  AND p.application_id = b.application_id'||chr(10)||
-'  AND p.when_butto';
-
-a:=a||'n_pressed_id = b.button_id';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_URL_MIS_PROC_BUTT',
-  p_collection_key        => 'SV_URL_MIS_PROC_BUTT',
-  p_category_key          => 'SV_URL_AUTH_INCONSISTENCIES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_URL_MIS_BC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAM';
-
-a:=a||'E#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_BC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  p.application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_BC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  p.page_id,'||chr(10)||
-'  b.breadcrumb_entry_id,'||chr(10)||
-'  b.last_updated_by,'||chr(10)||
-'  b.last_updated_on,';
-
-a:=a||''||chr(10)||
-'  b.component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''290'' link_page,'||chr(10)||
-'  '''' link_req,'||chr(10)||
-'  ''290'' link_cc,'||chr(10)||
-'  ''F4000_P287_MENU_ID,F4000_P290_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' '||chr(10)||
-'    || b.breadcrumb_id  || '','' || b.breadcrumb_entry_id || '','' '||chr(10)||
-'    || p.application_id || '','' || p.page_id link,'||chr(10)||
-'  ''URL Tampering - Inconsistent Breadcrumb Entries'' link_desc,'||chr(10)||
-'  b.breadcrumb_name,'||chr(10)||
-'  b.entry_label,'||chr(10)||
-'  b.bc_auth_scheme,'||chr(10)||
-'  p.aut';
-
-a:=a||'horization_scheme,'||chr(10)||
-'  CASE'||chr(10)||
-'    WHEN b.bc_auth_scheme_id != TO_CHAR(p.authorization_scheme_id) '||chr(10)||
-'      AND b.bc_auth_scheme_id IS NOT NULL '||chr(10)||
-'      AND TO_CHAR(p.authorization_scheme_id) IS NOT NULL THEN ''FAIL'''||chr(10)||
-'    WHEN b.bc_auth_scheme_id IS NOT NULL '||chr(10)||
-'      AND TO_CHAR(p.authorization_scheme_id) IS NULL THEN ''FAIL'''||chr(10)||
-'    ELSE ''PASS'''||chr(10)||
-'  END result,'||chr(10)||
-'  NULL val,'||chr(10)||
-'  NULL checksum,'||chr(10)||
-'  b.breadcrumb_name,'||chr(10)||
-'  b.ent';
-
-a:=a||'ry_label'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    bc.breadcrumb_id,'||chr(10)||
-'    bc.breadcrumb_name,'||chr(10)||
-'    bce.component_signature,'||chr(10)||
-'    bce.breadcrumb_entry_id,'||chr(10)||
-'    bce.last_updated_on,'||chr(10)||
-'    bce.last_updated_by,'||chr(10)||
-'    bce.authorization_scheme bc_auth_scheme,'||chr(10)||
-'    TO_CHAR(bce.authorization_scheme_id) bc_auth_scheme_id,'||chr(10)||
-'    bce.entry_label,'||chr(10)||
-'    TO_CHAR(SUBSTR'||chr(10)||
-'      ('||chr(10)||
-'      url,'||chr(10)||
-'      INSTR(url, '':'')+1,'||chr(10)||
-'      INSTR(SUBSTR(url, INSTR(';
-
-a:=a||'url, '':'')+1), '':'', 1)-1'||chr(10)||
-'      )) page_id,'||chr(10)||
-'    TO_CHAR(bce.authorization_scheme_id) authorization_scheme_id'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_bc_entries bce,'||chr(10)||
-'    apex_application_breadcrumbs bc'||chr(10)||
-'  WHERE'||chr(10)||
-'    bc.breadcrumb_id = bce.breadcrumb_id'||chr(10)||
-'    AND bc.application_id = #APPLICATION_ID#'||chr(10)||
-'  ) b,'||chr(10)||
-'  apex_application_pages p'||chr(10)||
-'WHERE'||chr(10)||
-'  p.application_id = #APPLICATION_ID#'||chr(10)||
-'  AND TO_CHAR(b.page_id) = TO_CHAR(p.page';
-
-a:=a||'_id)';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_URL_MIS_BC',
-  p_collection_key        => 'SV_URL_MIS_BC',
-  p_category_key          => 'SV_URL_AUTH_INCONSISTENCIES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_URL_MIS_STD_TAB
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  ';
-
-a:=a||'#COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_STD_TAB'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_MIS_STD_TAB'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  tab_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signatu';
-
-a:=a||'re,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  ''URL Tampering - Inconsistent Standard Tabs'' link_desc,'||chr(10)||
-'  tab_set,'||chr(10)||
-'  tab_label,'||chr(10)||
-'  tab_type,'||chr(10)||
-'  tab_auth_scheme,'||chr(10)||
-'  page_auth_scheme,'||chr(10)||
-'  CASE'||chr(10)||
-'    WHEN TO_CHAR(tab_auth_scheme_id) != page_auth_scheme_id '||chr(10)||
-'      AND TO_CHAR(tab_auth_scheme_id) IS NOT NULL '||chr(10)||
-'      AND page_auth_scheme_id IS NOT NULL THEN ''FAIL'''||chr(10)||
-'    WHEN TO_CHAR(tab_auth_schem';
-
-a:=a||'e_id) IS NOT NULL '||chr(10)||
-'      AND page_auth_scheme_id IS NULL THEN ''FAIL'''||chr(10)||
-'    ELSE ''PASS'''||chr(10)||
-'  END result,'||chr(10)||
-'  NULL val,'||chr(10)||
-'  NULL checksum,'||chr(10)||
-'  tab_label'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    t.tab_id,'||chr(10)||
-'    t.tab_type,'||chr(10)||
-'    t.tab_set,'||chr(10)||
-'    t.tab_label,'||chr(10)||
-'    t.page_id,'||chr(10)||
-'    t.last_updated_by,'||chr(10)||
-'    t.last_updated_on,'||chr(10)||
-'    t.component_signature,'||chr(10)||
-'    t.application_id,'||chr(10)||
-'    t.authorization_scheme tab_auth_scheme,'||chr(10)||
-'    t.authorization_scheme';
-
-a:=a||'_id tab_auth_scheme_id,'||chr(10)||
-'    p.authorization_scheme page_auth_scheme,'||chr(10)||
-'    p.authorization_scheme_id page_auth_scheme_id,'||chr(10)||
-'    link_page,'||chr(10)||
-'    link_req,'||chr(10)||
-'    link_cc,'||chr(10)||
-'    link'||chr(10)||
-'  FROM'||chr(10)||
-'    ('||chr(10)||
-'    SELECT'||chr(10)||
-'      tab_id,'||chr(10)||
-'      application_id,'||chr(10)||
-'      ''Standard'' tab_type,'||chr(10)||
-'      tab_set,'||chr(10)||
-'      tab_label,'||chr(10)||
-'      tab_page page_id,'||chr(10)||
-'      authorization_scheme,'||chr(10)||
-'      authorization_scheme_id,'||chr(10)||
-'      last_updated_by,'||chr(10)||
-'    ';
-
-a:=a||'  last_updated_on,'||chr(10)||
-'      component_signature,'||chr(10)||
-'      ''4305'' link_page,'||chr(10)||
-'      '''' link_req,'||chr(10)||
-'      ''4305'' link_cc,'||chr(10)||
-'      ''F4000_P4305_ID,FB_FLOW_ID:'' || tab_id || '','' || application_id link'||chr(10)||
-'    FROM'||chr(10)||
-'      apex_application_tabs'||chr(10)||
-'    WHERE'||chr(10)||
-'      application_id = #APPLICATION_ID#'||chr(10)||
-'    ) t,'||chr(10)||
-'    apex_application_pages p'||chr(10)||
-'  WHERE'||chr(10)||
-'    t.page_id = p.page_id(+)'||chr(10)||
-'    AND t.application_id = p.application_id'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_URL_MIS_STD_TAB',
-  p_collection_key        => 'SV_URL_MIS_STD_TAB',
-  p_category_key          => 'SV_URL_AUTH_INCONSISTENCIES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Ajax Callbacks
 DECLARE
   a CLOB;
@@ -46314,435 +41428,889 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_RPT_DBMS
+PROMPT == ..ATTRIBUTE: Report Contains &ITEM. Syntax
 DECLARE
   a CLOB;
-BEGIN 
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
 
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
+a := null;
+b:=b||'<p>'||chr(10)||
+'	Use of <strong>&amp;ITEM.</strong> syntax can potentially leave an application open to <strong>SQL Injection</strong> attacks. Developers must take extreme care to insure that any use of this syntax is controlled in such a way that the SQL Injection risk is minimized.</p>'||chr(10)||
+'<p>'||chr(10)||
+'	This is especially true when &amp;ITEM. Syntax is used as part of a SQL statement as the veriables will be replaced v';
 
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_RPT_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_RPT_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Ed';
+b:=b||'erbatim with the variable value. For example, suppose there is a a form online that allows a user to sign on with a username and password which ultimately executes this query:</p>'||chr(10)||
+'<pre style="margin-left: 40px;">'||chr(10)||
+'<strong>SELECT COUNT(*) FROM users'||chr(10)||
+'WHERE username = &#39;&amp;USERNAME.&#39;'||chr(10)||
+'AND password = &#39;&amp;PASSWORD.&#39;'||chr(10)||
+'</strong></pre>'||chr(10)||
+'<p>'||chr(10)||
+'	If the user were to enter this as their password:';
 
-a:=a||'it'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  region_name_esc,'||chr(10)||
-'  report_type,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'('||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || apr.region_id || '','' '||chr(10)||
-'    || ap.application_id || '','' || ap.page_id link,'||chr(10)||
-'  ''SQ';
+b:=b||'</p>'||chr(10)||
+'<pre style="margin-left: 40px;">'||chr(10)||
+'<strong>i_dont_know&#39; OR &#39;x&#39; = &#39;x</strong></pre>'||chr(10)||
+'<p>'||chr(10)||
+'	The resulting SQL would be:</p>'||chr(10)||
+'<pre style="margin-left: 40px;">'||chr(10)||
+'<strong>SELECT COUNT(*) FROM users'||chr(10)||
+'WHERE username = &#39;SCOTT&#39;'||chr(10)||
+'AND password = &#39;<span style="color:#f00;">i_dont_know&#39; OR &#39;x&#39; = &#39;x</span>&#39;'||chr(10)||
+'</strong></pre>'||chr(10)||
+'<p>'||chr(10)||
+'	This will erroneously return 1 rather th';
 
-a:=a||'L Injection - Interactive Reports'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  ap.page_name,'||chr(10)||
-'  r.region_name,'||chr(10)||
-'  htf.escape_sc(r.region_name) region_name_esc,'||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  ''Interactive'' report_type,'||chr(10)||
-'  r.last_updated_by,'||chr(10)||
-'  r.last_updated_on,'||chr(10)||
-'  r.component_signature,'||chr(10)||
-'  sv_sec_rules.check_dyn_sql(apr.sql_query) result,'||chr(10)||
-'  apr.sql_query val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.sql_query) checksum'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_appli';
+b:=b||'an No Data Found and allow the user to log in.<br />'||chr(10)||
+'	By using bind variables, this can be avoided.</p>'||chr(10)||
+'<pre style="margin-left: 40px;">'||chr(10)||
+'<strong>SELECT COUNT(*) FROM users'||chr(10)||
+'WHERE username = :USERNAME'||chr(10)||
+'AND password = :PASSWORD'||chr(10)||
+'</strong></pre>'||chr(10)||
+'<p>'||chr(10)||
+'	Now, if you enter this as your password:</p>'||chr(10)||
+'<pre style="margin-left: 40px;">'||chr(10)||
+'<strong>i_dont_know&#39; OR &#39;x&#39; = &#39;x</strong></pre>'||chr(10)||
+'<p>'||chr(10)||
+'	Unless t';
 
-a:=a||'cation_page_ir apr,'||chr(10)||
-'    apex_application_pages ap,'||chr(10)||
-'    apex_application_page_regions r'||chr(10)||
-'  WHERE'||chr(10)||
-'    apr.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.page_id = ap.page_id'||chr(10)||
-'    AND ap.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.region_id = r.region_id'||chr(10)||
-'UNION ALL'||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' ';
+b:=b||'hat is specifically your password, the database will return <em><strong>No Data Found</strong></em>.</p>'||chr(10)||
+'<p>'||chr(10)||
+'	While it may not be optimal performance-wise, the following items can safely be used with the <strong>&amp;ITEM_NAME.</strong> syntax, as they are all APEX built-in items and can not be changed by an end-user:</p>'||chr(10)||
+'<ul>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>APP_ID</strong></li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>APP_ALIAS</strong>';
 
-a:=a||'|| apr.region_id || '','' '||chr(10)||
-'    || apr.application_id || '','' || apr.page_id link,'||chr(10)||
-'  ''SQL Injection - Standard Reports'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  apr.page_name,'||chr(10)||
-'  apr.region_name,'||chr(10)||
-'  htf.escape_sc(apr.region_name) region_name_esc,'||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  ''Standard'' report_type,'||chr(10)||
-'  apr.last_updated_by,'||chr(10)||
-'  apr.last_updated_on,'||chr(10)||
-'  apr.component_signature,'||chr(10)||
-'  sv_sec_rules.check_dyn_sql(apr.region_source) result,'||chr(10)||
+b:=b||'</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>APP_PAGE_ID</strong></li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>APP_USER</strong></li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>SESSION</strong></li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>DEBUG</strong></li>'||chr(10)||
+'</ul>'||chr(10)||
+'<p>'||chr(10)||
+'	<strong>APEX-SERT</strong> will also ignore items that use the &amp;ITEM_NAME. syntax if they are:</p>'||chr(10)||
+'<ul>'||chr(10)||
+'	<li>'||chr(10)||
+'		Properly secured Application Items</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		Properly secured Page Items</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		Application Substitutio';
+
+b:=b||'n Strings</li>'||chr(10)||
+'</ul>'||chr(10)||
 '';
 
-a:=a||'  apr.region_source val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.region_source) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions apr'||chr(10)||
-'WHERE'||chr(10)||
-'  apr.source_type = ''Report'''||chr(10)||
-'  AND apr.application_id = #APPLICATION_ID#'||chr(10)||
-')';
+c:=c||'<p>'||chr(10)||
+'	Examine the code for uses of <strong>&amp;ITEM.</strong> syntax and, wherever possible, replace the usage with:</p>'||chr(10)||
+'<ul>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>:ITEM_NAME</strong>&nbsp; bind variable syntax'||chr(10)||
+'		<ul>'||chr(10)||
+'			<li>'||chr(10)||
+'				in SQL Statements</li>'||chr(10)||
+'			<li>'||chr(10)||
+'				in anonymous PL/SQL blocks in APEX</li>'||chr(10)||
+'		</ul>'||chr(10)||
+'	</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>v(&#39;ITEM_NAME&#39;) </strong>syntax'||chr(10)||
+'		<ul>'||chr(10)||
+'			<li>'||chr(10)||
+'				in stored PL/SQL program uni';
 
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_RPT_DBMS',
-  p_collection_key        => 'SV_SQLI_RPT_DBMS',
-  p_category_key          => 'SV_SQLI_RPT',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
+c:=c||'ts called from APEX</li>'||chr(10)||
+'		</ul>'||chr(10)||
+'	</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>ITEM_NAME</strong> syntax'||chr(10)||
+'		<ul>'||chr(10)||
+'			<li>'||chr(10)||
+'				in conditions</li>'||chr(10)||
+'		</ul>'||chr(10)||
+'	</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>&amp;ITEM_NAME.</strong>'||chr(10)||
+'		<ul>'||chr(10)||
+'			<li>'||chr(10)||
+'				Templates, Regions, Tabs, Menus, Lists</li>'||chr(10)||
+'		</ul>'||chr(10)||
+'	</li>'||chr(10)||
+'</ul>'||chr(10)||
+'<p>'||chr(10)||
+'	When use of the <strong>&amp;ITEM.</strong> syntax is necessary, developers can mitigate much of the risk by using <strong>HTF.ESCAPE_S';
+
+c:=c||'C</strong> to escape the referenced item.</p>'||chr(10)||
+'<p>'||chr(10)||
+'	<em><strong>Caution</strong>: Use of <strong>&amp;ITEM.</strong> syntax in certain circumstances may also provide the opportunity for a Cross Site Scripting risk. See the XSS Section of APEX-SERT for details.</em></p>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SQLI_RPT',
+  p_attribute_name           => 'Report Contains &ITEM. Syntax',
+  p_attribute_key            => 'SV_SQLI_RPT_ITEM',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLLECTION',
+  p_rule_type                => 'FUNCTION',
+  p_table_name               => '',
+  p_column_name              => '',
+  p_view_name                => 'SV_SEC_COL_SQLI_RPT_ITEM_V',
+  p_component_table          => 'APEX_APPLICATION_PAGE_REGIONS',
+  p_component_column_id      => 'REGION_ID',
+  p_component_column_display => 'REGION_NAME',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'COMPONENT',
+  p_component_sig_key        => 'REGION',
+  p_help_page                => '',
+  p_seq                      => 99,
+
+  p_collection_name          => 'SV_SQLI_RPT_ITEM',
+
+  p_display_page_id          => 708,
+
+  p_summary_page_id          => 705,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
   );
+END;
+/
+
+-->>END
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_RPT_ITEM: APPROVED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'APPROVED'
+);
 end;
 /
 
 -->>END
-PROMPT == ..COLLECTION: SV_SQLI_RPT_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
 
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_RPT_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_RPT_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Ed';
-
-a:=a||'it'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  region_name_esc,'||chr(10)||
-'  report_type,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'('||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || apr.region_id || '','' '||chr(10)||
-'    || ap.application_id || '','' || ap.page_id link,'||chr(10)||
-'  ''SQ';
-
-a:=a||'L Injection - Interactive Reports'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  ap.page_name,'||chr(10)||
-'  r.region_name,'||chr(10)||
-'  htf.escape_sc(r.region_name) region_name_esc,'||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  ''Interactive'' report_type,'||chr(10)||
-'  r.last_updated_by,'||chr(10)||
-'  r.last_updated_on,'||chr(10)||
-'  r.component_signature,'||chr(10)||
-'  sv_sec_rules.check_exe_imm(apr.sql_query) result,'||chr(10)||
-'  apr.sql_query val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.sql_query) checksum'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_appli';
-
-a:=a||'cation_page_ir apr,'||chr(10)||
-'    apex_application_pages ap,'||chr(10)||
-'    apex_application_page_regions r'||chr(10)||
-'  WHERE'||chr(10)||
-'    apr.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.page_id = ap.page_id'||chr(10)||
-'    AND ap.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.region_id = r.region_id'||chr(10)||
-'UNION ALL'||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' ';
-
-a:=a||'|| apr.region_id || '','' '||chr(10)||
-'    || apr.application_id || '','' || apr.page_id link,'||chr(10)||
-'  ''SQL Injection - Standard Reports'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  apr.page_name,'||chr(10)||
-'  apr.region_name,'||chr(10)||
-'  htf.escape_sc(apr.region_name) region_name_esc,  '||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  ''Standard'' report_type,'||chr(10)||
-'  apr.last_updated_by,'||chr(10)||
-'  apr.last_updated_on,'||chr(10)||
-'  apr.component_signature,'||chr(10)||
-'  sv_sec_rules.check_exe_imm(apr.region_source) result';
-
-a:=a||','||chr(10)||
-'  apr.region_source val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.region_source) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions apr'||chr(10)||
-'WHERE'||chr(10)||
-'  apr.source_type = ''Report'''||chr(10)||
-'  AND apr.application_id = #APPLICATION_ID#'||chr(10)||
-')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_RPT_EXEC',
-  p_collection_key        => 'SV_SQLI_RPT_EXEC',
-  p_category_key          => 'SV_SQLI_RPT',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
 end;
 /
 
 -->>END
-PROMPT == ..COLLECTION: SV_SQLI_RPT_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
 
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_RPT_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_RPT_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Ed';
-
-a:=a||'it'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  region_name_esc,'||chr(10)||
-'  report_type,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'('||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || apr.region_id || '','' '||chr(10)||
-'    || ap.application_id || '','' || ap.page_id link,'||chr(10)||
-'  ''SQ';
-
-a:=a||'L Injection - Interactive Reports'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  ap.page_name,'||chr(10)||
-'  r.region_name,'||chr(10)||
-'  htf.escape_sc(r.region_name) region_name_esc,'||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  ''Interactive'' report_type,'||chr(10)||
-'  r.last_updated_by,'||chr(10)||
-'  r.last_updated_on,'||chr(10)||
-'  r.component_signature,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(apr.sql_query) result,'||chr(10)||
-'  apr.sql_query val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.sql_query) checksum'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_a';
-
-a:=a||'pplication_page_ir apr,'||chr(10)||
-'    apex_application_pages ap,'||chr(10)||
-'    apex_application_page_regions r'||chr(10)||
-'  WHERE'||chr(10)||
-'    apr.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.page_id = ap.page_id'||chr(10)||
-'    AND ap.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.region_id = r.region_id'||chr(10)||
-'UNION ALL'||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_I';
-
-a:=a||'D:'' || apr.region_id || '','' '||chr(10)||
-'    || apr.application_id || '','' || apr.page_id link,'||chr(10)||
-'  ''SQL Injection - Standard Reports'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  apr.page_name,'||chr(10)||
-'  apr.region_name,'||chr(10)||
-'  htf.escape_sc(apr.region_name) region_name_esc,'||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  ''Standard'' report_type,'||chr(10)||
-'  apr.last_updated_by,'||chr(10)||
-'  apr.last_updated_on,'||chr(10)||
-'  apr.component_signature,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(apr.region_source) ';
-
-a:=a||'result,'||chr(10)||
-'  apr.region_source val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.region_source) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions apr'||chr(10)||
-'WHERE'||chr(10)||
-'  apr.source_type = ''Report'''||chr(10)||
-'  AND apr.application_id = #APPLICATION_ID#'||chr(10)||
-')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_RPT_ITEM',
-  p_collection_key        => 'SV_SQLI_RPT_ITEM',
-  p_category_key          => 'SV_SQLI_RPT',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
 end;
 /
 
 -->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REPORT_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'REPORT_NAME',
+  p_label                 => 'Report Name',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: APPROVED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_BY',
+  p_label                 => 'Approved By',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: APPROVED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_ON',
+  p_label                 => 'Approved On',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 40,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_RPT_ITEM: ATTRIBUTE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'ATTRIBUTE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REPORT_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'REPORT_NAME',
+  p_label                 => 'Report Name',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 30,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: UPDATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'UPDATED_BY',
+  p_label                 => 'Updated By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: UPDATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'UPDATED_ON',
+  p_label                 => 'Updated On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_RPT_ITEM: PENDING
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'PENDING'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REPORT_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'REPORT_NAME',
+  p_label                 => 'Report Name',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 25,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 50,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_RPT_ITEM: REJECTED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'REJECTED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REPORT_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REPORT_NAME',
+  p_label                 => 'Report Name',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REJECTED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_BY',
+  p_label                 => 'Rejected By',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REJECTED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_ON',
+  p_label                 => 'Rejected On',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REJECTION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTION',
+  p_label                 => 'Rejection',
+  p_seq                   => 10,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_RPT_ITEM: STALE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'STALE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'STALE',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'STALE',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REPORT_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'STALE',
+  p_column_name           => 'REPORT_NAME',
+  p_label                 => 'Report Name',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 25,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'STALE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_report_key            => 'STALE',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 50,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
 PROMPT == ..ATTRIBUTE: Report Contains EXECUTE IMMEDIATE
 DECLARE
   a CLOB;
@@ -48311,889 +43879,6 @@ end;
 
 -->>END
 
-PROMPT == ..ATTRIBUTE: Report Contains &ITEM. Syntax
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>'||chr(10)||
-'	Use of <strong>&amp;ITEM.</strong> syntax can potentially leave an application open to <strong>SQL Injection</strong> attacks. Developers must take extreme care to insure that any use of this syntax is controlled in such a way that the SQL Injection risk is minimized.</p>'||chr(10)||
-'<p>'||chr(10)||
-'	This is especially true when &amp;ITEM. Syntax is used as part of a SQL statement as the veriables will be replaced v';
-
-b:=b||'erbatim with the variable value. For example, suppose there is a a form online that allows a user to sign on with a username and password which ultimately executes this query:</p>'||chr(10)||
-'<pre style="margin-left: 40px;">'||chr(10)||
-'<strong>SELECT COUNT(*) FROM users'||chr(10)||
-'WHERE username = &#39;&amp;USERNAME.&#39;'||chr(10)||
-'AND password = &#39;&amp;PASSWORD.&#39;'||chr(10)||
-'</strong></pre>'||chr(10)||
-'<p>'||chr(10)||
-'	If the user were to enter this as their password:';
-
-b:=b||'</p>'||chr(10)||
-'<pre style="margin-left: 40px;">'||chr(10)||
-'<strong>i_dont_know&#39; OR &#39;x&#39; = &#39;x</strong></pre>'||chr(10)||
-'<p>'||chr(10)||
-'	The resulting SQL would be:</p>'||chr(10)||
-'<pre style="margin-left: 40px;">'||chr(10)||
-'<strong>SELECT COUNT(*) FROM users'||chr(10)||
-'WHERE username = &#39;SCOTT&#39;'||chr(10)||
-'AND password = &#39;<span style="color:#f00;">i_dont_know&#39; OR &#39;x&#39; = &#39;x</span>&#39;'||chr(10)||
-'</strong></pre>'||chr(10)||
-'<p>'||chr(10)||
-'	This will erroneously return 1 rather th';
-
-b:=b||'an No Data Found and allow the user to log in.<br />'||chr(10)||
-'	By using bind variables, this can be avoided.</p>'||chr(10)||
-'<pre style="margin-left: 40px;">'||chr(10)||
-'<strong>SELECT COUNT(*) FROM users'||chr(10)||
-'WHERE username = :USERNAME'||chr(10)||
-'AND password = :PASSWORD'||chr(10)||
-'</strong></pre>'||chr(10)||
-'<p>'||chr(10)||
-'	Now, if you enter this as your password:</p>'||chr(10)||
-'<pre style="margin-left: 40px;">'||chr(10)||
-'<strong>i_dont_know&#39; OR &#39;x&#39; = &#39;x</strong></pre>'||chr(10)||
-'<p>'||chr(10)||
-'	Unless t';
-
-b:=b||'hat is specifically your password, the database will return <em><strong>No Data Found</strong></em>.</p>'||chr(10)||
-'<p>'||chr(10)||
-'	While it may not be optimal performance-wise, the following items can safely be used with the <strong>&amp;ITEM_NAME.</strong> syntax, as they are all APEX built-in items and can not be changed by an end-user:</p>'||chr(10)||
-'<ul>'||chr(10)||
-'	<li>'||chr(10)||
-'		<strong>APP_ID</strong></li>'||chr(10)||
-'	<li>'||chr(10)||
-'		<strong>APP_ALIAS</strong>';
-
-b:=b||'</li>'||chr(10)||
-'	<li>'||chr(10)||
-'		<strong>APP_PAGE_ID</strong></li>'||chr(10)||
-'	<li>'||chr(10)||
-'		<strong>APP_USER</strong></li>'||chr(10)||
-'	<li>'||chr(10)||
-'		<strong>SESSION</strong></li>'||chr(10)||
-'	<li>'||chr(10)||
-'		<strong>DEBUG</strong></li>'||chr(10)||
-'</ul>'||chr(10)||
-'<p>'||chr(10)||
-'	<strong>APEX-SERT</strong> will also ignore items that use the &amp;ITEM_NAME. syntax if they are:</p>'||chr(10)||
-'<ul>'||chr(10)||
-'	<li>'||chr(10)||
-'		Properly secured Application Items</li>'||chr(10)||
-'	<li>'||chr(10)||
-'		Properly secured Page Items</li>'||chr(10)||
-'	<li>'||chr(10)||
-'		Application Substitutio';
-
-b:=b||'n Strings</li>'||chr(10)||
-'</ul>'||chr(10)||
-'';
-
-c:=c||'<p>'||chr(10)||
-'	Examine the code for uses of <strong>&amp;ITEM.</strong> syntax and, wherever possible, replace the usage with:</p>'||chr(10)||
-'<ul>'||chr(10)||
-'	<li>'||chr(10)||
-'		<strong>:ITEM_NAME</strong>&nbsp; bind variable syntax'||chr(10)||
-'		<ul>'||chr(10)||
-'			<li>'||chr(10)||
-'				in SQL Statements</li>'||chr(10)||
-'			<li>'||chr(10)||
-'				in anonymous PL/SQL blocks in APEX</li>'||chr(10)||
-'		</ul>'||chr(10)||
-'	</li>'||chr(10)||
-'	<li>'||chr(10)||
-'		<strong>v(&#39;ITEM_NAME&#39;) </strong>syntax'||chr(10)||
-'		<ul>'||chr(10)||
-'			<li>'||chr(10)||
-'				in stored PL/SQL program uni';
-
-c:=c||'ts called from APEX</li>'||chr(10)||
-'		</ul>'||chr(10)||
-'	</li>'||chr(10)||
-'	<li>'||chr(10)||
-'		<strong>ITEM_NAME</strong> syntax'||chr(10)||
-'		<ul>'||chr(10)||
-'			<li>'||chr(10)||
-'				in conditions</li>'||chr(10)||
-'		</ul>'||chr(10)||
-'	</li>'||chr(10)||
-'	<li>'||chr(10)||
-'		<strong>&amp;ITEM_NAME.</strong>'||chr(10)||
-'		<ul>'||chr(10)||
-'			<li>'||chr(10)||
-'				Templates, Regions, Tabs, Menus, Lists</li>'||chr(10)||
-'		</ul>'||chr(10)||
-'	</li>'||chr(10)||
-'</ul>'||chr(10)||
-'<p>'||chr(10)||
-'	When use of the <strong>&amp;ITEM.</strong> syntax is necessary, developers can mitigate much of the risk by using <strong>HTF.ESCAPE_S';
-
-c:=c||'C</strong> to escape the referenced item.</p>'||chr(10)||
-'<p>'||chr(10)||
-'	<em><strong>Caution</strong>: Use of <strong>&amp;ITEM.</strong> syntax in certain circumstances may also provide the opportunity for a Cross Site Scripting risk. See the XSS Section of APEX-SERT for details.</em></p>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_SQLI_RPT',
-  p_attribute_name           => 'Report Contains &ITEM. Syntax',
-  p_attribute_key            => 'SV_SQLI_RPT_ITEM',
-  p_active_flag              => 'Y',
-  p_rule_source              => 'COLLECTION',
-  p_rule_type                => 'FUNCTION',
-  p_table_name               => '',
-  p_column_name              => '',
-  p_view_name                => 'SV_SEC_COL_SQLI_RPT_ITEM_V',
-  p_component_table          => 'APEX_APPLICATION_PAGE_REGIONS',
-  p_component_column_id      => 'REGION_ID',
-  p_component_column_display => 'REGION_NAME',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'COMPONENT',
-  p_component_sig_key        => 'REGION',
-  p_help_page                => '',
-  p_seq                      => 99,
-
-  p_collection_name          => 'SV_SQLI_RPT_ITEM',
-
-  p_display_page_id          => 708,
-
-  p_summary_page_id          => 705,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_RPT_ITEM: APPROVED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'APPROVED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REPORT_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'REPORT_NAME',
-  p_label                 => 'Report Name',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: APPROVED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_BY',
-  p_label                 => 'Approved By',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: APPROVED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_ON',
-  p_label                 => 'Approved On',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 40,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_RPT_ITEM: ATTRIBUTE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'ATTRIBUTE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REPORT_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'REPORT_NAME',
-  p_label                 => 'Report Name',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 30,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: UPDATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'UPDATED_BY',
-  p_label                 => 'Updated By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: UPDATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'UPDATED_ON',
-  p_label                 => 'Updated On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_RPT_ITEM: PENDING
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'PENDING'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REPORT_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'REPORT_NAME',
-  p_label                 => 'Report Name',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 25,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 50,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_RPT_ITEM: REJECTED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'REJECTED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REPORT_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REPORT_NAME',
-  p_label                 => 'Report Name',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REJECTED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_BY',
-  p_label                 => 'Rejected By',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REJECTED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_ON',
-  p_label                 => 'Rejected On',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REJECTION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTION',
-  p_label                 => 'Rejection',
-  p_seq                   => 10,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_RPT_ITEM: STALE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'STALE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'STALE',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'STALE',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: REPORT_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'STALE',
-  p_column_name           => 'REPORT_NAME',
-  p_label                 => 'Report Name',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 25,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'STALE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_RPT_ITEM: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_report_key            => 'STALE',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 50,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
 PROMPT == CATEGORY: Page Settings: Duplicate Submissions
 BEGIN
 
@@ -50035,102 +44720,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_HIDDEN_ITEMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAM';
-
-a:=a||'E#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_HIDDEN_ITEMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_HIDDEN_ITEMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  item_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  compone';
-
-a:=a||'nt_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4311'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4311'' link_cc,'||chr(10)||
-'  ''F4000_P4311_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || item_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Regions'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  item_name,'||chr(10)||
-'  display_as,'||chr(10)||
-'  attribute_01 protected,'||chr(10)||
-'  sv_sec.get_result '||chr(10)||
-'    ('||chr(10)||
-'    ''SV_XSS_HIDDEN_ITEMS'','||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-'    attribute_01,'||chr(10)||
-'    NULL,'||chr(10)||
-'   ';
-
-a:=a||' ''N'','||chr(10)||
-'    ''Y'','||chr(10)||
-'    NULL'||chr(10)||
-'    ) result,'||chr(10)||
-'  attribute_01 val,'||chr(10)||
-'  sv_sec_util.get_checksum(attribute_01) checksum,'||chr(10)||
-'  region,'||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'    apex_application_page_items'||chr(10)||
-'WHERE '||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND display_as = ''Hidden''';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_HIDDEN_ITEMS',
-  p_collection_key        => 'SV_XSS_HIDDEN_ITEMS',
-  p_category_key          => 'SV_XSS_HIDDEN_ITEMS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Hidden Items at Risk
 DECLARE
   a CLOB;
@@ -52499,90 +47088,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_LIST_ENTRIES
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #';
-
-a:=a||'COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_LIST_ENTRIES'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_LIST_ENTRIES'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  list_entry_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  compone';
-
-a:=a||'nt_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4052'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4050,4052'' link_cc,'||chr(10)||
-'  ''F4000_P4052_ID,F4000_P4050_LIST_ID,FB_FLOW_ID:'' || list_entry_id || '','' '||chr(10)||
-'    || list_id || '','' || application_id link,'||chr(10)||
-'  ''XSS - List Entries'' link_desc,'||chr(10)||
-'  list_name,'||chr(10)||
-'  htf.escape_sc(entry_text) entry_text_esc,'||chr(10)||
-'  entry_text,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(entry_text) result,'||chr(10)||
-'  entry_text val,'||chr(10)||
-'  sv_sec_util';
-
-a:=a||'.get_checksum(entry_text) checksum,'||chr(10)||
-'  list_name,'||chr(10)||
-'  entry_text'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_list_entries'||chr(10)||
-'WHERE '||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_LIST_ENTRIES',
-  p_collection_key        => 'SV_XSS_LIST_ENTRIES',
-  p_category_key          => 'SV_XSS_LIST_ENTRIES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: List Entry Contains &ITEM. Syntax
 DECLARE
   a CLOB;
@@ -53305,90 +47810,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_REGION_TITLES
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_REGION_TITLES'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_REGION_TITLES'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signatur';
-
-a:=a||'e,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Regions'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  source_type,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(region_name) result,'||chr(10)||
-'  region_name val,'||chr(10)||
-'  sv_sec_util.';
-
-a:=a||'get_checksum(region_name) checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions apr'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_REGION_TITLES',
-  p_collection_key        => 'SV_XSS_REGION_TITLES',
-  p_category_key          => 'SV_XSS_REGION_TITLES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Region Title Contains &ITEM. Syntax
 DECLARE
   a CLOB;
@@ -54213,330 +48634,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_ITMD_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAM';
-
-a:=a||'E#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ITMD_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ITMD_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  item_id component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'';
-
-a:=a||'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  4311 link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  4311 link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  ''F4000_P4311_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || item_id || '','' || application_id || '','' || page_id link,   '||chr(10)||
-'  page_name,'||chr(10)||
-'  item_name,'||chr(10)||
-'  type,'||chr(10)||
-'  UPPER(REPLACE(type, '' '', ''_'')),'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region,'||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''SQL Injection - Item Defau';
-
-a:=a||'lt Value'' link_desc,'||chr(10)||
-'    page_id,'||chr(10)||
-'    item_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    page_name,'||chr(10)||
-'    region,'||chr(10)||
-'    item_name,'||chr(10)||
-'    sv_sec_rules.check_exe_imm(item_default) result,'||chr(10)||
-'    sv_sec_util.get_checksum(item_default) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''Default Value'' type,'||chr(10)||
-'    item_default val'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_items'||chr(10)||
-'  WHERE'||chr(10)||
-'    item_default_type IN ('||chr(10)||
-'      ''PLSQL_FUNC';
-
-a:=a||'TION_BODY'', '||chr(10)||
-'      ''PLSQL_EXPRESSION'')'||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_ITMD_EXEC',
-  p_collection_key        => 'SV_SQLI_ITMD_EXEC',
-  p_category_key          => 'SV_SQLI_ITMD',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_ITMD_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAM';
-
-a:=a||'E#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ITMD_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ITMD_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  item_id component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'';
-
-a:=a||'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  4311 link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  4311 link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  ''F4000_P4311_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || item_id || '','' || application_id || '','' || page_id link,   '||chr(10)||
-'  page_name,'||chr(10)||
-'  item_name,'||chr(10)||
-'  type,'||chr(10)||
-'  UPPER(REPLACE(type, '' '', ''_'')),'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region,'||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''SQL Injection - Item Defau';
-
-a:=a||'lt Value'' link_desc,'||chr(10)||
-'    page_id,'||chr(10)||
-'    item_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    page_name,'||chr(10)||
-'    region,'||chr(10)||
-'    item_name,'||chr(10)||
-'    sv_sec_rules.check_item_syntax(item_default) result,'||chr(10)||
-'    sv_sec_util.get_checksum(item_default) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''Default Value'' type,'||chr(10)||
-'    item_default val'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_items'||chr(10)||
-'  WHERE'||chr(10)||
-'    item_default_type IN ('||chr(10)||
-'      ''PLSQL_';
-
-a:=a||'FUNCTION_BODY'', '||chr(10)||
-'      ''PLSQL_EXPRESSION'')'||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_ITMD_ITEM',
-  p_collection_key        => 'SV_SQLI_ITMD_ITEM',
-  p_category_key          => 'SV_SQLI_ITMD',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_ITMD_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAM';
-
-a:=a||'E#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ITMD_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ITMD_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  item_id component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'';
-
-a:=a||'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  4311 link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  4311 link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  ''F4000_P4311_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || item_id || '','' || application_id || '','' || page_id link,   '||chr(10)||
-'  page_name,'||chr(10)||
-'  item_name,'||chr(10)||
-'  type,'||chr(10)||
-'  UPPER(REPLACE(type, '' '', ''_'')),'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region,'||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ''SQL Injection - Item Defau';
-
-a:=a||'lt Value'' link_desc,'||chr(10)||
-'    page_id,'||chr(10)||
-'    item_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    page_name,'||chr(10)||
-'    region,'||chr(10)||
-'    item_name,'||chr(10)||
-'    sv_sec_rules.check_dyn_sql(item_default) result,'||chr(10)||
-'    sv_sec_util.get_checksum(item_default) checksum,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''Default Value'' type,'||chr(10)||
-'    item_default val'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_items'||chr(10)||
-'  WHERE'||chr(10)||
-'    item_default_type IN ('||chr(10)||
-'      ''PLSQL_FUNC';
-
-a:=a||'TION_BODY'', '||chr(10)||
-'      ''PLSQL_EXPRESSION'')'||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_ITMD_DBMS',
-  p_collection_key        => 'SV_SQLI_ITMD_DBMS',
-  p_category_key          => 'SV_SQLI_ITMD',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Item Default Contains &ITEM. Syntax
 DECLARE
   a CLOB;
@@ -56816,255 +50913,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_ATH_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ATH_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ATH_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  authorization_scheme_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signatur';
-
-a:=a||'e,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4008'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''RP,4313'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,F4000_P4008_ID:'' || application_id || '','' '||chr(10)||
-'    || authorization_scheme_id link,'||chr(10)||
-'  ''SQL Injection - Authorization Schemes'' link_desc,'||chr(10)||
-'  authorization_scheme_name,'||chr(10)||
-'  htf.escape_sc(authorization_scheme_name) authorization_scheme_name_esc,'||chr(10)||
-'  INITCAP(REPLACE(scheme_type, ''_'', '' '')) scheme_type,'||chr(10)||
-'  sv_sec_rules.chec';
-
-a:=a||'k_dyn_sql(attribute_01) result,'||chr(10)||
-'  attribute_01 val,'||chr(10)||
-'  sv_sec_util.get_checksum(attribute_01) checksum,'||chr(10)||
-'  authorization_scheme_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_authorization'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APP_ID#'||chr(10)||
-'  AND UPPER(scheme_type_code) IN (''NATIVE_FUNCTION_BODY'', ''NATIVE_EXISTS'',''NATIVE_NOT_EXISTS'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_ATH_DBMS',
-  p_collection_key        => 'SV_SQLI_ATH_DBMS',
-  p_category_key          => 'SV_SQLI_ATH',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_ATH_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ATH_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ATH_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  authorization_scheme_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signatur';
-
-a:=a||'e,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4008'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''RP,4313'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,F4000_P4008_ID:'' || application_id || '','' '||chr(10)||
-'    || authorization_scheme_id link,'||chr(10)||
-'  ''SQL Injection - Authorization Schemes'' link_desc,'||chr(10)||
-'  authorization_scheme_name,'||chr(10)||
-'  htf.escape_sc(authorization_scheme_name) authorization_scheme_name_esc,'||chr(10)||
-'  INITCAP(REPLACE(scheme_type, ''_'', '' '')) scheme_type,'||chr(10)||
-'  sv_sec_rules.chec';
-
-a:=a||'k_exe_imm(attribute_01) result,'||chr(10)||
-'  attribute_01 val,'||chr(10)||
-'  sv_sec_util.get_checksum(attribute_01) checksum,'||chr(10)||
-'  authorization_scheme_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_authorization'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APP_ID#'||chr(10)||
-'  AND UPPER(scheme_type_code) IN (''NATIVE_FUNCTION_BODY'', ''NATIVE_EXISTS'',''NATIVE_NOT_EXISTS'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_ATH_EXEC',
-  p_collection_key        => 'SV_SQLI_ATH_EXEC',
-  p_category_key          => 'SV_SQLI_ATH',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_ATH_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ATH_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_ATH_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  authorization_scheme_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signatur';
-
-a:=a||'e,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4008'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''RP,4313'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,F4000_P4008_ID:'' || application_id || '','' '||chr(10)||
-'    || authorization_scheme_id link,'||chr(10)||
-'  ''SQL Injection - Authorization Schemes'' link_desc,'||chr(10)||
-'  authorization_scheme_name,'||chr(10)||
-'  htf.escape_sc(authorization_scheme_name) authorization_scheme_name_esc,'||chr(10)||
-'  INITCAP(REPLACE(scheme_type, ''_'', '' '')) scheme_type,'||chr(10)||
-'  sv_sec_rules.chec';
-
-a:=a||'k_item_syntax(attribute_01) result,'||chr(10)||
-'  attribute_01 val,'||chr(10)||
-'  sv_sec_util.get_checksum(attribute_01) checksum,'||chr(10)||
-'  authorization_scheme_name '||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_authorization'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APP_ID#'||chr(10)||
-'  AND UPPER(scheme_type_code) IN (''NATIVE_FUNCTION_BODY'', ''NATIVE_EXISTS'',''NATIVE_NOT_EXISTS'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_ATH_ITEM',
-  p_collection_key        => 'SV_SQLI_ATH_ITEM',
-  p_category_key          => 'SV_SQLI_ATH',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Authorization Scheme Contains DBMS_SQL
 DECLARE
   a CLOB;
@@ -59229,243 +53077,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_LST_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT categ';
-
-a:=a||'ory_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_LST_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_LST_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  list_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4050'' link_';
-
-a:=a||'page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4050'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,F4000_P4050_LIST_ID:'' || application_id || '','' '||chr(10)||
-'    || list_id link,'||chr(10)||
-'  ''SQL Injection - Lists'' link_desc,'||chr(10)||
-'  list_name,'||chr(10)||
-'  sv_sec_rules.check_dyn_sql(list_query) result,'||chr(10)||
-'  list_query val,'||chr(10)||
-'  sv_sec_util.get_checksum(list_query) checksum,'||chr(10)||
-'  list_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_lists'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND list_type_code IN(''F';
-
-a:=a||'UNCTION_RETURNING_SQL_QUERY'', ''SQL_QUERY'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_LST_DBMS',
-  p_collection_key        => 'SV_SQLI_LST_DBMS',
-  p_category_key          => 'SV_SQLI_LISTS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_LST_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT categ';
-
-a:=a||'ory_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_LST_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_LST_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  list_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4313'' link_';
-
-a:=a||'page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''RP,4313'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P4313_ID:'' || application_id || '','' '||chr(10)||
-'    || list_id link,'||chr(10)||
-'  ''SQL Injection - Lists'' link_desc,'||chr(10)||
-'  list_name,'||chr(10)||
-'  sv_sec_rules.check_exe_imm(list_query) result,'||chr(10)||
-'  list_query val,'||chr(10)||
-'  sv_sec_util.get_checksum(list_query) checksum,'||chr(10)||
-'  list_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_lists'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND list_t';
-
-a:=a||'ype_code IN(''FUNCTION_RETURNING_SQL_QUERY'', ''SQL_QUERY'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_LST_EXEC',
-  p_collection_key        => 'SV_SQLI_LST_EXEC',
-  p_category_key          => 'SV_SQLI_LISTS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_LST_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT categ';
-
-a:=a||'ory_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_LST_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_LST_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  list_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4050'' link_';
-
-a:=a||'page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4050'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,F4000_P4050_LIST_ID:'' || application_id || '','' '||chr(10)||
-'    || list_id link,'||chr(10)||
-'  ''SQL Injection - Lists'' link_desc,'||chr(10)||
-'  list_name,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(list_query) result,'||chr(10)||
-'  list_query val,'||chr(10)||
-'  sv_sec_util.get_checksum(list_query) checksum,'||chr(10)||
-'  list_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_lists'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND list_type_code I';
-
-a:=a||'N(''FUNCTION_RETURNING_SQL_QUERY'', ''SQL_QUERY'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_LST_ITEM',
-  p_collection_key        => 'SV_SQLI_LST_ITEM',
-  p_category_key          => 'SV_SQLI_LISTS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: List Contains EXECUTE IMMEIDATE
 DECLARE
   a CLOB;
@@ -61421,246 +55032,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_PLG_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELE';
-
-a:=a||'CT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PLG_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PLG_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  plugin_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  name component_signature,'||chr(10)||
-'  ''Edit'' edit,';
-
-a:=a||''||chr(10)||
-'  ''4410'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4410'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,P4410_ID:'' || application_id || '','' '||chr(10)||
-'    || plugin_id link,'||chr(10)||
-'  ''SQL Injection - Plugins'' link_desc,'||chr(10)||
-'  display_name,'||chr(10)||
-'  htf.escape_sc(display_name) display_name_esc,'||chr(10)||
-'  sv_sec_rules.check_dyn_sql(plsql_code) result,'||chr(10)||
-'  plsql_code val,'||chr(10)||
-'  sv_sec_util.get_checksum(plsql_code) checksum,'||chr(10)||
-'  display_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_appl_plugins'||chr(10)||
-'WHERE'||chr(10)||
-'  app';
-
-a:=a||'lication_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_PLG_DBMS',
-  p_collection_key        => 'SV_SQLI_PLG_DBMS',
-  p_category_key          => 'SV_SQLI_PLG',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_PLG_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELE';
-
-a:=a||'CT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PLG_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PLG_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  plugin_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  name component_signature,'||chr(10)||
-'  ''Edit'' edit,';
-
-a:=a||''||chr(10)||
-'  ''4410'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4410'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,P4410_ID:'' || application_id || '','' '||chr(10)||
-'    || plugin_id link,'||chr(10)||
-'  ''SQL Injection - Plugins'' link_desc,'||chr(10)||
-'  display_name,'||chr(10)||
-'  htf.escape_sc(display_name) display_name_esc,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(plsql_code) result,'||chr(10)||
-'  plsql_code val,'||chr(10)||
-'  sv_sec_util.get_checksum(plsql_code) checksum,'||chr(10)||
-'  display_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_appl_plugins'||chr(10)||
-'WHERE'||chr(10)||
-' ';
-
-a:=a||' application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_PLG_ITEM',
-  p_collection_key        => 'SV_SQLI_PLG_ITEM',
-  p_category_key          => 'SV_SQLI_PLG',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_PLG_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELE';
-
-a:=a||'CT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PLG_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PLG_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  plugin_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  name component_signature,'||chr(10)||
-'  ''Edit'' edit,';
-
-a:=a||''||chr(10)||
-'  ''4410'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4410'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,P4410_ID:'' || application_id || '','' '||chr(10)||
-'    || plugin_id link,'||chr(10)||
-'  ''SQL Injection - Plugins'' link_desc,'||chr(10)||
-'  display_name,'||chr(10)||
-'  htf.escape_sc(display_name) display_name_esc,'||chr(10)||
-'  sv_sec_rules.check_exe_imm(plsql_code) result,'||chr(10)||
-'  plsql_code val,'||chr(10)||
-'  sv_sec_util.get_checksum(plsql_code) checksum,'||chr(10)||
-'  display_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_appl_plugins'||chr(10)||
-'WHERE'||chr(10)||
-'  app';
-
-a:=a||'lication_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_PLG_EXEC',
-  p_collection_key        => 'SV_SQLI_PLG_EXEC',
-  p_category_key          => 'SV_SQLI_PLG',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Plugin Contains &ITEM. Syntax
 DECLARE
   a CLOB;
@@ -63824,393 +57195,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_LOV_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_LOV_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_LOV_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  lov_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit''';
-
-a:=a||' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  ''SQL Injection - Lists of Values'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  list_of_values_name,'||chr(10)||
-'  htf.escape_sc(list_of_values_name) list_of_values_name_esc,'||chr(10)||
-'  lov_type,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(lov_definition) result,'||chr(10)||
-'  lov_definition val,'||chr(10)||
-'  sv_sec_util.get_checksum(lov_definition) checksum,'||chr(10)||
-'  list_of_values_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'';
-
-a:=a||'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    ''4111'' link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''4111'' link_cc,'||chr(10)||
-'    ''F4000_P4111_ID,FB_FLOW_ID:'' || lov_id || '','' || application_id link,'||chr(10)||
-'    0 page_id,'||chr(10)||
-'    ''Shared Component'' page_name,'||chr(10)||
-'    list_of_values_name,'||chr(10)||
-'    lov_id,'||chr(10)||
-'    ''SHARED_LOV'' lov_type,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    list_of_values_query lov_definition'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_lovs'||chr(10)||
-'  WHERE'||chr(10)||
-'    ';
-
-a:=a||'lov_type = ''Dynamic'''||chr(10)||
-'  UNION'||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    ''4311'' link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''4311'' link_cc,'||chr(10)||
-'    ''F4000_P4311_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || item_id || '','' || application_id '||chr(10)||
-'      || '','' || page_id link,'||chr(10)||
-'    page_id,'||chr(10)||
-'    page_name,'||chr(10)||
-'    item_name list_of_values_name,'||chr(10)||
-'    item_id lov_id,'||chr(10)||
-'    ''ITEM_LOV'' lov_type,'||chr(10)||
-'    component_s';
-
-a:=a||'ignature,'||chr(10)||
-'    lov_definition'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_items'||chr(10)||
-'  WHERE'||chr(10)||
-'    INSTR(UPPER(lov_definition), ''SELECT'',1) > 0'||chr(10)||
-'    AND lov_named_lov IS NULL'||chr(10)||
-'  )'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_LOV_ITEM',
-  p_collection_key        => 'SV_SQLI_LOV_ITEM',
-  p_category_key          => 'SV_SQLI_LOV',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_LOV_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_LOV_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_LOV_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  lov_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit''';
-
-a:=a||' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  ''SQL Injection - Lists of Values'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  list_of_values_name,'||chr(10)||
-'  htf.escape_sc(list_of_values_name) list_of_values_name_esc,'||chr(10)||
-'  lov_type,'||chr(10)||
-'  sv_sec_rules.check_dyn_sql(lov_definition) result,'||chr(10)||
-'  lov_definition val,'||chr(10)||
-'  sv_sec_util.get_checksum(lov_definition) checksum,'||chr(10)||
-'  list_of_values_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ';
-
-a:=a||'last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    ''4111'' link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''4111'' link_cc,'||chr(10)||
-'    ''F4000_P4111_ID,FB_FLOW_ID:'' || lov_id || '','' || application_id link,'||chr(10)||
-'    0 page_id,'||chr(10)||
-'    ''Shared Component'' page_name,'||chr(10)||
-'    list_of_values_name,'||chr(10)||
-'    lov_id,'||chr(10)||
-'    ''SHARED_LOV'' lov_type,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    list_of_values_query lov_definition'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_lovs'||chr(10)||
-'  WHERE'||chr(10)||
-'    lov_';
-
-a:=a||'type = ''Dynamic'''||chr(10)||
-'  UNION'||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    ''4311'' link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''4311'' link_cc,'||chr(10)||
-'    ''F4000_P4311_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || item_id || '','' || application_id '||chr(10)||
-'      || '','' || page_id link,'||chr(10)||
-'    page_id,'||chr(10)||
-'    page_name,'||chr(10)||
-'    item_name list_of_values_name,'||chr(10)||
-'    item_id lov_id,'||chr(10)||
-'    ''ITEM_LOV'' lov_type,'||chr(10)||
-'    component_signa';
-
-a:=a||'ture,'||chr(10)||
-'    lov_definition'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_items'||chr(10)||
-'  WHERE'||chr(10)||
-'    INSTR(UPPER(lov_definition), ''SELECT'',1) > 0'||chr(10)||
-'    AND lov_named_lov IS NULL'||chr(10)||
-'  )'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_LOV_DBMS',
-  p_collection_key        => 'SV_SQLI_LOV_DBMS',
-  p_category_key          => 'SV_SQLI_LOV',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_LOV_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_LOV_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_LOV_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  lov_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit''';
-
-a:=a||' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  ''SQL Injection - Lists of Values'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  list_of_values_name,'||chr(10)||
-'  htf.escape_sc(list_of_values_name) list_of_values_name_esc,'||chr(10)||
-'  lov_type,'||chr(10)||
-'  sv_sec_rules.check_exe_imm(lov_definition) result,'||chr(10)||
-'  lov_definition val,'||chr(10)||
-'  sv_sec_util.get_checksum(lov_definition) checksum,'||chr(10)||
-'  list_of_values_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    ';
-
-a:=a||'last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    ''4111'' link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''4111'' link_cc,'||chr(10)||
-'    ''F4000_P4111_ID,FB_FLOW_ID:'' || lov_id || '','' || application_id link,'||chr(10)||
-'    0 page_id,'||chr(10)||
-'    ''Shared Component'' page_name,'||chr(10)||
-'    list_of_values_name,'||chr(10)||
-'    lov_id,'||chr(10)||
-'    ''SHARED_LOV'' lov_type,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    list_of_values_query lov_definition'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_lovs'||chr(10)||
-'  WHERE'||chr(10)||
-'    lov_';
-
-a:=a||'type = ''Dynamic'''||chr(10)||
-'  UNION'||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    ''4311'' link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''4311'' link_cc,'||chr(10)||
-'    ''F4000_P4311_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || item_id || '','' || application_id '||chr(10)||
-'      || '','' || page_id link,'||chr(10)||
-'    page_id,'||chr(10)||
-'    page_name,'||chr(10)||
-'    item_name list_of_values_name,'||chr(10)||
-'    item_id lov_id,'||chr(10)||
-'    ''ITEM_LOV'' lov_type,'||chr(10)||
-'    component_signa';
-
-a:=a||'ture,'||chr(10)||
-'    lov_definition'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_items'||chr(10)||
-'  WHERE'||chr(10)||
-'    INSTR(UPPER(lov_definition), ''SELECT'',1) > 0'||chr(10)||
-'    AND lov_named_lov IS NULL'||chr(10)||
-'  )'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_LOV_EXEC',
-  p_collection_key        => 'SV_SQLI_LOV_EXEC',
-  p_category_key          => 'SV_SQLI_LOV',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: List of Values Contains DBMS_SQL
 DECLARE
   a CLOB;
@@ -66681,106 +59665,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_URL_ITEM_PROTECT
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  c006,'||chr(10)||
-'  c007,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'S';
-
-a:=a||'ELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_ITEM_PROTECT'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_ITEM_PROTECT'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  item_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  la';
-
-a:=a||'st_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  515 link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  515 link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,P515_FLOW_ID,P515_ID:'' || application_id || '','' || application_id || '','' || page_id link,   '||chr(10)||
-'  ''URL - Item Protection'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region,'||chr(10)||
-'  item_name,'||chr(10)||
-'  label,'||chr(10)||
-'  htf.escape_sc(label) label_esc,'||chr(10)||
-'  display_as,'||chr(10)||
-'  item_protection_level,'||chr(10)||
-'  sv_sec.get_result '||chr(10)||
-'    ('||chr(10)||
-'    ''SV_U';
-
-a:=a||'RL_ITEM_PROTECT'','||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-'    item_protection_level,'||chr(10)||
-'    NULL,'||chr(10)||
-'    ''N'','||chr(10)||
-'    ''Y'','||chr(10)||
-'    NULL'||chr(10)||
-'    ) result,'||chr(10)||
-'  item_protection_level val,'||chr(10)||
-'  sv_sec_util.get_checksum(item_protection_level) checksum,'||chr(10)||
-'  region,'||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_items'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_URL_ITEM_PROTECT',
-  p_collection_key        => 'SV_URL_ITEM_PROTECTION',
-  p_category_key          => 'SV_URL_ITEM_PROTECTION',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Item Protection Level
 DECLARE
   a CLOB;
@@ -68525,2579 +61409,6 @@ sv_sec_import.category(
   p_rpt_attribute_key     => '',
   p_internal_flag         => 'Y'
   );
-end;
-/
-
--->>END
-
-PROMPT == ..COLLECTION: SV_XSS_PH_JS_ONLOAD
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_se';
-
-a:=a||'c_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PH_JS_ONLOAD'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PH_JS_ONLOAD'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  NULL region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4301'' link_page,'||chr(10)||
-' ';
-
-a:=a||' NULL link_req,'||chr(10)||
-'  ''4301'' link_cc,'||chr(10)||
-'  ''F4000_P4301_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || page_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Page Headers'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  sv_sec_rules.check_xss(javascript_code_onload) result,'||chr(10)||
-'  javascript_code_onload val,'||chr(10)||
-'  sv_sec_util.get_checksum(javascript_code_onload) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_pages ap'||chr(10)||
-'WHERE'||chr(10)||
-'  ap.application_id =';
-
-a:=a||' #APPLICATION_ID#'||chr(10)||
-'';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_PH_JS_ONLOAD',
-  p_collection_key        => 'SV_XSS_PAGE_HEADER_JS_ONLOAD',
-  p_category_key          => 'SV_XSS_PAGE_HEADERS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_XSS_PH_JS_GLOBALS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_se';
-
-a:=a||'c_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PH_JS_GLOBALS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PH_JS_GLOBALS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  NULL region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4301'' link_page,';
-
-a:=a||''||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4301'' link_cc,'||chr(10)||
-'  ''F4000_P4301_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || page_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Page Headers'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  sv_sec_rules.check_xss(javascript_code) result,'||chr(10)||
-'  javascript_code val,'||chr(10)||
-'  sv_sec_util.get_checksum(javascript_code) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_pages ap'||chr(10)||
-'WHERE'||chr(10)||
-'  ap.application_id = #APPLICATION_ID#'||chr(10)||
-'';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_PH_JS_GLOBALS',
-  p_collection_key        => 'SV_XSS_PAGE_HEADER_JS_GLOBALS',
-  p_category_key          => 'SV_XSS_PAGE_HEADERS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_XSS_PH_HTML_BODY
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_se';
-
-a:=a||'c_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PH_HTML_BODY'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PH_HTML_BODY'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  NULL region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4301'' link_page,'||chr(10)||
-' ';
-
-a:=a||' NULL link_req,'||chr(10)||
-'  ''4301'' link_cc,'||chr(10)||
-'  ''F4000_P4301_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || page_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Page Headers'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  sv_sec_rules.check_xss(page_html_onload) result,'||chr(10)||
-'  page_html_onload val,'||chr(10)||
-'  sv_sec_util.get_checksum(page_html_onload) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_pages ap'||chr(10)||
-'WHERE'||chr(10)||
-'  ap.application_id = #APPLICATION_ID#'||chr(10)||
-'';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_PH_HTML_BODY',
-  p_collection_key        => 'SV_XSS_PAGE_HEADER_HTML_BODY',
-  p_category_key          => 'SV_XSS_PAGE_HEADERS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_XSS_PH_HTML_HEAD
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_se';
-
-a:=a||'c_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PH_HTML_HEAD'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PH_HTML_HEAD'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  NULL region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4301'' link_page,'||chr(10)||
-' ';
-
-a:=a||' NULL link_req,'||chr(10)||
-'  ''4301'' link_cc,'||chr(10)||
-'  ''F4000_P4301_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || page_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Page Headers'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  sv_sec_rules.check_xss(page_html_header) result,'||chr(10)||
-'  page_html_header val,'||chr(10)||
-'  sv_sec_util.get_checksum(page_html_header) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_pages ap'||chr(10)||
-'WHERE'||chr(10)||
-'  ap.application_id = #APPLICATION_ID#'||chr(10)||
-'';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_PH_HTML_HEAD',
-  p_collection_key        => 'SV_XSS_PAGE_HEADER_HTML_HEADER',
-  p_category_key          => 'SV_XSS_PAGE_HEADERS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_XSS_PH_HEADER
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_se';
-
-a:=a||'c_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PH_HEADER'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PH_HEADER'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  NULL region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4301'' link_page,'||chr(10)||
-'  NULL ';
-
-a:=a||'link_req,'||chr(10)||
-'  ''4301'' link_cc,'||chr(10)||
-'  ''F4000_P4301_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || page_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Page Headers'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  sv_sec_rules.check_xss(header_text) result,'||chr(10)||
-'  header_text val,'||chr(10)||
-'  sv_sec_util.get_checksum(header_text) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_pages ap'||chr(10)||
-'WHERE'||chr(10)||
-'  ap.application_id = #APPLICATION_ID#'||chr(10)||
-'';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_PH_HEADER',
-  p_collection_key        => 'SV_XSS_PAGE_HEADER_HEADER_TEXT',
-  p_category_key          => 'SV_XSS_PAGE_HEADERS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_XSS_PH_FOOTER
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_se';
-
-a:=a||'c_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PH_FOOTER'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PH_FOOTER'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  NULL region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4301'' link_page,'||chr(10)||
-'  NULL ';
-
-a:=a||'link_req,'||chr(10)||
-'  ''4301'' link_cc,'||chr(10)||
-'  ''F4000_P4301_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || page_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Page Headers'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  sv_sec_rules.check_xss(footer_text) result,'||chr(10)||
-'  footer_text val,'||chr(10)||
-'  sv_sec_util.get_checksum(footer_text) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_pages ap'||chr(10)||
-'WHERE'||chr(10)||
-'  ap.application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_PH_FOOTER',
-  p_collection_key        => 'SV_XSS_PAGE_HEADER_FOOTER_TEXT',
-  p_category_key          => 'SV_XSS_PAGE_HEADERS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..ATTRIBUTE: Page HTML Body Attribute
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>Any attributed here will augment the <strong>&lt;body&gt;</strong> tag on the page.</p>'||chr(10)||
-'';
-
-c:=c||'<p>Ensure that any items using the&nbsp;<strong>&amp;ITEM.</strong>&nbsp;syntax references are properly secured, and can not be manipulated through the URL. &nbsp;</p>'||chr(10)||
-''||chr(10)||
-'<p>Consider moving all JavaScript to either static files or PL/SQL Regions which can render on Page Zero. &nbsp;This will ensure that APEX variables can be inserted on the server side, where there is less risk of them being malicio';
-
-c:=c||'usly altered.</p>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_XSS_PAGE_HEADERS',
-  p_attribute_name           => 'Page HTML Body Attribute',
-  p_attribute_key            => 'SV_XSS_PH_HTML_BODY',
-  p_active_flag              => 'N',
-  p_rule_source              => 'COLLECTION',
-  p_rule_type                => 'FUNCTION',
-  p_table_name               => '',
-  p_column_name              => '',
-  p_view_name                => 'SV_SEC_COL_XSS_PH_HTML_BODY_V',
-  p_component_table          => '',
-  p_component_column_id      => '',
-  p_component_column_display => '',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'PAGE',
-  p_component_sig_key        => '',
-  p_help_page                => '',
-  p_seq                      => 4,
-
-  p_collection_name          => 'SV_XSS_PH_HTML_BODY',
-
-  p_display_page_id          => 574,
-
-  p_summary_page_id          => 570,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ....ATTRIBUTE VALUE: Page HTML Body Attribute
-BEGIN
-
-sv_sec_import.attribute_value(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_attribute_set_key     => 'DEFAULT',
-  p_value                 => 'PASS',
-  p_result                => 'PASS',
-  p_active_flag           => 'Y'
-  );
-END;
-/
-
--->>END
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_BODY: APPROVED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'APPROVED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: APPROVED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_BY',
-  p_label                 => 'Approved By',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: ATTRIBUTE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'ATTRIBUTE_ID',
-  p_label                 => 'Approved On',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 55,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_BODY: ATTRIBUTE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'ATTRIBUTE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 45,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: UPDATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'UPDATED_BY',
-  p_label                 => 'Updated By',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: UPDATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'UPDATED_ON',
-  p_label                 => 'Updated On',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_BODY: PENDING
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'PENDING'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 65,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_BODY: REJECTED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'REJECTED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 30,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: REJECTED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_BY',
-  p_label                 => 'Rejected By',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: REJECTED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_ON',
-  p_label                 => 'Rejected On',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: REJECTION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTION',
-  p_label                 => 'Rejection',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 25,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_BODY: STALE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'STALE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'STALE',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'STALE',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'STALE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
-  p_report_key            => 'STALE',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 65,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..ATTRIBUTE: Execute when Page Loads
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>Any JavaScript code entered here will execute as part of the page&#39;s <strong>onload</strong> event.</p>'||chr(10)||
-'';
-
-c:=c||'<p>Ensure that any items using the&nbsp;<strong>&amp;ITEM.</strong>&nbsp;syntax references are properly secured, and can not be manipulated through the URL. &nbsp;</p>'||chr(10)||
-''||chr(10)||
-'<p>Consider moving all JavaScript to either static files or PL/SQL Regions which can render on Page Zero. &nbsp;This will ensure that APEX variables can be inserted on the server side, where there is less risk of them being malicio';
-
-c:=c||'usly altered.</p>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_XSS_PAGE_HEADERS',
-  p_attribute_name           => 'Execute when Page Loads',
-  p_attribute_key            => 'SV_XSS_PH_JS_ONLOAD',
-  p_active_flag              => 'N',
-  p_rule_source              => 'COLLECTION',
-  p_rule_type                => 'FUNCTION',
-  p_table_name               => '',
-  p_column_name              => '',
-  p_view_name                => 'SV_SEC_COL_XSS_PH_JS_ONLOAD_V',
-  p_component_table          => '',
-  p_component_column_id      => '',
-  p_component_column_display => '',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'PAGE',
-  p_component_sig_key        => '',
-  p_help_page                => '',
-  p_seq                      => 2,
-
-  p_collection_name          => 'SV_XSS_PH_JS_ONLOAD',
-
-  p_display_page_id          => 572,
-
-  p_summary_page_id          => 570,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ....ATTRIBUTE VALUE: Execute when Page Loads
-BEGIN
-
-sv_sec_import.attribute_value(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_attribute_set_key     => 'DEFAULT',
-  p_value                 => 'PASS',
-  p_result                => 'PASS',
-  p_active_flag           => 'Y'
-  );
-END;
-/
-
--->>END
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_JS_ONLOAD: APPROVED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'APPROVED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: APPROVED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_BY',
-  p_label                 => 'Approved By',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: ATTRIBUTE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'ATTRIBUTE_ID',
-  p_label                 => 'Approved On',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 55,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_JS_ONLOAD: ATTRIBUTE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'ATTRIBUTE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 45,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: UPDATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'UPDATED_BY',
-  p_label                 => 'Updated By',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: UPDATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'UPDATED_ON',
-  p_label                 => 'Updated On',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_JS_ONLOAD: PENDING
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'PENDING'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 65,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_JS_ONLOAD: REJECTED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'REJECTED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 30,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: REJECTED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_BY',
-  p_label                 => 'Rejected By',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: REJECTED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_ON',
-  p_label                 => 'Rejected On',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: REJECTION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTION',
-  p_label                 => 'Rejection',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 25,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_JS_ONLOAD: STALE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'STALE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'STALE',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'STALE',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'STALE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
-  p_report_key            => 'STALE',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 65,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..ATTRIBUTE: HTML Header
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>'||chr(10)||
-'	Any text entered here will be substituted in place of the <strong>#HEAD#</strong> token in the page template. &nbsp;Typical uses for this region include, but are not limited to page specific:</p>'||chr(10)||
-'<p>'||chr(10)||
-'	&nbsp;- Inline CSS definitions<br />'||chr(10)||
-'	&nbsp;- Additional CSS or Javascript file references<br />'||chr(10)||
-'	&nbsp;- Meta Tags</p>'||chr(10)||
-'<p>'||chr(10)||
-'	Changes that need to be applied to all pages of an application should';
-
-b:=b||' be made to either Page Zero regions or to the Page Template.</p>'||chr(10)||
-'';
-
-c:=c||'<p>'||chr(10)||
-'	Ensure&nbsp;that any items using the&nbsp;<strong>&amp;ITEM.</strong>&nbsp;syntax references are properly secured, and can not be manipulated through the URL.</p>'||chr(10)||
-'<p>'||chr(10)||
-'	Consider moving all JavaScript to either static files or PL/SQL Regions which can render on Page Zero. &nbsp;This will ensure that APEX variables can be inserted on the server side, where there is less risk of them being malici';
-
-c:=c||'ously altered.</p>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_XSS_PAGE_HEADERS',
-  p_attribute_name           => 'HTML Header',
-  p_attribute_key            => 'SV_XSS_PH_HTML_HEAD',
-  p_active_flag              => 'Y',
-  p_rule_source              => 'COLLECTION',
-  p_rule_type                => 'FUNCTION',
-  p_table_name               => '',
-  p_column_name              => '',
-  p_view_name                => 'SV_SEC_COL_XSS_PH_HTML_HEAD_V',
-  p_component_table          => '',
-  p_component_column_id      => '',
-  p_component_column_display => '',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'PAGE',
-  p_component_sig_key        => '',
-  p_help_page                => '',
-  p_seq                      => 3,
-
-  p_collection_name          => 'SV_XSS_PH_HTML_HEAD',
-
-  p_display_page_id          => 573,
-
-  p_summary_page_id          => 570,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ....ATTRIBUTE VALUE: HTML Header
-BEGIN
-
-sv_sec_import.attribute_value(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_attribute_set_key     => 'DEFAULT',
-  p_value                 => 'PASS',
-  p_result                => 'PASS',
-  p_active_flag           => 'Y'
-  );
-END;
-/
-
--->>END
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_HEAD: APPROVED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'APPROVED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: APPROVED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_BY',
-  p_label                 => 'Approved By',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: ATTRIBUTE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'ATTRIBUTE_ID',
-  p_label                 => 'Approved On',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 55,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_HEAD: ATTRIBUTE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'ATTRIBUTE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 45,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: UPDATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'UPDATED_BY',
-  p_label                 => 'Updated By',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: UPDATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'UPDATED_ON',
-  p_label                 => 'Updated On',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_HEAD: PENDING
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'PENDING'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 65,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_HEAD: REJECTED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'REJECTED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 30,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: REJECTED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_BY',
-  p_label                 => 'Rejected By',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: REJECTED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_ON',
-  p_label                 => 'Rejected On',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: REJECTION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTION',
-  p_label                 => 'Rejection',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 25,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_HEAD: STALE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'STALE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'STALE',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'STALE',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'STALE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_report_key            => 'STALE',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 65,
-  p_alignment             => 'Left'
-);
 end;
 /
 
@@ -73221,6 +63532,2128 @@ end;
 
 -->>END
 
+PROMPT == ..ATTRIBUTE: Page HTML Body Attribute
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>Any attributed here will augment the <strong>&lt;body&gt;</strong> tag on the page.</p>'||chr(10)||
+'';
+
+c:=c||'<p>Ensure that any items using the&nbsp;<strong>&amp;ITEM.</strong>&nbsp;syntax references are properly secured, and can not be manipulated through the URL. &nbsp;</p>'||chr(10)||
+''||chr(10)||
+'<p>Consider moving all JavaScript to either static files or PL/SQL Regions which can render on Page Zero. &nbsp;This will ensure that APEX variables can be inserted on the server side, where there is less risk of them being malicio';
+
+c:=c||'usly altered.</p>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_XSS_PAGE_HEADERS',
+  p_attribute_name           => 'Page HTML Body Attribute',
+  p_attribute_key            => 'SV_XSS_PH_HTML_BODY',
+  p_active_flag              => 'N',
+  p_rule_source              => 'COLLECTION',
+  p_rule_type                => 'FUNCTION',
+  p_table_name               => '',
+  p_column_name              => '',
+  p_view_name                => 'SV_SEC_COL_XSS_PH_HTML_BODY_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'PAGE',
+  p_component_sig_key        => '',
+  p_help_page                => '',
+  p_seq                      => 4,
+
+  p_collection_name          => 'SV_XSS_PH_HTML_BODY',
+
+  p_display_page_id          => 574,
+
+  p_summary_page_id          => 570,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ....ATTRIBUTE VALUE: Page HTML Body Attribute
+BEGIN
+
+sv_sec_import.attribute_value(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_attribute_set_key     => 'DEFAULT',
+  p_value                 => 'PASS',
+  p_result                => 'PASS',
+  p_active_flag           => 'Y'
+  );
+END;
+/
+
+-->>END
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_BODY: APPROVED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'APPROVED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: APPROVED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_BY',
+  p_label                 => 'Approved By',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: ATTRIBUTE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'ATTRIBUTE_ID',
+  p_label                 => 'Approved On',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 55,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_BODY: ATTRIBUTE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'ATTRIBUTE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 45,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: UPDATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'UPDATED_BY',
+  p_label                 => 'Updated By',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: UPDATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'UPDATED_ON',
+  p_label                 => 'Updated On',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_BODY: PENDING
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'PENDING'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 65,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_BODY: REJECTED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'REJECTED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 30,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: REJECTED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_BY',
+  p_label                 => 'Rejected By',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: REJECTED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_ON',
+  p_label                 => 'Rejected On',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: REJECTION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTION',
+  p_label                 => 'Rejection',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 25,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_BODY: STALE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'STALE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'STALE',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'STALE',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'STALE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_BODY: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_BODY',
+  p_report_key            => 'STALE',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 65,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..ATTRIBUTE: Execute when Page Loads
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>Any JavaScript code entered here will execute as part of the page&#39;s <strong>onload</strong> event.</p>'||chr(10)||
+'';
+
+c:=c||'<p>Ensure that any items using the&nbsp;<strong>&amp;ITEM.</strong>&nbsp;syntax references are properly secured, and can not be manipulated through the URL. &nbsp;</p>'||chr(10)||
+''||chr(10)||
+'<p>Consider moving all JavaScript to either static files or PL/SQL Regions which can render on Page Zero. &nbsp;This will ensure that APEX variables can be inserted on the server side, where there is less risk of them being malicio';
+
+c:=c||'usly altered.</p>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_XSS_PAGE_HEADERS',
+  p_attribute_name           => 'Execute when Page Loads',
+  p_attribute_key            => 'SV_XSS_PH_JS_ONLOAD',
+  p_active_flag              => 'N',
+  p_rule_source              => 'COLLECTION',
+  p_rule_type                => 'FUNCTION',
+  p_table_name               => '',
+  p_column_name              => '',
+  p_view_name                => 'SV_SEC_COL_XSS_PH_JS_ONLOAD_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'PAGE',
+  p_component_sig_key        => '',
+  p_help_page                => '',
+  p_seq                      => 2,
+
+  p_collection_name          => 'SV_XSS_PH_JS_ONLOAD',
+
+  p_display_page_id          => 572,
+
+  p_summary_page_id          => 570,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ....ATTRIBUTE VALUE: Execute when Page Loads
+BEGIN
+
+sv_sec_import.attribute_value(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_attribute_set_key     => 'DEFAULT',
+  p_value                 => 'PASS',
+  p_result                => 'PASS',
+  p_active_flag           => 'Y'
+  );
+END;
+/
+
+-->>END
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_JS_ONLOAD: APPROVED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'APPROVED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: APPROVED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_BY',
+  p_label                 => 'Approved By',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: ATTRIBUTE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'ATTRIBUTE_ID',
+  p_label                 => 'Approved On',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 55,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_JS_ONLOAD: ATTRIBUTE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'ATTRIBUTE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 45,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: UPDATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'UPDATED_BY',
+  p_label                 => 'Updated By',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: UPDATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'UPDATED_ON',
+  p_label                 => 'Updated On',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_JS_ONLOAD: PENDING
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'PENDING'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 65,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_JS_ONLOAD: REJECTED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'REJECTED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 30,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: REJECTED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_BY',
+  p_label                 => 'Rejected By',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: REJECTED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_ON',
+  p_label                 => 'Rejected On',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: REJECTION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTION',
+  p_label                 => 'Rejection',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 25,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_JS_ONLOAD: STALE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'STALE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'STALE',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'STALE',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'STALE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_JS_ONLOAD: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_JS_ONLOAD',
+  p_report_key            => 'STALE',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 65,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..ATTRIBUTE: HTML Header
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>'||chr(10)||
+'	Any text entered here will be substituted in place of the <strong>#HEAD#</strong> token in the page template. &nbsp;Typical uses for this region include, but are not limited to page specific:</p>'||chr(10)||
+'<p>'||chr(10)||
+'	&nbsp;- Inline CSS definitions<br />'||chr(10)||
+'	&nbsp;- Additional CSS or Javascript file references<br />'||chr(10)||
+'	&nbsp;- Meta Tags</p>'||chr(10)||
+'<p>'||chr(10)||
+'	Changes that need to be applied to all pages of an application should';
+
+b:=b||' be made to either Page Zero regions or to the Page Template.</p>'||chr(10)||
+'';
+
+c:=c||'<p>'||chr(10)||
+'	Ensure&nbsp;that any items using the&nbsp;<strong>&amp;ITEM.</strong>&nbsp;syntax references are properly secured, and can not be manipulated through the URL.</p>'||chr(10)||
+'<p>'||chr(10)||
+'	Consider moving all JavaScript to either static files or PL/SQL Regions which can render on Page Zero. &nbsp;This will ensure that APEX variables can be inserted on the server side, where there is less risk of them being malici';
+
+c:=c||'ously altered.</p>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_XSS_PAGE_HEADERS',
+  p_attribute_name           => 'HTML Header',
+  p_attribute_key            => 'SV_XSS_PH_HTML_HEAD',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLLECTION',
+  p_rule_type                => 'FUNCTION',
+  p_table_name               => '',
+  p_column_name              => '',
+  p_view_name                => 'SV_SEC_COL_XSS_PH_HTML_HEAD_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'PAGE',
+  p_component_sig_key        => '',
+  p_help_page                => '',
+  p_seq                      => 3,
+
+  p_collection_name          => 'SV_XSS_PH_HTML_HEAD',
+
+  p_display_page_id          => 573,
+
+  p_summary_page_id          => 570,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ....ATTRIBUTE VALUE: HTML Header
+BEGIN
+
+sv_sec_import.attribute_value(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_attribute_set_key     => 'DEFAULT',
+  p_value                 => 'PASS',
+  p_result                => 'PASS',
+  p_active_flag           => 'Y'
+  );
+END;
+/
+
+-->>END
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_HEAD: APPROVED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'APPROVED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: APPROVED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_BY',
+  p_label                 => 'Approved By',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: ATTRIBUTE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'ATTRIBUTE_ID',
+  p_label                 => 'Approved On',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 55,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_HEAD: ATTRIBUTE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'ATTRIBUTE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 45,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: UPDATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'UPDATED_BY',
+  p_label                 => 'Updated By',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: UPDATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'UPDATED_ON',
+  p_label                 => 'Updated On',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_HEAD: PENDING
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'PENDING'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 65,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_HEAD: REJECTED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'REJECTED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 30,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: REJECTED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_BY',
+  p_label                 => 'Rejected By',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: REJECTED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_ON',
+  p_label                 => 'Rejected On',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: REJECTION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTION',
+  p_label                 => 'Rejection',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 25,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_XSS_PH_HTML_HEAD: STALE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'STALE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'STALE',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'STALE',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'STALE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_XSS_PH_HTML_HEAD: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_report_key            => 'STALE',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 65,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
 PROMPT == CATEGORY: SQL Injection: Tabular Forms
 BEGIN
 
@@ -73239,333 +65672,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_TFM_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_TFM_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_TFM_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Ed';
-
-a:=a||'it'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  region_name_esc,'||chr(10)||
-'  report_type,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'('||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || apr.region_id || '','' '||chr(10)||
-'    || apr.application_id || '','' || apr.page_id link,'||chr(10)||
-'  ''';
-
-a:=a||'SQL Injection - Standard Reports'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  apr.page_name,'||chr(10)||
-'  apr.region_name,'||chr(10)||
-'  htf.escape_sc(apr.region_name) region_name_esc,'||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  ''Standard'' report_type,'||chr(10)||
-'  apr.last_updated_by,'||chr(10)||
-'  apr.last_updated_on,'||chr(10)||
-'  apr.component_signature,'||chr(10)||
-'  sv_sec_rules.check_dyn_sql(apr.region_source) result,'||chr(10)||
-'  apr.region_source val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.region_source) checksum'||chr(10)||
-'FR';
-
-a:=a||'OM'||chr(10)||
-'  apex_application_page_regions apr'||chr(10)||
-'WHERE'||chr(10)||
-'  apr.source_type = ''Tabular Form'''||chr(10)||
-'  AND apr.application_id = #APPLICATION_ID#'||chr(10)||
-')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_TFM_DBMS',
-  p_collection_key        => 'SV_SQLI_TFM_DBMS',
-  p_category_key          => 'SV_SQLI_TFM',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_TFM_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_TFM_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_TFM_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Ed';
-
-a:=a||'it'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  region_name_esc,'||chr(10)||
-'  report_type,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'('||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || apr.region_id || '','' '||chr(10)||
-'    || apr.application_id || '','' || apr.page_id link,'||chr(10)||
-'  ''';
-
-a:=a||'SQL Injection - Standard Reports'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  apr.page_name,'||chr(10)||
-'  apr.region_name,'||chr(10)||
-'  htf.escape_sc(apr.region_name) region_name_esc,  '||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  ''Standard'' report_type,'||chr(10)||
-'  apr.last_updated_by,'||chr(10)||
-'  apr.last_updated_on,'||chr(10)||
-'  apr.component_signature,'||chr(10)||
-'  sv_sec_rules.check_exe_imm(apr.region_source) result,'||chr(10)||
-'  apr.region_source val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.region_source) checksum'||chr(10)||
-'';
-
-a:=a||'FROM'||chr(10)||
-'  apex_application_page_regions apr'||chr(10)||
-'WHERE'||chr(10)||
-'  apr.source_type = ''Tabular Form'''||chr(10)||
-'  AND apr.application_id = #APPLICATION_ID#'||chr(10)||
-')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_TFM_EXEC',
-  p_collection_key        => 'SV_SQLI_TFM_EXEC',
-  p_category_key          => 'SV_SQLI_TFM',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_TFM_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_TFM_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_TFM_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Ed';
-
-a:=a||'it'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  region_name_esc,'||chr(10)||
-'  report_type,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'('||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || apr.region_id || '','' '||chr(10)||
-'    || apr.application_id || '','' || apr.page_id link,'||chr(10)||
-'  ''';
-
-a:=a||'SQL Injection - Standard Reports'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  apr.page_name,'||chr(10)||
-'  apr.region_name,'||chr(10)||
-'  htf.escape_sc(apr.region_name) region_name_esc,'||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  ''Standard'' report_type,'||chr(10)||
-'  apr.last_updated_by,'||chr(10)||
-'  apr.last_updated_on,'||chr(10)||
-'  apr.component_signature,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(apr.region_source) result,'||chr(10)||
-'  apr.region_source val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.region_source) checksu';
-
-a:=a||'m'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions apr'||chr(10)||
-'WHERE'||chr(10)||
-'  apr.source_type = ''Tabular Form'''||chr(10)||
-'  AND apr.application_id = #APPLICATION_ID#'||chr(10)||
-')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_TFM_ITEM',
-  p_collection_key        => 'SV_SQLI_TFM_ITEM',
-  p_category_key          => 'SV_SQLI_TFM',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Tabular Form Contains &ITEM. Syntax
 DECLARE
   a CLOB;
@@ -76035,126 +68141,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_STD_RPT_COLS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  column_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELE';
-
-a:=a||'CT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_STD_RPT_COLS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_STD_RPT_COLS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  column_id,'||chr(10)||
-'  last_upda';
-
-a:=a||'ted_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,  '||chr(10)||
-'  ''XSS - Standard Report Columns'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  column_alias,'||chr(10)||
-'  column_label,'||chr(10)||
-'  INITCAP(REPLACE(display_as, ''_'', '' '')) display_as,'||chr(10)||
-'  sv_sec.get_result '||chr(10)||
-'    ('||chr(10)||
-'    ''SV_XSS_STD_RPT_COLS'','||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-'    display_as,'||chr(10)||
-'    NULL,'||chr(10)||
-'    ''N'','||chr(10)||
-'    ''Y'','||chr(10)||
-'    ';
-
-a:=a||'NULL'||chr(10)||
-'    ) result,'||chr(10)||
-'  display_as val,'||chr(10)||
-'  sv_sec_util.get_checksum(display_as) checksum,'||chr(10)||
-'  region_name,'||chr(10)||
-'  column_alias'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    region_report_column_id column_id,'||chr(10)||
-'    column_alias,'||chr(10)||
-'    heading column_label,'||chr(10)||
-'    display_as_code display_as,'||chr(10)||
-'    page_id,'||chr(10)||
-'    page_name,'||chr(10)||
-'    region_id,'||chr(10)||
-'    region_name,'||chr(10)||
-'    application_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ';
-
-a:=a||'422 link_page,'||chr(10)||
-'    ''RP,4651,960,420,422'' link_cc,'||chr(10)||
-'    ''FB_FLOW_ID,FB_FLOW_PAGE_ID,P422_COLUMN_ID,P420_REGION_ID,F4000_P4651_ID,P960_ID:'' '||chr(10)||
-'    || application_id || '','' || page_id || '','' || region_report_column_id || '','' || region_id link'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_rpt_cols'||chr(10)||
-'  WHERE'||chr(10)||
-'    application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_STD_RPT_COLS',
-  p_collection_key        => 'SV_XSS_REPORT_COLS',
-  p_category_key          => 'SV_XSS_STD_RPT_COLS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Standard Report Columns
 DECLARE
   a CLOB;
@@ -77106,94 +69092,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_BC_ENTRIES
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'    collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  n001,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_N';
-
-a:=a||'AME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_BC_ENTRIES'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  bc.application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_BC_ENTRIES'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  bc.breadcrumb_entry_id,'||chr(10)||
-'  bc.last_updated_by,'||chr(10)||
-'  bc.la';
-
-a:=a||'st_updated_on,'||chr(10)||
-'  bc.component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''290'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''RP,287,290'' link_cc,'||chr(10)||
-'  ''F4000_P290_ID,F4000_P287_MENU_ID,FB_FLOW_ID:'' || bc.breadcrumb_entry_id || '','' '||chr(10)||
-'    || bc.breadcrumb_id || '','' || bc.application_id link,'||chr(10)||
-'  ''XSS - Breadcrumb Entries'' link_desc,'||chr(10)||
-'  bc.defined_for_page target_page,'||chr(10)||
-'  b.breadcrumb_name,'||chr(10)||
-'  bc.entry_label,'||chr(10)||
-'  htf.escape_sc(bc.entry_labe';
-
-a:=a||'l) entry_label_esc,'||chr(10)||
-'  sv_sec_rules.check_xss(bc.entry_label) result,'||chr(10)||
-'  bc.entry_label val,'||chr(10)||
-'  sv_sec_util.get_checksum(bc.entry_label) checksum,'||chr(10)||
-'  b.breadcrumb_name,'||chr(10)||
-'  bc.entry_label'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_bc_entries bc,'||chr(10)||
-'  apex_application_breadcrumbs b'||chr(10)||
-'WHERE '||chr(10)||
-'  bc.application_id = #APPLICATION_ID#'||chr(10)||
-'  AND bc.breadcrumb_id = b.breadcrumb_id';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_BC_ENTRIES',
-  p_collection_key        => 'SV_XSS_BREADCRUMB_ENTRIES',
-  p_category_key          => 'SV_XSS_BREADCRUMB_ENTRIES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Breadcrumb Enrtry Contains &ITEM. Syntax
 DECLARE
   a CLOB;
@@ -77946,104 +69844,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_URL_ITEM_ENCRYPT
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  c006,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ';
-
-a:=a||'''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_ITEM_ENCRYPT'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_ITEM_ENCRYPT'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  item_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updat';
-
-a:=a||'ed_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  4311 link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  4311 link_cc,'||chr(10)||
-'  ''F4000_P4311_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || item_id || '','' || application_id || '','' || page_id link,   '||chr(10)||
-'  ''URL - Encrypted Items'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region,'||chr(10)||
-'  item_name,'||chr(10)||
-'  label,'||chr(10)||
-'  htf.escape_sc(label) label_esc,'||chr(10)||
-'  encrypt_session_state,'||chr(10)||
-'  sv_sec.get_result '||chr(10)||
-'    ('||chr(10)||
-'    ''SV_URL_ITEM_ENCRYPT'',';
-
-a:=a||''||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-'    encrypt_session_state,'||chr(10)||
-'    NULL,'||chr(10)||
-'    ''N'','||chr(10)||
-'    ''Y'','||chr(10)||
-'    NULL'||chr(10)||
-'    ) result,'||chr(10)||
-'  encrypt_session_state val,'||chr(10)||
-'  sv_sec_util.get_checksum(encrypt_session_state) checksum,'||chr(10)||
-'  region,'||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_items'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_URL_ITEM_ENCRYPT',
-  p_collection_key        => 'SV_URL_ITEM_ENCRYPTION',
-  p_category_key          => 'SV_URL_ITEM_ENCRYPTION',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Item Encryption
 DECLARE
   a CLOB;
@@ -80564,113 +72364,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_APP_ITEMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELE';
-
-a:=a||'CT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_APP_ITEMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_APP_ITEMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  -1 page_id,'||chr(10)||
-'  application_item_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit''';
-
-a:=a||' edit,'||chr(10)||
-'  ''4303'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4303'' link_cc,'||chr(10)||
-'  ''F4000_P4303_ID,FB_FLOW_ID:'' || application_item_id || '','' '||chr(10)||
-'    || application_id link,'||chr(10)||
-'  ''XSS - Application Items'' link_desc,'||chr(10)||
-'  item_name,'||chr(10)||
-'  session_state_protection,'||chr(10)||
-'  sv_sec.get_result '||chr(10)||
-'    ('||chr(10)||
-'    ''SV_XSS_APP_ITEMS'','||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-'    session_state_protection,'||chr(10)||
-'    NULL,'||chr(10)||
-'    ''N'','||chr(10)||
-'    ''Y'','||chr(10)||
-'    0'||chr(10)||
-'    ) result,'||chr(10)||
-'  session_state';
-
-a:=a||'_protection val,'||chr(10)||
-'  sv_sec_util.get_checksum(session_state_protection) checksum,'||chr(10)||
-'  item_name'||chr(10)||
-'  FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    item_name,'||chr(10)||
-'    application_item_id,'||chr(10)||
-'    application_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    CASE'||chr(10)||
-'      WHEN session_state_protection = ''B'' THEN ''Checksum Required - Application Level'''||chr(10)||
-'      WHEN session_state_protection = ''P'' THEN ''Checksum Required';
-
-a:=a||' - User Level'''||chr(10)||
-'      WHEN session_state_protection = ''S'' THEN ''Checksum Required - Session Level'''||chr(10)||
-'      WHEN session_state_protection = ''I'' THEN ''Restricted - May not be set from browser'''||chr(10)||
-'      ELSE ''Unrestricted'' END session_state_protection'||chr(10)||
-'  FROM '||chr(10)||
-'    apex_application_items'||chr(10)||
-'  WHERE '||chr(10)||
-'    application_id = #APPLICATION_ID#'||chr(10)||
-'  ) i';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_APP_ITEMS',
-  p_collection_key        => 'SV_XSS_APPLICATION_ITEMS',
-  p_category_key          => 'SV_XSS_APPLICATION_ITEMS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Application Items
 DECLARE
   a CLOB;
@@ -81422,99 +73115,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_STATIC_REGION
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_STATIC_REGION'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_STATIC_REGION'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signatur';
-
-a:=a||'e,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Regions'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  source_type,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(region_source) result,'||chr(10)||
-'  region_source val,'||chr(10)||
-'  sv_sec_u';
-
-a:=a||'til.get_checksum(region_source) checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions apr'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND source_type NOT IN ('||chr(10)||
-'    ''HTML/Text (escape special characters)'', '||chr(10)||
-'    ''Report'', '||chr(10)||
-'    ''Interactive Report'', '||chr(10)||
-'    ''PL/SQL'','||chr(10)||
-'    ''Tabular Form'','||chr(10)||
-'    ''Calendar'','||chr(10)||
-'    ''List'')'||chr(10)||
-'  AND LENGTH(region_source) > 0';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_STATIC_REGION',
-  p_collection_key        => 'SV_XSS_STATIC_REGIONS',
-  p_category_key          => 'SV_XSS_STATIC_REGIONS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Static Region Contains &ITEM. Syntax
 DECLARE
   a CLOB;
@@ -90874,95 +82474,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_ITEM_LABELS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLEC';
-
-a:=a||'TION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_ITEM_LABELS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_ITEM_LABELS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  item_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  c';
-
-a:=a||'omponent_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4311'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4311'' link_cc,'||chr(10)||
-'  ''F4000_P4311_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || item_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Item Labels'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  item_name,'||chr(10)||
-'  label,'||chr(10)||
-'  htf.escape_sc(label) item_label_esc,'||chr(10)||
-'  display_as,'||chr(10)||
-'  sv_sec_rules.check_xss(label) result,'||chr(10)||
-'  label val,'||chr(10)||
-'  sv_sec_util.get_checks';
-
-a:=a||'um(label) checksum,'||chr(10)||
-'  region,'||chr(10)||
-'  item_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_items'||chr(10)||
-'WHERE '||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND display_as NOT IN (''Hidden'', ''Hidden and Protected'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_ITEM_LABELS',
-  p_collection_key        => 'SV_XSS_ITEM_LABELS',
-  p_category_key          => 'SV_XSS_ITEM_LABELS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Item Label Contains &ITEM_SYNTAX.
 DECLARE
   a CLOB;
@@ -91795,1058 +83306,6 @@ sv_sec_import.category(
   p_rpt_attribute_key     => '',
   p_internal_flag         => 'Y'
   );
-end;
-/
-
--->>END
-
-PROMPT == ..COLLECTION: SV_SQLI_CAL_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_CAL_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_CAL_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit';
-
-a:=a||','||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''SQL Injection - Calendar Regions'' link_desc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  sv_sec_rules.check_exe_imm(region_source) result,'||chr(10)||
-'  region_source val,'||chr(10)||
-'  sv_sec_util.get_checksum';
-
-a:=a||'(region_source) checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND source_type = ''Calendar''';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_CAL_EXEC',
-  p_collection_key        => 'SV_SQLI_CAL_EXEC',
-  p_category_key          => 'SV_SQLI_CAL',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_CAL_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_CAL_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_CAL_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit';
-
-a:=a||','||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''SQL Injection - Calendar Regions'' link_desc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(region_source) result,'||chr(10)||
-'  region_source val,'||chr(10)||
-'  sv_sec_util.get_chec';
-
-a:=a||'ksum(region_source) checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND source_type = ''Calendar''';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_CAL_ITEM',
-  p_collection_key        => 'SV_SQLI_CAL_ITEM',
-  p_category_key          => 'SV_SQLI_CAL',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_CAL_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_CAL_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_CAL_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit';
-
-a:=a||','||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''SQL Injection - Calendar Regions'' link_desc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  sv_sec_rules.check_dyn_sql(region_source) result,'||chr(10)||
-'  region_source val,'||chr(10)||
-'  sv_sec_util.get_checksum';
-
-a:=a||'(region_source) checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND source_type = ''Calendar''';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_CAL_DBMS',
-  p_collection_key        => 'SV_SQLI_CAL_DBMS',
-  p_category_key          => 'SV_SQLI_CAL',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..ATTRIBUTE: Calendar Contains EXECUTE IMMEIDATE
-DECLARE
-  a CLOB;
-  b CLOB;
-  c CLOB;
-  d CLOB;
-  e CLOB;
-BEGIN
-
-a := null;
-b:=b||'<p>'||chr(10)||
-'	<span style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;';
-
-b:=b||' background-color: rgb(255, 255, 255); display: inline !important; float: none; ">While not specifically a risk in itself, the use of<span class="Apple-converted-space">&nbsp;</span></span><strong style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -we';
-
-b:=b||'bkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); ">EXECUTE IMMEDIATE</strong><span style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spa';
-
-b:=b||'cing: normal; line-height: normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); display: inline !important; float: none; "><span class="Apple-converted-space">&nbsp;</span>is considered a risk as it can perform vir';
-
-b:=b||'tually any type of action within the parse as schema. Any use of<span class="Apple-converted-space">&nbsp;</span></span><strong style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: norma';
-
-b:=b||'l; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); ">EXECUTE IMMEDIATE</strong><span style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -webkit-au';
-
-b:=b||'to; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); display: inline !important; float: none; "><span class="Apple-converted-space">&nbsp;</span>should be treated with<span class="Apple-converted-space">&nbsp;</span></span><em style="color: rgb(34, 34, 34)';
-
-b:=b||'; font-family: Verdana, Arial, sans-serif; font-size: 12px; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); "><strong>extreme cau';
-
-b:=b||'tion.</strong></em></p>'||chr(10)||
-'';
-
-c:=c||'<p>'||chr(10)||
-'	<span style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;';
-
-c:=c||' background-color: rgb(255, 255, 255); display: inline !important; float: none; ">Either avoid use of<span class="Apple-converted-space">&nbsp;</span></span><strong style="font-size: 12px; color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; tex';
-
-c:=c||'t-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); ">EXECUTE IMMEDIATE,</strong><span style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: norm';
-
-c:=c||'al; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); display: inline !important; float: none; "><span class="Apple-converted-space">&nbsp;</span>or do everything possible to endure that the code that is being executed ';
-
-c:=c||'can not be maliciously influenced by the input of end users. Developers should pay special attention to any use of<span class="Apple-converted-space">&nbsp;</span></span><strong style="font-size: 12px; color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -webkit-auto; text-ind';
-
-c:=c||'ent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); ">EXECUTE IMMEDIATE</strong><span style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-';
-
-c:=c||'height: normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); display: inline !important; float: none; "><span class="Apple-converted-space">&nbsp;</span>that uses values from the APEX Session State as they may be a';
-
-c:=c||'ble to be directly or indirectly influenced by end users.</span></p>'||chr(10)||
-'';
-
-sv_sec_import.attribute(
-  p_category_key             => 'SV_SQLI_CAL',
-  p_attribute_name           => 'Calendar Contains EXECUTE IMMEIDATE',
-  p_attribute_key            => 'SV_SQLI_CAL_EXEC',
-  p_active_flag              => 'Y',
-  p_rule_source              => 'COLLECTION',
-  p_rule_type                => 'FUNCTION',
-  p_table_name               => '',
-  p_column_name              => '',
-  p_view_name                => 'SV_SEC_COL_SQLI_CAL_EXEC_V',
-  p_component_table          => 'APEX_APPLICATION_PAGE_REGIONS',
-  p_component_column_id      => 'REGION_ID',
-  p_component_column_display => 'REGION_NAME',
-  p_column_table             => '',
-  p_column_column_id         => '',
-  p_column_column_display    => '',
-  p_when_not_found           => 'FAIL',
-  p_internal_flag            => 'Y',
-  p_impact                   => 'COMPONENT',
-  p_component_sig_key        => 'REGION',
-  p_help_page                => '',
-  p_seq                      => 99,
-
-  p_collection_name          => 'SV_SQLI_CAL_EXEC',
-
-  p_display_page_id          => 737,
-
-  p_summary_page_id          => 735,
-
-  p_rule_plsql               => a,
-  p_info                     => b,
-  p_fix                      => c
-  );
-END;
-/
-
--->>END
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_CAL_EXEC: APPROVED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'APPROVED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REGION_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'REGION_NAME',
-  p_label                 => 'Region',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: APPROVED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_BY',
-  p_label                 => 'Approved By',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: APPROVED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'APPROVED_ON',
-  p_label                 => 'Approved On',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'APPROVED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 40,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_CAL_EXEC: ATTRIBUTE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'ATTRIBUTE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 30,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REGION_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'REGION_NAME',
-  p_label                 => 'Region Name',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: UPDATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'UPDATED_BY',
-  p_label                 => 'Updated By',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: UPDATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'UPDATED_ON',
-  p_label                 => 'Updated On',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'ATTRIBUTE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_CAL_EXEC: PENDING
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'PENDING'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REGION_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'REGION_NAME',
-  p_label                 => 'Region',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 25,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'PENDING',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 50,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_CAL_EXEC: REJECTED
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'REJECTED'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 15,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REGION_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REGION_NAME',
-  p_label                 => 'Region',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REJECTED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_BY',
-  p_label                 => 'Rejected By',
-  p_seq                   => 8,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REJECTED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTED_ON',
-  p_label                 => 'Rejected On',
-  p_seq                   => 9,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REJECTION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'REJECTED',
-  p_column_name           => 'REJECTION',
-  p_label                 => 'Rejection',
-  p_seq                   => 10,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Left'
-);
-end;
-/
-
--->>END
-
-PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_CAL_EXEC: STALE
-begin 
-sv_sec_import.attr_rpt_inter(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'STALE'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_ID
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'STALE',
-  p_column_name           => 'PAGE_ID',
-  p_label                 => 'Page',
-  p_seq                   => 1,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'STALE',
-  p_column_name           => 'PAGE_NAME',
-  p_label                 => 'Name',
-  p_seq                   => 2,
-  p_format_mask           => '',
-  p_width                 => 20,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REGION_NAME
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'STALE',
-  p_column_name           => 'REGION_NAME',
-  p_label                 => 'Region',
-  p_seq                   => 3,
-  p_format_mask           => '',
-  p_width                 => 25,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: RESULT
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'STALE',
-  p_column_name           => 'RESULT',
-  p_label                 => 'Result',
-  p_seq                   => 4,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_BY
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_BY',
-  p_label                 => 'Created By',
-  p_seq                   => 5,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_ON
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'STALE',
-  p_column_name           => 'CREATED_ON',
-  p_label                 => 'Created On',
-  p_seq                   => 6,
-  p_format_mask           => '',
-  p_width                 => 10,
-  p_alignment             => 'Center'
-);
-end;
-/
-
--->>END
-
-PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: JUSTIFICATION
-begin 
-sv_sec_import.attr_rpt_cols(
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_report_key            => 'STALE',
-  p_column_name           => 'JUSTIFICATION',
-  p_label                 => 'Justification',
-  p_seq                   => 7,
-  p_format_mask           => '',
-  p_width                 => 50,
-  p_alignment             => 'Left'
-);
 end;
 /
 
@@ -94528,6 +84987,809 @@ end;
 
 -->>END
 
+PROMPT == ..ATTRIBUTE: Calendar Contains EXECUTE IMMEIDATE
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>'||chr(10)||
+'	<span style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;';
+
+b:=b||' background-color: rgb(255, 255, 255); display: inline !important; float: none; ">While not specifically a risk in itself, the use of<span class="Apple-converted-space">&nbsp;</span></span><strong style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -we';
+
+b:=b||'bkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); ">EXECUTE IMMEDIATE</strong><span style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spa';
+
+b:=b||'cing: normal; line-height: normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); display: inline !important; float: none; "><span class="Apple-converted-space">&nbsp;</span>is considered a risk as it can perform vir';
+
+b:=b||'tually any type of action within the parse as schema. Any use of<span class="Apple-converted-space">&nbsp;</span></span><strong style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: norma';
+
+b:=b||'l; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); ">EXECUTE IMMEDIATE</strong><span style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -webkit-au';
+
+b:=b||'to; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); display: inline !important; float: none; "><span class="Apple-converted-space">&nbsp;</span>should be treated with<span class="Apple-converted-space">&nbsp;</span></span><em style="color: rgb(34, 34, 34)';
+
+b:=b||'; font-family: Verdana, Arial, sans-serif; font-size: 12px; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); "><strong>extreme cau';
+
+b:=b||'tion.</strong></em></p>'||chr(10)||
+'';
+
+c:=c||'<p>'||chr(10)||
+'	<span style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px;';
+
+c:=c||' background-color: rgb(255, 255, 255); display: inline !important; float: none; ">Either avoid use of<span class="Apple-converted-space">&nbsp;</span></span><strong style="font-size: 12px; color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; tex';
+
+c:=c||'t-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); ">EXECUTE IMMEDIATE,</strong><span style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: norm';
+
+c:=c||'al; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); display: inline !important; float: none; "><span class="Apple-converted-space">&nbsp;</span>or do everything possible to endure that the code that is being executed ';
+
+c:=c||'can not be maliciously influenced by the input of end users. Developers should pay special attention to any use of<span class="Apple-converted-space">&nbsp;</span></span><strong style="font-size: 12px; color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-style: normal; font-variant: normal; letter-spacing: normal; line-height: normal; orphans: 2; text-align: -webkit-auto; text-ind';
+
+c:=c||'ent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); ">EXECUTE IMMEDIATE</strong><span style="color: rgb(34, 34, 34); font-family: Verdana, Arial, sans-serif; font-size: 12px; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-';
+
+c:=c||'height: normal; orphans: 2; text-align: -webkit-auto; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-size-adjust: auto; -webkit-text-stroke-width: 0px; background-color: rgb(255, 255, 255); display: inline !important; float: none; "><span class="Apple-converted-space">&nbsp;</span>that uses values from the APEX Session State as they may be a';
+
+c:=c||'ble to be directly or indirectly influenced by end users.</span></p>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SQLI_CAL',
+  p_attribute_name           => 'Calendar Contains EXECUTE IMMEIDATE',
+  p_attribute_key            => 'SV_SQLI_CAL_EXEC',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLLECTION',
+  p_rule_type                => 'FUNCTION',
+  p_table_name               => '',
+  p_column_name              => '',
+  p_view_name                => 'SV_SEC_COL_SQLI_CAL_EXEC_V',
+  p_component_table          => 'APEX_APPLICATION_PAGE_REGIONS',
+  p_component_column_id      => 'REGION_ID',
+  p_component_column_display => 'REGION_NAME',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'COMPONENT',
+  p_component_sig_key        => 'REGION',
+  p_help_page                => '',
+  p_seq                      => 99,
+
+  p_collection_name          => 'SV_SQLI_CAL_EXEC',
+
+  p_display_page_id          => 737,
+
+  p_summary_page_id          => 735,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_CAL_EXEC: APPROVED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'APPROVED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REGION_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'REGION_NAME',
+  p_label                 => 'Region',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: APPROVED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_BY',
+  p_label                 => 'Approved By',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: APPROVED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'APPROVED_ON',
+  p_label                 => 'Approved On',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'APPROVED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 40,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_CAL_EXEC: ATTRIBUTE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'ATTRIBUTE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 30,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REGION_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'REGION_NAME',
+  p_label                 => 'Region Name',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: UPDATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'UPDATED_BY',
+  p_label                 => 'Updated By',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: UPDATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'UPDATED_ON',
+  p_label                 => 'Updated On',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'ATTRIBUTE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_CAL_EXEC: PENDING
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'PENDING'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REGION_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'REGION_NAME',
+  p_label                 => 'Region',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 25,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'PENDING',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 50,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_CAL_EXEC: REJECTED
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'REJECTED'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 15,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REGION_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REGION_NAME',
+  p_label                 => 'Region',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REJECTED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_BY',
+  p_label                 => 'Rejected By',
+  p_seq                   => 8,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REJECTED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTED_ON',
+  p_label                 => 'Rejected On',
+  p_seq                   => 9,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REJECTION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'REJECTED',
+  p_column_name           => 'REJECTION',
+  p_label                 => 'Rejection',
+  p_seq                   => 10,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ..SV_SEC_ATTR_RPT_INTER: SV_SQLI_CAL_EXEC: STALE
+begin 
+sv_sec_import.attr_rpt_inter(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'STALE'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_ID
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'STALE',
+  p_column_name           => 'PAGE_ID',
+  p_label                 => 'Page',
+  p_seq                   => 1,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: PAGE_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'STALE',
+  p_column_name           => 'PAGE_NAME',
+  p_label                 => 'Name',
+  p_seq                   => 2,
+  p_format_mask           => '',
+  p_width                 => 20,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: REGION_NAME
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'STALE',
+  p_column_name           => 'REGION_NAME',
+  p_label                 => 'Region',
+  p_seq                   => 3,
+  p_format_mask           => '',
+  p_width                 => 25,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: RESULT
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'STALE',
+  p_column_name           => 'RESULT',
+  p_label                 => 'Result',
+  p_seq                   => 4,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_BY
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_BY',
+  p_label                 => 'Created By',
+  p_seq                   => 5,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: CREATED_ON
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'STALE',
+  p_column_name           => 'CREATED_ON',
+  p_label                 => 'Created On',
+  p_seq                   => 6,
+  p_format_mask           => '',
+  p_width                 => 10,
+  p_alignment             => 'Center'
+);
+end;
+/
+
+-->>END
+
+PROMPT == ....SV_SEC_ATTR_RPT_COLS: SV_SQLI_CAL_EXEC: JUSTIFICATION
+begin 
+sv_sec_import.attr_rpt_cols(
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_report_key            => 'STALE',
+  p_column_name           => 'JUSTIFICATION',
+  p_label                 => 'Justification',
+  p_seq                   => 7,
+  p_format_mask           => '',
+  p_width                 => 50,
+  p_alignment             => 'Left'
+);
+end;
+/
+
+-->>END
+
 PROMPT == CATEGORY: SQL Injection: Charts & Maps
 BEGIN
 
@@ -94546,330 +85808,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_FLS_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  c006,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ';
-
-a:=a||'''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_FLS_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_FLS_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  series_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_o';
-
-a:=a||'n,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''834'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  NULL link_cc,'||chr(10)||
-'  ''SQL Injection - Charts/Maps'' link_desc,'||chr(10)||
-'  ''P754_ID,P834_SERIES_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || series_id || '', '' || application_id || '','' || page_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name || '' - '' || series_name) region_name_esc,'||chr(10)||
-'  series_name,'||chr(10)||
-'  series';
-
-a:=a||'_id,'||chr(10)||
-'  chart_type,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(series_query) result,'||chr(10)||
-'  series_query val,'||chr(10)||
-'  sv_sec_util.get_checksum(series_query) checksum,'||chr(10)||
-'  region_name,'||chr(10)||
-'  series_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT '||chr(10)||
-'    application_id,'||chr(10)||
-'    page_id,'||chr(10)||
-'    page_name,'||chr(10)||
-'    region_name,'||chr(10)||
-'    series_name,'||chr(10)||
-'    region_id,'||chr(10)||
-'    series_id,'||chr(10)||
-'    series_query,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''FLASH';
-
-a:=a||'5'' chart_type'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_flash5_s'||chr(10)||
-'  )'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_FLS_ITEM',
-  p_collection_key        => 'SV_SQLI_FLS_ITEM',
-  p_category_key          => 'SV_SQLI_FLS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_FLS_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  c006,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ';
-
-a:=a||'''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_FLS_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_FLS_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  series_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_o';
-
-a:=a||'n,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''834'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  NULL link_cc,'||chr(10)||
-'  ''SQL Injection - Charts/Maps'' link_desc,'||chr(10)||
-'  ''P754_ID,P834_SERIES_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || series_id || '', '' || application_id || '','' || page_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name || '' - '' || series_name) region_name_esc,'||chr(10)||
-'  series_name,'||chr(10)||
-'  series';
-
-a:=a||'_id,'||chr(10)||
-'  chart_type,'||chr(10)||
-'  sv_sec_rules.check_exe_imm(series_query) result,'||chr(10)||
-'  series_query val,'||chr(10)||
-'  sv_sec_util.get_checksum(series_query) checksum,'||chr(10)||
-'  region_name,'||chr(10)||
-'  series_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT '||chr(10)||
-'    application_id,'||chr(10)||
-'    page_id,'||chr(10)||
-'    page_name,'||chr(10)||
-'    region_name,'||chr(10)||
-'    series_name,'||chr(10)||
-'    region_id,'||chr(10)||
-'    series_id,'||chr(10)||
-'    series_query,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''FLASH5'' c';
-
-a:=a||'hart_type'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_flash5_s'||chr(10)||
-'  )'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_FLS_EXEC',
-  p_collection_key        => 'SV_SQLI_FLS_EXEC',
-  p_category_key          => 'SV_SQLI_FLS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_FLS_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  c006,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ';
-
-a:=a||'''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_FLS_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_FLS_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  series_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_o';
-
-a:=a||'n,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''834'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  NULL link_cc,'||chr(10)||
-'  ''SQL Injection - Charts/Maps'' link_desc,'||chr(10)||
-'  ''P754_ID,P834_SERIES_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || series_id || '', '' || application_id || '','' || page_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name || '' - '' || series_name) region_name_esc,'||chr(10)||
-'  series_name,'||chr(10)||
-'  series';
-
-a:=a||'_id,'||chr(10)||
-'  chart_type,'||chr(10)||
-'  sv_sec_rules.check_dyn_sql(series_query) result,'||chr(10)||
-'  series_query val,'||chr(10)||
-'  sv_sec_util.get_checksum(series_query) checksum,'||chr(10)||
-'  region_name,'||chr(10)||
-'  series_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT '||chr(10)||
-'    application_id,'||chr(10)||
-'    page_id,'||chr(10)||
-'    page_name,'||chr(10)||
-'    region_name,'||chr(10)||
-'    series_name,'||chr(10)||
-'    region_id,'||chr(10)||
-'    series_id,'||chr(10)||
-'    series_query,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''FLASH5'' c';
-
-a:=a||'hart_type'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_flash5_s'||chr(10)||
-'  )'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_FLS_DBMS',
-  p_collection_key        => 'SV_SQLI_FLS_DBMS',
-  p_category_key          => 'SV_SQLI_FLS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Chart/Map Contains &ITEM. Syntax
 DECLARE
   a CLOB;
@@ -97389,255 +88327,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_PLS_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PLS_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PLS_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit';
-
-a:=a||','||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''SQL Injection - PL/SQL Regions'' link_desc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(region_source) result,'||chr(10)||
-'  region_source val,'||chr(10)||
-'  sv_sec_util.get_checks';
-
-a:=a||'um(region_source) checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND source_type = ''PL/SQL''';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_PLS_ITEM',
-  p_collection_key        => 'SV_SQLI_PLS_ITEM',
-  p_category_key          => 'SV_SQLI_PLS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_PLS_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PLS_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PLS_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit';
-
-a:=a||','||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''SQL Injection - PL/SQL Regions'' link_desc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  sv_sec_rules.check_dyn_sql(region_source) result,'||chr(10)||
-'  region_source val,'||chr(10)||
-'  sv_sec_util.get_checksum(r';
-
-a:=a||'egion_source) checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND source_type = ''PL/SQL''';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_PLS_DBMS',
-  p_collection_key        => 'SV_SQLI_PLS_DBMS',
-  p_category_key          => 'SV_SQLI_PLS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_PLS_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PLS_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_PLS_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit';
-
-a:=a||','||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''SQL Injection - PL/SQL Regions'' link_desc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  sv_sec_rules.check_exe_imm(region_source) result,'||chr(10)||
-'  region_source val,'||chr(10)||
-'  sv_sec_util.get_checksum(r';
-
-a:=a||'egion_source) checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND source_type = ''PL/SQL''';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_PLS_EXEC',
-  p_collection_key        => 'SV_SQLI_PLS_EXEC',
-  p_category_key          => 'SV_SQLI_PLS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: PL/SQL Region Contains EXECUTE IMMEDIATE
 DECLARE
   a CLOB;
@@ -100107,148 +90796,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_PS_RPT_EXP_DATA
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-' ';
-
-a:=a||' (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_PS_RPT_EXP_DATA'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_PS_RPT_EXP_DATA'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' ed';
-
-a:=a||'it,'||chr(10)||
-'  link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  ''Settings - Export Report Data'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  source_type,'||chr(10)||
-'  enable_csv_output,'||chr(10)||
-'  sv_sec.get_result '||chr(10)||
-'    ('||chr(10)||
-'    ''SV_PS_RPT_EXP_DATA'','||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-'    enable_csv_output,'||chr(10)||
-'    NULL,'||chr(10)||
-'    ''N'','||chr(10)||
-'    ''Y'','||chr(10)||
-'    NULL'||chr(10)||
-'    ) result,'||chr(10)||
-'  enable_csv_output val,'||chr(10)||
-'  sv_sec_util.ge';
-
-a:=a||'t_checksum(enable_csv_output) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    page_id,'||chr(10)||
-'    region_id,'||chr(10)||
-'    page_name,'||chr(10)||
-'    region_name,'||chr(10)||
-'    source_type,'||chr(10)||
-'    NVL(enable_csv_output,''No'') enable_csv_output,'||chr(10)||
-'    420 link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''RP,420,960,4651'' link_cc,'||chr(10)||
-'    ''FB_FLOW_ID,FB_FLOW_PAGE_ID,P420_REGION_ID:'' || application_id || '','' '||chr(10)||
-'      || page_id || '','' || region_id link,'||chr(10)||
-'    last';
-
-a:=a||'_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    component_signature'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_regions'||chr(10)||
-'  WHERE'||chr(10)||
-'    source_type_code IN (''UPDATABLE_SQL_QUERY'', ''SQL_QUERY'', ''FUNCTION_RETURNING_SQL_QUERY'', ''STRUCTURED_QUERY'')'||chr(10)||
-'    AND application_id = #APPLICATION_ID#'||chr(10)||
-'  UNION ALL'||chr(10)||
-'  SELECT'||chr(10)||
-'    pi.application_id,'||chr(10)||
-'    pi.page_id,'||chr(10)||
-'    pi.region_id,'||chr(10)||
-'    p.page_name,'||chr(10)||
-'    pi.region_name,'||chr(10)||
-'    ''Interactive Report';
-
-a:=a||''' source_type,'||chr(10)||
-'    pi.show_download enable_csv_output,'||chr(10)||
-'    601 link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''RP,601,4651'' link_cc,'||chr(10)||
-'    ''FB_FLOW_ID,FB_FLOW_PAGE_ID,P601_REGION_ID:'' || pi.application_id || '','' '||chr(10)||
-'      || pi.page_id || '','' || pi.region_id link,'||chr(10)||
-'    pi.updated_by last_updated_by,'||chr(10)||
-'    pi.updated_on last_updated_on,'||chr(10)||
-'    pi.component_signature'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_ir pi,'||chr(10)||
-'    apex_applica';
-
-a:=a||'tion_pages p'||chr(10)||
-'  WHERE'||chr(10)||
-'    pi.page_id = p.page_id'||chr(10)||
-'    AND pi.application_id = p.application_id'||chr(10)||
-'    AND pi.application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_PS_RPT_EXP_DATA',
-  p_collection_key        => 'SV_PS_RPT_EXP_DATA',
-  p_category_key          => 'SV_PS_RPT_EXP_DATA',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Export Report Data
 DECLARE
   a CLOB;
@@ -101173,158 +91720,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_PS_RPT_MAX_ROWS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  n001,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTIO';
-
-a:=a||'N_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_PS_RPT_MAX_ROWS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_PS_RPT_MAX_ROWS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''';
-
-a:=a||'Edit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  ''Settings - Maximum Row Count'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  report_type,'||chr(10)||
-'  sv_sec.get_recommended_value'||chr(10)||
-'    ('||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-'    ''SV_PS_RPT_MAX_ROWS'''||chr(10)||
-'    ) recommended_value,'||chr(10)||
-'  max_row_count,'||chr(10)||
-'  sv_sec.get_result '||chr(10)||
-'    ('||chr(10)||
-'    ''SV_PS_RPT_MAX_ROWS'','||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-' ';
-
-a:=a||'   max_row_count,'||chr(10)||
-'    NULL,'||chr(10)||
-'    ''N'','||chr(10)||
-'    ''Y'','||chr(10)||
-'    0'||chr(10)||
-'    ) result,'||chr(10)||
-'  max_row_count val,'||chr(10)||
-'  sv_sec_util.get_checksum(TO_CHAR(max_row_count)) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id,'||chr(10)||
-'    page_id,'||chr(10)||
-'    page_name,'||chr(10)||
-'    region_id,'||chr(10)||
-'    region_name, '||chr(10)||
-'    ENABLE_CSV_OUTPUT export_to_csv, '||chr(10)||
-'    ''Standard'' report_type,'||chr(10)||
-'    TO_NUMBER(NVL(maximum_row_count,500)) max_row_count,'||chr(10)||
-'    420 link_page,'||chr(10)||
-'    NULL lin';
-
-a:=a||'k_req,'||chr(10)||
-'    ''RP,420,960,4651'' link_cc,'||chr(10)||
-'    ''FB_FLOW_ID,FB_FLOW_PAGE_ID,P420_REGION_ID:'' || application_id || '','' '||chr(10)||
-'      || page_id || '','' || region_id link,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    component_signature'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_regions '||chr(10)||
-'  WHERE'||chr(10)||
-'    application_id = #APPLICATION_ID#'||chr(10)||
-'    AND source_type_code in (''SQL_QUERY'',''UPDATABLE_SQL_QUERY'',''FUNCTION_RETURNING_SQL_QUE';
-
-a:=a||'RY'', ''STRUCTURED_QUERY'')'||chr(10)||
-'  UNION ALL'||chr(10)||
-'  SELECT '||chr(10)||
-'    pi.application_id,'||chr(10)||
-'    pi.page_id,'||chr(10)||
-'    p.page_name,'||chr(10)||
-'    pi.region_id,'||chr(10)||
-'    pi.region_name, '||chr(10)||
-'    pi.show_download export_to_csv, '||chr(10)||
-'    ''Interactive'' report_type,'||chr(10)||
-'    TO_NUMBER(NVL(pi.max_row_count,10000)) max_row_count,'||chr(10)||
-'    601 link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''RP,4651,960,420,601,4050,27,196,121,232,695,754,832,287,2000'' link_cc,'||chr(10)||
-'    ''FB_FLOW_ID,FB';
-
-a:=a||'_FLOW_PAGE_ID,F4000_P4651_ID,P601_REGION_ID:'' || pi.application_id || '','' '||chr(10)||
-'      || pi.page_id || '','' || pi.interactive_report_id || '','' || pi.region_id link,'||chr(10)||
-'    pi.updated_by last_updated_by,'||chr(10)||
-'    pi.updated_on updated_on,'||chr(10)||
-'    pi.component_signature'||chr(10)||
-'  FROM '||chr(10)||
-'    apex_application_page_ir pi,'||chr(10)||
-'    apex_application_pages p'||chr(10)||
-'  WHERE'||chr(10)||
-'    pi.page_id = p.page_id'||chr(10)||
-'    AND pi.application_id = p.application_id';
-
-a:=a||''||chr(10)||
-'    AND pi.application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_PS_RPT_MAX_ROWS',
-  p_collection_key        => 'SV_PS_RPT_MAX_ROWS',
-  p_category_key          => 'SV_PS_RPT_MAX_ROWS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Maximum Row Count
 DECLARE
   a CLOB;
@@ -102219,258 +92614,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_BRN_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELE';
-
-a:=a||'CT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_BRN_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_BRN_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  branch_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''431';
-
-a:=a||'3'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''RP,4313'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P4313_ID:'' || application_id || '','' '||chr(10)||
-'    || page_id || '','' || branch_id link,'||chr(10)||
-'  ''SQL Injection - Branches'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  branch_type,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(branch_action) result,'||chr(10)||
-'  branch_action val,'||chr(10)||
-'  sv_sec_util.get_checksum(branch_action) checksum,'||chr(10)||
-'  branch_type'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application';
-
-a:=a||'_page_branches'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND branch_type IN ('||chr(10)||
-'    ''Branch to PL/SQL Procedure'', '||chr(10)||
-'    ''Branch to Function Returning a Page'', '||chr(10)||
-'    ''Branch to Function Returning a URL'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_BRN_ITEM',
-  p_collection_key        => 'SV_SQLI_BRN_ITEM',
-  p_category_key          => 'SV_SQLI_BRN',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_BRN_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELE';
-
-a:=a||'CT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_BRN_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_BRN_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  branch_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''431';
-
-a:=a||'3'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''RP,4313'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P4313_ID:'' || application_id || '','' '||chr(10)||
-'    || page_id || '','' || branch_id link,'||chr(10)||
-'  ''SQL Injection - Branches'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  branch_type,'||chr(10)||
-'  sv_sec_rules.check_exe_imm(branch_action) result,'||chr(10)||
-'  branch_action val,'||chr(10)||
-'  sv_sec_util.get_checksum(branch_action) checksum,'||chr(10)||
-'  branch_type'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_pag';
-
-a:=a||'e_branches'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND branch_type IN ('||chr(10)||
-'    ''Branch to PL/SQL Procedure'', '||chr(10)||
-'    ''Branch to Function Returning a Page'', '||chr(10)||
-'    ''Branch to Function Returning a URL'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_BRN_EXEC',
-  p_collection_key        => 'SV_SQLI_BRN_EXEC',
-  p_category_key          => 'SV_SQLI_BRN',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_BRN_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELE';
-
-a:=a||'CT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_BRN_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_BRN_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  branch_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''431';
-
-a:=a||'3'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''RP,4313'' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P4313_ID:'' || application_id || '','' '||chr(10)||
-'    || page_id || '','' || branch_id link,'||chr(10)||
-'  ''SQL Injection - Branches'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  branch_type,'||chr(10)||
-'  sv_sec_rules.check_dyn_sql(branch_action) result,'||chr(10)||
-'  branch_action val,'||chr(10)||
-'  sv_sec_util.get_checksum(branch_action) checksum,'||chr(10)||
-'  branch_type'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_pag';
-
-a:=a||'e_branches'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND branch_type IN ('||chr(10)||
-'    ''Branch to PL/SQL Procedure'', '||chr(10)||
-'    ''Branch to Function Returning a Page'', '||chr(10)||
-'    ''Branch to Function Returning a URL'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_BRN_DBMS',
-  p_collection_key        => 'SV_SQLI_BRN_DBMS',
-  p_category_key          => 'SV_SQLI_BRN',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Branch Contains &ITEM. Syntax
 DECLARE
   a CLOB;
@@ -104939,118 +95082,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_PS_BROWSER_CACHE
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  d001,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT categor';
-
-a:=a||'y_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_PS_BROWSER_CACHE'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_PS_BROWSER_CACHE'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  NULL lin';
-
-a:=a||'k_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  ''Settings - Browser Cache'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  page_name,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  browser_cache,'||chr(10)||
-'  sv_sec.get_result '||chr(10)||
-'    ('||chr(10)||
-'    ''SV_PS_BROWSER_CACHE'','||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-'    browser_cache,'||chr(10)||
-'    NULL,'||chr(10)||
-'    ''N'','||chr(10)||
-'    ''Y'','||chr(10)||
-'    NULL'||chr(10)||
-'    ) result,'||chr(10)||
-'  browser_cache val,'||chr(10)||
-'  sv_sec_util.get_checksum(browser_cache) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    ap.applicat';
-
-a:=a||'ion_id,'||chr(10)||
-'    ap.page_id,'||chr(10)||
-'    page_name,'||chr(10)||
-'    CASE '||chr(10)||
-'      WHEN ap.browser_cache = ''Application Default'' THEN aa.browser_cache '||chr(10)||
-'      ELSE ap.browser_cache END browser_cache,'||chr(10)||
-'    420 link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''RP,420,960,4651'' link_cc,'||chr(10)||
-'    ''FB_FLOW_ID,FB_FLOW_PAGE_ID,P420_REGION_ID:'' || ap.application_id || '','' '||chr(10)||
-'      || ap.page_id link,'||chr(10)||
-'    ap.last_updated_by,'||chr(10)||
-'    ap.last_updated_on,'||chr(10)||
-'    ap.c';
-
-a:=a||'omponent_signature'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_pages ap,'||chr(10)||
-'    apex_applications aa'||chr(10)||
-'  WHERE'||chr(10)||
-'    aa.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND ap.application_id = aa.application_id'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_PS_BROWSER_CACHE',
-  p_collection_key        => 'SV_PS_BROWSER_CACHE',
-  p_category_key          => 'SV_PS_BROWSER_CACHE',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Browser Cache
 DECLARE
   a CLOB;
@@ -105884,252 +95915,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_SQLI_TRE_DBMS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_TRE_DBMS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_TRE_DBMS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit';
-
-a:=a||','||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''SQL Injection - Trees'' link_desc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  sv_sec_rules.check_dyn_sql(tree_query) result,'||chr(10)||
-'  tree_query val,'||chr(10)||
-'  sv_sec_util.get_checksum(tree_query) chec';
-
-a:=a||'ksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_trees'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_TRE_DBMS',
-  p_collection_key        => 'SV_SQLI_TRE_DBMS',
-  p_category_key          => 'SV_SQLI_TRE',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_TRE_EXEC
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_TRE_EXEC'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_TRE_EXEC'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit';
-
-a:=a||','||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''SQL Injection - Trees'' link_desc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  sv_sec_rules.check_exe_imm(tree_query) result,'||chr(10)||
-'  tree_query val,'||chr(10)||
-'  sv_sec_util.get_checksum(tree_query) chec';
-
-a:=a||'ksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_trees'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_TRE_EXEC',
-  p_collection_key        => 'SV_SQLI_TRE_EXEC',
-  p_category_key          => 'SV_SQLI_TRE',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
-PROMPT == ..COLLECTION: SV_SQLI_TRE_ITEM
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  link,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,';
-
-a:=a||''||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_TRE_ITEM'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_TRE_ITEM'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit';
-
-a:=a||','||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''SQL Injection - Trees'' link_desc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(tree_query) result,'||chr(10)||
-'  tree_query val,'||chr(10)||
-'  sv_sec_util.get_checksum(tree_query) ';
-
-a:=a||'checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_trees'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_SQLI_TRE_ITEM',
-  p_collection_key        => 'SV_SQLI_TRE_ITEM',
-  p_category_key          => 'SV_SQLI_TRE',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Tree Contains DBMS_SQL
 DECLARE
   a CLOB;
@@ -108599,104 +98384,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_STAB_LABELS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  edit,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_STAB_LABELS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_STAB_LABELS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  tab_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ';
-
-a:=a||'''Edit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  ''XSS - Standard Tabs'' link_desc,'||chr(10)||
-'  tab_name,'||chr(10)||
-'  tab_label,'||chr(10)||
-'  htf.escape_sc(tab_label) tab_label_esc,'||chr(10)||
-'  tab_set,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(tab_label) result,'||chr(10)||
-'  tab_label val,'||chr(10)||
-'  sv_sec_util.get_checksum(tab_label) checksum,'||chr(10)||
-'  tab_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id, '||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    tab_set, '||chr(10)||
-'  ';
-
-a:=a||'  tab_name, '||chr(10)||
-'    tab_label,'||chr(10)||
-'    tab_id,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''4305'' link_page,'||chr(10)||
-'    ''4305'' link_cc,'||chr(10)||
-'    ''F4000_P4305_ID,FB_FLOW_ID:'' || tab_id || '','' || application_id link'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_tabs'||chr(10)||
-'  )'||chr(10)||
-'WHERE '||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_STAB_LABELS',
-  p_collection_key        => 'SV_XSS_STAB_LABELS',
-  p_category_key          => 'SV_XSS_STAB_LABELS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Standard Tab Label Contains &ITEM. Syntax
 DECLARE
   a CLOB;
@@ -109492,105 +99179,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_PTAB_LABELS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  edit,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PTAB_LABELS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_PTAB_LABELS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  0 page_id,'||chr(10)||
-'  tab_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ';
-
-a:=a||'''Edit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  ''XSS - Parent Tabs'' link_desc,'||chr(10)||
-'  tab_name,'||chr(10)||
-'  tab_label,'||chr(10)||
-'  htf.escape_sc(tab_label) tab_label_esc,'||chr(10)||
-'  tab_set,'||chr(10)||
-'  sv_sec_rules.check_item_syntax(tab_label) result,'||chr(10)||
-'  tab_label val,'||chr(10)||
-'  sv_sec_util.get_checksum(tab_label) checksum,'||chr(10)||
-'  tab_name'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    application_id, '||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    tab_set, '||chr(10)||
-'    ';
-
-a:=a||'tab_name, '||chr(10)||
-'    tab_label,'||chr(10)||
-'    parent_tab_id tab_id,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    ''4318'' link_page,'||chr(10)||
-'    ''4318'' link_cc,'||chr(10)||
-'    ''F4000_P4318_ID,F4000_LAST_VIEW,FB_FLOW_ID:'' || parent_tab_id || '',9000'''||chr(10)||
-'      || '','' || application_id link'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_parent_tabs'||chr(10)||
-'  )'||chr(10)||
-'WHERE '||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_PTAB_LABELS',
-  p_collection_key        => 'SV_XSS_PTAB_LABELS',
-  p_category_key          => 'SV_XSS_PTAB_LABELS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Parent Tab Label Contains &ITEM. Syntax
 DECLARE
   a CLOB;
@@ -110400,149 +99988,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_COL_HTML_EXPR
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  column_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  c006,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'';
-
-a:=a||'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_COL_HTML_EXPR'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_COL_HTML_EXPR'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  column_id,'||chr(10)||
-' ';
-
-a:=a||' last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,  '||chr(10)||
-'  ''XSS - '' || report_type || '' Report Columns'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  column_alias,'||chr(10)||
-'  column_label,'||chr(10)||
-'  html_expression,'||chr(10)||
-'  report_type,'||chr(10)||
-'  sv_sec_rules.check_xss(html_expression) result,'||chr(10)||
-'  html_expression val,'||chr(10)||
-'  sv_sec_util.get_checksum(html_expression) check';
-
-a:=a||'sum,'||chr(10)||
-'  region_name,'||chr(10)||
-'  column_alias'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    region_report_column_id column_id,'||chr(10)||
-'    column_alias,'||chr(10)||
-'    heading column_label,'||chr(10)||
-'    html_expression,'||chr(10)||
-'    ''Standard'' report_type,'||chr(10)||
-'    page_id,'||chr(10)||
-'    page_name,'||chr(10)||
-'    region_id,'||chr(10)||
-'    region_name,'||chr(10)||
-'    application_id,'||chr(10)||
-'    last_updated_by,'||chr(10)||
-'    last_updated_on,'||chr(10)||
-'    component_signature,'||chr(10)||
-'    422 link_page,'||chr(10)||
-'    ''RP,4651,960,420,422'' link_cc,'||chr(10)||
-'    ''FB_FLOW_I';
-
-a:=a||'D,FB_FLOW_PAGE_ID,P422_COLUMN_ID,P420_REGION_ID,F4000_P4651_ID,P960_ID:'' '||chr(10)||
-'    || application_id || '','' || page_id || '','' || region_report_column_id || '','' || region_id link'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_rpt_cols'||chr(10)||
-'  WHERE'||chr(10)||
-'    application_id = #APPLICATION_ID#'||chr(10)||
-'  UNION ALL'||chr(10)||
-'  SELECT'||chr(10)||
-'    c.column_id,'||chr(10)||
-'    c.column_alias,'||chr(10)||
-'    c.report_label column_label,'||chr(10)||
-'    c.html_expression,'||chr(10)||
-'    ''Interactive'' report_';
-
-a:=a||'type,'||chr(10)||
-'    c.page_id,'||chr(10)||
-'    r.page_name,'||chr(10)||
-'    c.region_id,'||chr(10)||
-'    r.region_name,'||chr(10)||
-'    c.application_id,'||chr(10)||
-'    c.updated_by last_updated_by,'||chr(10)||
-'    c.updated_on last_updated_on,'||chr(10)||
-'    c.component_signature,'||chr(10)||
-'    687 link_page,'||chr(10)||
-'    ''687,601,4651'' link_cc,'||chr(10)||
-'    ''FB_FLOW_ID,FB_FLOW_PAGE_ID,P687_ID,P601_REGION_ID,P601_ID:'''||chr(10)||
-'      || c.application_id || '','' || c.page_id || '','' || c.column_id || '','' || r.region_id link'||chr(10)||
-'  ';
-
-a:=a||'FROM'||chr(10)||
-'    apex_application_page_ir_col c,'||chr(10)||
-'    apex_application_page_regions r'||chr(10)||
-'  WHERE'||chr(10)||
-'    c.region_id = r.region_id'||chr(10)||
-'    AND c.application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_COL_HTML_EXPR',
-  p_collection_key        => 'SV_XSS_COL_HTML_EXPR',
-  p_category_key          => 'SV_XSS_COL_HTML_EXPR',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Column HTML Expression
 DECLARE
   a CLOB;
@@ -111438,92 +100883,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_URL_PAGE_PROTECT
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_se';
-
-a:=a||'c_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_PAGE_PROTECT'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_URL_PAGE_PROTECT'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  515 link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  515';
-
-a:=a||' link_cc,'||chr(10)||
-'  ''FB_FLOW_ID,P515_FLOW_ID,P515_ID:'' || application_id || '','' || application_id || '','' || page_id  link,'||chr(10)||
-'  ''URL - Page Protection'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  htf.escape_sc(page_name) page_name_esc,'||chr(10)||
-'  page_access_protection,  '||chr(10)||
-'  sv_sec.get_result '||chr(10)||
-'    ('||chr(10)||
-'    ''SV_URL_PAGE_PROTECT'','||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-'    page_access_protection,'||chr(10)||
-'    NULL,'||chr(10)||
-'    ''N'','||chr(10)||
-'    ''Y'','||chr(10)||
-'    NULL'||chr(10)||
-'    ) result,'||chr(10)||
-'  page_a';
-
-a:=a||'ccess_protection val,'||chr(10)||
-'  sv_sec_util.get_checksum(page_access_protection) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_pages'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_URL_PAGE_PROTECT',
-  p_collection_key        => 'SV_URL_PAGE_PROTECTION',
-  p_category_key          => 'SV_URL_PAGE_PROTECTION',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Page Access Protection
 DECLARE
   a CLOB;
@@ -112390,134 +101749,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_IR_RPT_COLS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  column_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  c005,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name,'||chr(10)||
-'  column_name'||chr(10)||
-'  )'||chr(10)||
-'SELE';
-
-a:=a||'CT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_IR_RPT_COLS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_IR_RPT_COLS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  column_id,'||chr(10)||
-'  last_update';
-
-a:=a||'d_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,  '||chr(10)||
-'  ''XSS - Report Columns'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  column_alias,'||chr(10)||
-'  column_label,'||chr(10)||
-'  INITCAP(REPLACE(display_as, ''_'', '' '')) display_as,'||chr(10)||
-'  sv_sec.get_result '||chr(10)||
-'    ('||chr(10)||
-'    ''SV_XSS_IR_RPT_COLS'','||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-'    display_as,'||chr(10)||
-'    NULL,'||chr(10)||
-'    ''N'','||chr(10)||
-'    ''Y'','||chr(10)||
-'    NULL'||chr(10)||
-'    ) r';
-
-a:=a||'esult,'||chr(10)||
-'  display_as val,'||chr(10)||
-'  sv_sec_util.get_checksum(display_as) checksum,'||chr(10)||
-'  region_name,'||chr(10)||
-'  column_alias'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    c.column_id,'||chr(10)||
-'    c.column_alias,'||chr(10)||
-'    c.report_label column_label,'||chr(10)||
-'    c.display_text_as display_as,'||chr(10)||
-'    c.page_id,'||chr(10)||
-'    p.page_name,'||chr(10)||
-'    c.region_id,'||chr(10)||
-'    r.region_name,'||chr(10)||
-'    c.application_id,'||chr(10)||
-'    c.updated_by last_updated_by,'||chr(10)||
-'    c.updated_on last_updated_on,'||chr(10)||
-'    c.component_';
-
-a:=a||'signature,'||chr(10)||
-'    687 link_page,'||chr(10)||
-'    ''687,601,4651'' link_cc,'||chr(10)||
-'    ''FB_FLOW_ID,FB_FLOW_PAGE_ID,P687_ID,P601_REGION_ID,P601_ID:'''||chr(10)||
-'      || c.application_id || '','' || c.page_id || '','' || c.column_id || '','' || r.region_id link'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_page_ir_col c,'||chr(10)||
-'    apex_application_pages p,'||chr(10)||
-'    apex_application_page_regions r'||chr(10)||
-'  WHERE'||chr(10)||
-'    c.page_id = p.page_id'||chr(10)||
-'    AND c.region_id = r.region_id'||chr(10)||
-'    A';
-
-a:=a||'ND p.application_id = c.application_id'||chr(10)||
-'    AND r.application_id = c.application_id'||chr(10)||
-'    AND c.application_id = #APPLICATION_ID#'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_IR_RPT_COLS',
-  p_collection_key        => 'SV_XSS_IR_RPT_COLS',
-  p_category_key          => 'SV_XSS_IR_RPT_COLS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Interactive Report Columns
 DECLARE
   a CLOB;
@@ -113390,91 +102621,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_UNESCAPED_PROCESSES
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_UNESCAPED_PROCESSES'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_UNESCAPED_PROCESSES'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  process_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  compo';
-
-a:=a||'nent_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'    ''4312'' link_page,'||chr(10)||
-'    ''4312'' link_req,'||chr(10)||
-'    ''4312'' link_cc,'||chr(10)||
-'    ''F4000_P4312_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || process_id || '','' '||chr(10)||
-'      || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Unescaped Output - Process'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  process_name,'||chr(10)||
-'  htf.escape_sc(process_name) region_name_esc,'||chr(10)||
-'  process_type,'||chr(10)||
-'  sv_sec_rules.check_unescaped_htp(process_sour';
-
-a:=a||'ce) result,'||chr(10)||
-'  process_source val,'||chr(10)||
-'  sv_sec_util.get_checksum(process_source) checksum,'||chr(10)||
-'  process_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_proc app'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND process_type_code = ''PLSQL''';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_UNESCAPED_PROCESSES',
-  p_collection_key        => 'SV_XSS_UNESCAPED_PROCESSES',
-  p_category_key          => 'SV_XSS_UNESCAPED_PROCESSES',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Process Contains Unescaped Output
 DECLARE
   a CLOB;
@@ -114291,95 +103437,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_XSS_UNESCAPED_REGIONS
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  component_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum,'||chr(10)||
-'  component_name'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
-
-a:=a||'ION_ID#,'||chr(10)||
-'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_UNESCAPED_REGIONS'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_UNESCAPED_REGIONS'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  region_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_';
-
-a:=a||'signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || region_id || '','' '||chr(10)||
-'    || application_id || '','' || page_id link,'||chr(10)||
-'  ''XSS - Unescaped Output - Region'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  region_name,'||chr(10)||
-'  htf.escape_sc(region_name) region_name_esc,'||chr(10)||
-'  source_type,'||chr(10)||
-'  sv_sec_rules.check_unescaped_htp(region_source) result,'||chr(10)||
-'  r';
-
-a:=a||'egion_source val,'||chr(10)||
-'  sv_sec_util.get_checksum(region_source) checksum,'||chr(10)||
-'  region_name'||chr(10)||
-'FROM'||chr(10)||
-'  apex_application_page_regions apr'||chr(10)||
-'WHERE'||chr(10)||
-'  application_id = #APPLICATION_ID#'||chr(10)||
-'  AND source_type IN ('||chr(10)||
-'    ''Report'','||chr(10)||
-'    ''PL/SQL'','||chr(10)||
-'    ''Tabular Form'','||chr(10)||
-'    ''Calendar'')';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_XSS_UNESCAPED_REGIONS',
-  p_collection_key        => 'SV_XSS_UNESCAPED_REGIONS',
-  p_category_key          => 'SV_XSS_UNESCAPED_REGIONS',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Region Contains Unescaped Output
 DECLARE
   a CLOB;
@@ -115621,118 +104678,6 @@ end;
 
 -->>END
 
-PROMPT == ..COLLECTION: SV_PS_REJOIN_SESSION
-DECLARE
-  a CLOB;
-BEGIN 
-
-a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
-'  ('||chr(10)||
-'  collection_name,'||chr(10)||
-'  collection_id,'||chr(10)||
-'  category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  link_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  link_desc,'||chr(10)||
-'  c001,'||chr(10)||
-'  c002,'||chr(10)||
-'  c003,'||chr(10)||
-'  d001,'||chr(10)||
-'  c004,'||chr(10)||
-'  result,'||chr(10)||
-'  val,'||chr(10)||
-'  checksum'||chr(10)||
-'  )'||chr(10)||
-'SELECT'||chr(10)||
-'  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECTION_ID#,'||chr(10)||
-'  (SELECT categor';
-
-a:=a||'y_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_PS_REJOIN_SESSION'')) '||chr(10)||
-'    category_key,'||chr(10)||
-'  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_PS_REJOIN_SESSION'') '||chr(10)||
-'    attribute_id,'||chr(10)||
-'  page_id,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  component_signature,'||chr(10)||
-'  ''Edit'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
-'  NULL l';
-
-a:=a||'ink_req,'||chr(10)||
-'  link_cc,'||chr(10)||
-'  link,'||chr(10)||
-'  ''Settings - Rejoin Existing Sessions'' link_desc,'||chr(10)||
-'  page_name,'||chr(10)||
-'  page_name,'||chr(10)||
-'  last_updated_by,'||chr(10)||
-'  last_updated_on,'||chr(10)||
-'  rejoin_existing_sessions,'||chr(10)||
-'  sv_sec.get_result '||chr(10)||
-'    ('||chr(10)||
-'    ''SV_PS_REJOIN_SESSION'','||chr(10)||
-'    #ATTRIBUTE_SET_ID#,'||chr(10)||
-'    rejoin_existing_sessions,'||chr(10)||
-'    NULL,'||chr(10)||
-'    ''N'','||chr(10)||
-'    ''Y'','||chr(10)||
-'    NULL'||chr(10)||
-'    ) result,'||chr(10)||
-'  rejoin_existing_sessions val,'||chr(10)||
-'  sv_sec_util.get_checksum(rejoin_exi';
-
-a:=a||'sting_sessions) checksum'||chr(10)||
-'FROM'||chr(10)||
-'  ('||chr(10)||
-'  SELECT'||chr(10)||
-'    ap.application_id,'||chr(10)||
-'    ap.page_id,'||chr(10)||
-'    page_name,'||chr(10)||
-'    CASE '||chr(10)||
-'      WHEN ap.rejoin_existing_sessions = ''Application Default'' THEN aa.rejoin_existing_sessions '||chr(10)||
-'      ELSE ap.rejoin_existing_sessions END rejoin_existing_sessions,'||chr(10)||
-'    420 link_page,'||chr(10)||
-'    NULL link_req,'||chr(10)||
-'    ''RP,420,960,4651'' link_cc,'||chr(10)||
-'    ''FB_FLOW_ID,FB_FLOW_PAGE_ID,P420_REGION_ID:'' || ap.app';
-
-a:=a||'lication_id || '','' '||chr(10)||
-'      || ap.page_id link,'||chr(10)||
-'    ap.last_updated_by,'||chr(10)||
-'    ap.last_updated_on,'||chr(10)||
-'    ap.component_signature'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_application_pages ap,'||chr(10)||
-'    apex_applications aa'||chr(10)||
-'  WHERE'||chr(10)||
-'    aa.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND ap.application_id = aa.application_id'||chr(10)||
-'  )';
-
-sv_sec_import.score_collection(
-  p_collection_name       => 'SV_PS_REJOIN_SESSION',
-  p_collection_key        => 'SV_PS_REJOIN_SESSION',
-  p_category_key          => 'SV_PS_REJOIN_SESSION',
-  p_internal_flag         => 'Y',
-  p_apex_version          => '5.0',
-  p_collection_sql        => a
-  );
-end;
-/
-
--->>END
 PROMPT == ..ATTRIBUTE: Rejoin Existing Sessions
 DECLARE
   a CLOB;
@@ -115823,92 +104768,322 @@ END;
 /
 
 -->>END
+PROMPT == CATEGORY: SQL Injection: Interactive Grids
+BEGIN
+
+sv_sec_import.category(
+  p_category_name         => 'SQL Injection: Interactive Grids',
+  p_category_short_name   => 'SQLi: Interactive Grids',
+  p_category_key          => 'SV_SQLI_IG',
+  p_classification_key    => 'SQL_INJECTION',
+  p_category_link         => '',
+  p_display_page          => 'SV_SQLI_IG',
+  p_rpt_attribute_key     => '',
+  p_internal_flag         => 'Y'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == ..ATTRIBUTE: Interactive Grid Contains DBMS_SQL
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>'||chr(10)||
+'	The improper use of <strong>DBMS_SQL</strong> could introduce the potential for a SQL Injection attack - specifically if the SQL to be executed contains evaluated APEX items - even with the bind variable syntax.</p>'||chr(10)||
+'';
+
+c:=c||'<p>'||chr(10)||
+'	Verify that any use of <strong>DBMS_SQL</strong> is not evaluating APEX items before executing them.</p>'||chr(10)||
+'<ul>'||chr(10)||
+'	<li>'||chr(10)||
+'		When you are forced to use <strong>&amp;ITEM.</strong> notation, always be aware of the source of those items and whether or not they have been properly escaped using the <strong>HTF.ESCAPE_SC</strong> function.</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		Beware of the improper use of Bind Variables in Dyna';
+
+c:=c||'mic SQL. For Instance:<br />'||chr(10)||
+'		<br />'||chr(10)||
+'		<span style="font-family:courier new,courier,monospace;"><strong>l_sql := &#39;SELECT * FROM emp&nbsp; &nbsp;<br />'||chr(10)||
+'		&nbsp; WHERE empno =&#39; || :P1_EMPNO;<br />'||chr(10)||
+'		RETURN l_sql;</strong></span><br />'||chr(10)||
+'		<br />'||chr(10)||
+'		is no better than using &amp;ITEM. syntax, as the value of the bind variable will be concatenated verbatim to the query string. Instead, be sure to';
+
+c:=c||' embed the bind variables in the string, so that when the query executes, they appear as bind variables, not evaluated values.<br />'||chr(10)||
+'		<br />'||chr(10)||
+'		<span style="font-family:courier new,courier,monospace;"><strong>l_sql := &#39;SELECT * FROM emp&nbsp; &nbsp;<br />'||chr(10)||
+'		&nbsp; WHERE empno = :P1_EMPNO&#39;;<br />'||chr(10)||
+'		RETURN l_sql;</strong></span></li>'||chr(10)||
+'</ul>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SQLI_IG',
+  p_attribute_name           => 'Interactive Grid Contains DBMS_SQL',
+  p_attribute_key            => 'SV_SQLI_IG_DBMS',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLLECTION',
+  p_rule_type                => 'FUNCTION',
+  p_table_name               => '',
+  p_column_name              => '',
+  p_view_name                => 'SV_SEC_COL_SQLI_RPT_DBMS_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'COMPONENT',
+  p_component_sig_key        => 'REGION',
+  p_help_page                => '',
+  p_seq                      => 99,
+
+  p_collection_name          => 'SV_SQLI_IG_DBMS',
+
+  p_display_page_id          => 702,
+
+  p_summary_page_id          => 701,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ..ATTRIBUTE: Interactive Grid Contains EXECUTE IMMEDIATE
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>'||chr(10)||
+'	While not specifically a risk in itself, the use of <strong>EXECUTE IMMEDIATE</strong> is considered a risk as it can perform virtually any type of action within the parse as schema. Any use of <strong>EXECUTE IMMEDIATE</strong> should be treated with <em><strong>extreme caution.</strong></em></p>'||chr(10)||
+'';
+
+c:=c||'<p>'||chr(10)||
+'	Either avoid use of EXE<strong>CUTE IMMEDIATE,</strong> or do everything possible to endure that the code that is being executed can not be maliciously influenced by the input of end users. Developers should pay special attention to any use of <strong>EXECUTE IMMEDIATE</strong> that uses values from the APEX Session State as they may be able to be directly or indirectly influenced by end user';
+
+c:=c||'s.</p>';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SQLI_IG',
+  p_attribute_name           => 'Interactive Grid Contains EXECUTE IMMEDIATE',
+  p_attribute_key            => 'SV_SQLI_IG_EXEC',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLLECTION',
+  p_rule_type                => 'FUNCTION',
+  p_table_name               => '',
+  p_column_name              => '',
+  p_view_name                => 'SV_SEC_COL_SQLI_RPT_EXEC_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'COMPONENT',
+  p_component_sig_key        => 'REGION',
+  p_help_page                => '',
+  p_seq                      => 99,
+
+  p_collection_name          => 'SV_SQLI_IG_DBMS',
+
+  p_display_page_id          => 703,
+
+  p_summary_page_id          => 701,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ..ATTRIBUTE: Interactive Grid Contains &ITEM. Syntax
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>'||chr(10)||
+'	Use of <strong>&amp;ITEM.</strong> syntax can potentially leave an application open to <strong>SQL Injection</strong> attacks. Developers must take extreme care to insure that any use of this syntax is controlled in such a way that the SQL Injection risk is minimized.</p>'||chr(10)||
+'<p>'||chr(10)||
+'	This is especially true when &amp;ITEM. Syntax is used as part of a SQL statement as the veriables will be replaced v';
+
+b:=b||'erbatim with the variable value. For example, suppose there is a a form online that allows a user to sign on with a username and password which ultimately executes this query:</p>'||chr(10)||
+'<pre style="margin-left: 40px;">'||chr(10)||
+'<strong>SELECT COUNT(*) FROM users'||chr(10)||
+'WHERE username = &#39;&amp;USERNAME.&#39;'||chr(10)||
+'AND password = &#39;&amp;PASSWORD.&#39;'||chr(10)||
+'</strong></pre>'||chr(10)||
+'<p>'||chr(10)||
+'	If the user were to enter this as their password:';
+
+b:=b||'</p>'||chr(10)||
+'<pre style="margin-left: 40px;">'||chr(10)||
+'<strong>i_dont_know&#39; OR &#39;x&#39; = &#39;x</strong></pre>'||chr(10)||
+'<p>'||chr(10)||
+'	The resulting SQL would be:</p>'||chr(10)||
+'<pre style="margin-left: 40px;">'||chr(10)||
+'<strong>SELECT COUNT(*) FROM users'||chr(10)||
+'WHERE username = &#39;SCOTT&#39;'||chr(10)||
+'AND password = &#39;<span style="color:#f00;">i_dont_know&#39; OR &#39;x&#39; = &#39;x</span>&#39;'||chr(10)||
+'</strong></pre>'||chr(10)||
+'<p>'||chr(10)||
+'	This will erroneously return 1 rather th';
+
+b:=b||'an No Data Found and allow the user to log in.<br />'||chr(10)||
+'	By using bind variables, this can be avoided.</p>'||chr(10)||
+'<pre style="margin-left: 40px;">'||chr(10)||
+'<strong>SELECT COUNT(*) FROM users'||chr(10)||
+'WHERE username = :USERNAME'||chr(10)||
+'AND password = :PASSWORD'||chr(10)||
+'</strong></pre>'||chr(10)||
+'<p>'||chr(10)||
+'	Now, if you enter this as your password:</p>'||chr(10)||
+'<pre style="margin-left: 40px;">'||chr(10)||
+'<strong>i_dont_know&#39; OR &#39;x&#39; = &#39;x</strong></pre>'||chr(10)||
+'<p>'||chr(10)||
+'	Unless t';
+
+b:=b||'hat is specifically your password, the database will return <em><strong>No Data Found</strong></em>.</p>'||chr(10)||
+'<p>'||chr(10)||
+'	While it may not be optimal performance-wise, the following items can safely be used with the <strong>&amp;ITEM_NAME.</strong> syntax, as they are all APEX built-in items and can not be changed by an end-user:</p>'||chr(10)||
+'<ul>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>APP_ID</strong></li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>APP_ALIAS</strong>';
+
+b:=b||'</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>APP_PAGE_ID</strong></li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>APP_USER</strong></li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>SESSION</strong></li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>DEBUG</strong></li>'||chr(10)||
+'</ul>'||chr(10)||
+'<p>'||chr(10)||
+'	<strong>APEX-SERT</strong> will also ignore items that use the &amp;ITEM_NAME. syntax if they are:</p>'||chr(10)||
+'<ul>'||chr(10)||
+'	<li>'||chr(10)||
+'		Properly secured Application Items</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		Properly secured Page Items</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		Application Substitutio';
+
+b:=b||'n Strings</li>'||chr(10)||
+'</ul>'||chr(10)||
+'';
+
+c:=c||'<p>'||chr(10)||
+'	Examine the code for uses of <strong>&amp;ITEM.</strong> syntax and, wherever possible, replace the usage with:</p>'||chr(10)||
+'<ul>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>:ITEM_NAME</strong>&nbsp; bind variable syntax'||chr(10)||
+'		<ul>'||chr(10)||
+'			<li>'||chr(10)||
+'				in SQL Statements</li>'||chr(10)||
+'			<li>'||chr(10)||
+'				in anonymous PL/SQL blocks in APEX</li>'||chr(10)||
+'		</ul>'||chr(10)||
+'	</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>v(&#39;ITEM_NAME&#39;) </strong>syntax'||chr(10)||
+'		<ul>'||chr(10)||
+'			<li>'||chr(10)||
+'				in stored PL/SQL program uni';
+
+c:=c||'ts called from APEX</li>'||chr(10)||
+'		</ul>'||chr(10)||
+'	</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>ITEM_NAME</strong> syntax'||chr(10)||
+'		<ul>'||chr(10)||
+'			<li>'||chr(10)||
+'				in conditions</li>'||chr(10)||
+'		</ul>'||chr(10)||
+'	</li>'||chr(10)||
+'	<li>'||chr(10)||
+'		<strong>&amp;ITEM_NAME.</strong>'||chr(10)||
+'		<ul>'||chr(10)||
+'			<li>'||chr(10)||
+'				Templates, Regions, Tabs, Menus, Lists</li>'||chr(10)||
+'		</ul>'||chr(10)||
+'	</li>'||chr(10)||
+'</ul>'||chr(10)||
+'<p>'||chr(10)||
+'	When use of the <strong>&amp;ITEM.</strong> syntax is necessary, developers can mitigate much of the risk by using <strong>HTF.ESCAPE_S';
+
+c:=c||'C</strong> to escape the referenced item.</p>'||chr(10)||
+'<p>'||chr(10)||
+'	<em><strong>Caution</strong>: Use of <strong>&amp;ITEM.</strong> syntax in certain circumstances may also provide the opportunity for a Cross Site Scripting risk. See the XSS Section of APEX-SERT for details.</em></p>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_SQLI_IG',
+  p_attribute_name           => 'Interactive Grid Contains &ITEM. Syntax',
+  p_attribute_key            => 'SV_SQLI_IG_ITEM',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLLECTION',
+  p_rule_type                => 'FUNCTION',
+  p_table_name               => '',
+  p_column_name              => '',
+  p_view_name                => 'SV_SEC_COL_SQLI_RPT_ITEM_V',
+  p_component_table          => '',
+  p_component_column_id      => '',
+  p_component_column_display => '',
+  p_column_table             => '',
+  p_column_column_id         => '',
+  p_column_column_display    => '',
+  p_when_not_found           => 'FAIL',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'COMPONENT',
+  p_component_sig_key        => 'REGION',
+  p_help_page                => '',
+  p_seq                      => 99,
+
+  p_collection_name          => 'SV_SQLI_IG_DBMS',
+
+  p_display_page_id          => 704,
+
+  p_summary_page_id          => 701,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
 -- FINISH: C A T E G O R I E S
 -- START: A T T R I B U T E _ S E T _ L I N K S
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_DEEP_LINKING
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_PS_DEEP_LINKING',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_RPT_RESTFUL_ACCESS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_PS_RPT_RESTFUL_ACCESS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_UNESCAPED_ITEMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_UNESCAPED_ITEMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_DESKTOP_INCLUDE_LEGACY_JAVASCRIPT
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_UI_DESKTOP_INCLUDE_LEGACY_JAVASCRIPT',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_RPT
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_UI_RPT',
-  p_time_to_fix           => 1,
-  p_severity_level        => 2,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_APP_AVAILIBILITY_STATUS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_APP_AVAILIBILITY_STATUS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_APP_LOGGING
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_APP_LOGGING',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
 PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_APP_DEBUGGING
 BEGIN 
 sv_sec_import.attr_set_mapping(
@@ -115957,23 +105132,11 @@ sv_sec_import.attr_set_mapping(
 end;
 /
 
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_COMPATIBILITY_MODE
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_APP_AVAILIBILITY_STATUS
 BEGIN 
 sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_COMPATIBILITY_MODE',
-  p_time_to_fix           => 1,
-  p_severity_level        => 2,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_EMAIL_FROM_ADDRESS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_EMAIL_FROM_ADDRESS',
+  p_attribute_key         => 'SV_SET_APP_AVAILIBILITY_STATUS',
   p_time_to_fix           => 1,
   p_severity_level        => 3,
   p_active_flag           => 'Y'
@@ -115981,13 +105144,13 @@ sv_sec_import.attr_set_mapping(
 end;
 /
 
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_APP_VERSION
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_APP_LOGGING
 BEGIN 
 sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_APP_VERSION',
+  p_attribute_key         => 'SV_SET_APP_LOGGING',
   p_time_to_fix           => 1,
-  p_severity_level        => 3,
+  p_severity_level        => 1,
   p_active_flag           => 'Y'
   );
 end;
@@ -116053,35 +105216,11 @@ sv_sec_import.attr_set_mapping(
 end;
 /
 
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_BROWSER_CACHE
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_COMPATIBILITY_MODE
 BEGIN 
 sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_SEC_BROWSER_CACHE',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_EMBED_IN_FRAMES
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_SEC_EMBED_IN_FRAMES',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_CLEANUP_PLSQL
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_SEC_CLEANUP_PLSQL',
+  p_attribute_key         => 'SV_SET_COMPATIBILITY_MODE',
   p_time_to_fix           => 1,
   p_severity_level        => 2,
   p_active_flag           => 'Y'
@@ -116089,47 +105228,11 @@ sv_sec_import.attr_set_mapping(
 end;
 /
 
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_ITEM_PROTECTION_LEVEL_SUMMARY
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_EMAIL_FROM_ADDRESS
 BEGIN 
 sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_SEC_ITEM_PROTECTION_LEVEL_SUMMARY',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_AUTHORIZATION_SCHEME
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_SEC_AUTHORIZATION_SCHEME',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_DESKTOP_APP_LOGIN_URL
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_UI_DESKTOP_APP_LOGIN_URL',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_APP_PARSE_AS_SCHEMA
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_APP_PARSE_AS_SCHEMA',
+  p_attribute_key         => 'SV_SET_EMAIL_FROM_ADDRESS',
   p_time_to_fix           => 1,
   p_severity_level        => 3,
   p_active_flag           => 'Y'
@@ -116137,1501 +105240,13 @@ sv_sec_import.attr_set_mapping(
 end;
 /
 
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_DESKTOP_APP_HOME_LINK
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_APP_VERSION
 BEGIN 
 sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_UI_DESKTOP_APP_HOME_LINK',
-  p_time_to_fix           => 1,
-  p_severity_level        => 2,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_SESSION_STATE_PROTECTION
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_SEC_SESSION_STATE_PROTECTION',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_APP_PUBLIC_USER
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_APP_PUBLIC_USER',
+  p_attribute_key         => 'SV_SET_APP_VERSION',
   p_time_to_fix           => 1,
   p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_VPD
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_SEC_VPD',
-  p_time_to_fix           => 1,
-  p_severity_level        => 2,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_AUTHENTICATION_SCHEME
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_SEC_AUTHENTICATION_SCHEME',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SEC_AUTHORIZE_PUBLIC_PAGES
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SEC_AUTHORIZE_PUBLIC_PAGES',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SEC_DEEP_LINKING
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SEC_DEEP_LINKING',
-  p_time_to_fix           => 1,
-  p_severity_level        => 2,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SEC_HTML_ESCAPING_MODE
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SEC_HTML_ESCAPING_MODE',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PRC_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_PRC_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PRC_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_PRC_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PRC_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_PRC_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_COMP_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_COMP_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_COMP_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_COMP_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_COMP_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_DYN_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_DYN_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_DYN_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_DYN_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_DYN_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_DYN_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_VAL_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_VAL_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_VAL_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_VAL_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_VAL_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_VAL_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_RPT_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_RPT_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_RPT_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_RPT_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_RPT_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ITMS_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_ITMS_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ITMS_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_ITMS_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ITMS_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_ITMS_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_OD_PROC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_URL_MIS_OD_PROC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_AJAX_CB
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_URL_MIS_AJAX_CB',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_LE
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_URL_MIS_LE',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_IR_LINK
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_URL_MIS_IR_LINK',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_NB
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_URL_MIS_NB',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_IR_COL
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_URL_MIS_IR_COL',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_STD_COL
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_URL_MIS_STD_COL',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_BC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_URL_MIS_BC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_PAR_TAB
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_URL_MIS_PAR_TAB',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_PROC_BUTT
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_URL_MIS_PROC_BUTT',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_STD_TAB
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_URL_MIS_STD_TAB',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ITMD_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_ITMD_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ITMD_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_ITMD_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ITMD_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_ITMD_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_DUP_SUBMISSION
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_PS_DUP_SUBMISSION',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_HIDDEN_ITEMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_HIDDEN_ITEMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_LIST_ENTRIES
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_LIST_ENTRIES',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_REGION_TITLES
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_REGION_TITLES',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_MAXIMUM_SESSION_IDLE_SECONDS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_SEC_MAXIMUM_SESSION_IDLE_SECONDS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SES_RPT
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_SES_RPT',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_MAXIMUM_SESSION_LIFE_SECONDS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_SEC_MAXIMUM_SESSION_LIFE_SECONDS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ATH_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_ATH_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ATH_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_ATH_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ATH_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_ATH_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_LST_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_LST_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_LST_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_LST_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_LST_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_LST_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_FORM_AUTOCOMP
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_PS_FORM_AUTOCOMP',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PLG_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_PLG_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PLG_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_PLG_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PLG_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_PLG_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_ITEM_PROTECT
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_URL_ITEM_PROTECT',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_LOV_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_LOV_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_LOV_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_LOV_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_LOV_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_LOV_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_BC_ENTRIES
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_BC_ENTRIES',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_ITEM_ENCRYPT
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_URL_ITEM_ENCRYPT',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_AUTHENTICATION
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_PS_AUTHENTICATION',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_AUTHORIZATION
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_PS_AUTHORIZATION',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_APP_ITEMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_APP_ITEMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_STATIC_REGION
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_STATIC_REGION',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_PH_HEADER
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_PH_HEADER',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_PH_FOOTER
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_PH_FOOTER',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_PH_HTML_HEAD
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_STD_RPT_COLS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_STD_RPT_COLS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_TFM_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_TFM_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_TFM_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_TFM_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_TFM_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_TFM_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_CAL_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_CAL_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_CAL_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_CAL_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_CAL_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_SECURE_COOKIE
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_SECURE_COOKIE',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_PAGE_SENTRY
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_PAGE_SENTRY',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_PRE_AUTHENTICATION
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_PRE_AUTHENTICATION',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_AUTHENTICATION_FUNCTION
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_AUTHENTICATION_FUNCTION',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_SESSION_VERIFY
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_SESSION_VERIFY',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_COOKIE_NAME
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_COOKIE_NAME',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_INVALID_SESSION_URL
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_INVALID_SESSION_URL',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_LOGOUT_URL
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_LOGOUT_URL',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_INVALID_SESSION_PAGE
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_INVALID_SESSION_PAGE',
-  p_time_to_fix           => 1,
-  p_severity_level        => 2,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_COOKIE_DOMAIN
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_COOKIE_DOMAIN',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_COOKIE_PATH
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_COOKIE_PATH',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_POST_AUTHENTICATION
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_POST_AUTHENTICATION',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_RPT
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_RPT',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_ITEM_LABELS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_ITEM_LABELS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_RPT_EXP_DATA
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_PS_RPT_EXP_DATA',
-  p_time_to_fix           => 1,
-  p_severity_level        => 2,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_RPT_MAX_ROWS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_PS_RPT_MAX_ROWS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 2,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_BRN_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_BRN_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_BRN_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_BRN_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_BRN_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_BRN_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_FLS_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_FLS_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_FLS_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_FLS_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_FLS_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_FLS_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PLS_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_PLS_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PLS_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_PLS_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PLS_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_PLS_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_BROWSER_CACHE
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_PS_BROWSER_CACHE',
-  p_time_to_fix           => 1,
-  p_severity_level        => 2,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_TRE_DBMS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_TRE_DBMS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_TRE_EXEC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_TRE_EXEC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_TRE_ITEM
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SQLI_TRE_ITEM',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_UNESCAPED_PROCESSES
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_UNESCAPED_PROCESSES',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_UNESCAPED_REGIONS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_UNESCAPED_REGIONS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_STAB_LABELS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_STAB_LABELS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_PTAB_LABELS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_PTAB_LABELS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_COL_HTML_EXPR
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_COL_HTML_EXPR',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_IR_RPT_COLS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_XSS_IR_RPT_COLS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_PAGE_PROTECT
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_URL_PAGE_PROTECT',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_APP_FEEDBACK
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_APP_FEEDBACK',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_POST_LOGOUT_PROC
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_POST_LOGOUT_PROC',
-  p_time_to_fix           => 1,
-  p_severity_level        => 3,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_ENABLE_LEGACY_ATTR
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_AUTH_ENABLE_LEGACY_ATTR',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_REJOIN_SESSIONS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_SEC_REJOIN_SESSIONS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 2,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_HTTP_RESPONSE_HEADERS
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_SEC_HTTP_RESPONSE_HEADERS',
-  p_time_to_fix           => 1,
-  p_severity_level        => 2,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_RUNTIME_API
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_SEC_RUNTIME_API',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_DESKTOP_INCLUDE_JQUERY_MIGRATE
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_UI_DESKTOP_INCLUDE_JQUERY_MIGRATE',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_MOBILE_INCLUDE_LEGACY_JAVASCRIPT
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_UI_MOBILE_INCLUDE_LEGACY_JAVASCRIPT',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_MOBILE_INCLUDE_JQUERY_MIGRATE
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_UI_MOBILE_INCLUDE_JQUERY_MIGRATE',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_MOBILE_APP_LOGIN_URL
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_UI_MOBILE_APP_LOGIN_URL',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_MOBILE_APP_HOME_LINK
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_SET_UI_MOBILE_APP_HOME_LINK',
-  p_time_to_fix           => 1,
-  p_severity_level        => 1,
-  p_active_flag           => 'Y'
-  );
-end;
-/
-
-PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_REJOIN_SESSION
-BEGIN 
-sv_sec_import.attr_set_mapping(
-  p_attribute_set_key     => 'DEFAULT',
-  p_attribute_key         => 'SV_PS_REJOIN_SESSION',
-  p_time_to_fix           => 1,
-  p_severity_level        => 2,
   p_active_flag           => 'Y'
   );
 end;
@@ -117668,6 +105283,114 @@ sv_sec_import.attr_set_mapping(
   p_attribute_key         => 'SV_SET_GLOBAL_NOTIFICATION',
   p_time_to_fix           => 1,
   p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_APP_FEEDBACK
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_APP_FEEDBACK',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_DEEP_LINKING
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_PS_DEEP_LINKING',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_RPT_RESTFUL_ACCESS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_PS_RPT_RESTFUL_ACCESS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_UNESCAPED_ITEMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_UNESCAPED_ITEMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_DESKTOP_INCLUDE_LEGACY_JAVASCRIPT
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_UI_DESKTOP_INCLUDE_LEGACY_JAVASCRIPT',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_RPT
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_UI_RPT',
+  p_time_to_fix           => 1,
+  p_severity_level        => 2,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_DESKTOP_APP_LOGIN_URL
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_UI_DESKTOP_APP_LOGIN_URL',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_DESKTOP_APP_HOME_LINK
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_UI_DESKTOP_APP_HOME_LINK',
+  p_time_to_fix           => 1,
+  p_severity_level        => 2,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_DESKTOP_INCLUDE_JQUERY_MIGRATE
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_UI_DESKTOP_INCLUDE_JQUERY_MIGRATE',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
   p_active_flag           => 'Y'
   );
 end;
@@ -117762,6 +105485,1554 @@ BEGIN
 sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_XSS_LIST_URL',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_ITEM_PROTECTION_LEVEL_SUMMARY
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_SEC_ITEM_PROTECTION_LEVEL_SUMMARY',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_SESSION_STATE_PROTECTION
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_SEC_SESSION_STATE_PROTECTION',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_APP_PUBLIC_USER
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_APP_PUBLIC_USER',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_VPD
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_SEC_VPD',
+  p_time_to_fix           => 1,
+  p_severity_level        => 2,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_AUTHENTICATION_SCHEME
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_SEC_AUTHENTICATION_SCHEME',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_AUTHORIZATION_SCHEME
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_SEC_AUTHORIZATION_SCHEME',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_APP_PARSE_AS_SCHEMA
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_APP_PARSE_AS_SCHEMA',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_BROWSER_CACHE
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_SEC_BROWSER_CACHE',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_EMBED_IN_FRAMES
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_SEC_EMBED_IN_FRAMES',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_CLEANUP_PLSQL
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_SEC_CLEANUP_PLSQL',
+  p_time_to_fix           => 1,
+  p_severity_level        => 2,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SEC_AUTHORIZE_PUBLIC_PAGES
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SEC_AUTHORIZE_PUBLIC_PAGES',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SEC_DEEP_LINKING
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SEC_DEEP_LINKING',
+  p_time_to_fix           => 1,
+  p_severity_level        => 2,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SEC_HTML_ESCAPING_MODE
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SEC_HTML_ESCAPING_MODE',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_REJOIN_SESSIONS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_SEC_REJOIN_SESSIONS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 2,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_HTTP_RESPONSE_HEADERS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_SEC_HTTP_RESPONSE_HEADERS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 2,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_RUNTIME_API
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_SEC_RUNTIME_API',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_COMP_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_COMP_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_COMP_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_COMP_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_COMP_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_COMP_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_DYN_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_DYN_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_DYN_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_DYN_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_DYN_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_DYN_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PRC_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_PRC_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PRC_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_PRC_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PRC_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_PRC_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_VAL_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_VAL_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_VAL_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_VAL_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_VAL_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_VAL_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ITMS_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_ITMS_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ITMS_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_ITMS_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ITMS_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_ITMS_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_AJAX_CB
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_URL_MIS_AJAX_CB',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_LE
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_URL_MIS_LE',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_IR_LINK
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_URL_MIS_IR_LINK',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_NB
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_URL_MIS_NB',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_OD_PROC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_URL_MIS_OD_PROC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_IR_COL
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_URL_MIS_IR_COL',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_STD_COL
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_URL_MIS_STD_COL',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_BC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_URL_MIS_BC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_PAR_TAB
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_URL_MIS_PAR_TAB',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_PROC_BUTT
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_URL_MIS_PROC_BUTT',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_MIS_STD_TAB
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_URL_MIS_STD_TAB',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_RPT_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_RPT_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_RPT_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_RPT_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_RPT_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_RPT_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_DUP_SUBMISSION
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_PS_DUP_SUBMISSION',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_HIDDEN_ITEMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_HIDDEN_ITEMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_MAXIMUM_SESSION_LIFE_SECONDS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_SEC_MAXIMUM_SESSION_LIFE_SECONDS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SEC_MAXIMUM_SESSION_IDLE_SECONDS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_SEC_MAXIMUM_SESSION_IDLE_SECONDS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_SES_RPT
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_SES_RPT',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_LIST_ENTRIES
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_LIST_ENTRIES',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_REGION_TITLES
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_REGION_TITLES',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ITMD_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_ITMD_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ITMD_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_ITMD_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ITMD_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_ITMD_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ATH_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_ATH_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ATH_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_ATH_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_ATH_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_ATH_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_LST_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_LST_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_LST_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_LST_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_LST_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_LST_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PLG_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_PLG_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PLG_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_PLG_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PLG_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_PLG_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_LOV_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_LOV_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_LOV_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_LOV_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_LOV_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_LOV_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_ITEM_PROTECT
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_URL_ITEM_PROTECT',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_FORM_AUTOCOMP
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_PS_FORM_AUTOCOMP',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_PH_HTML_HEAD
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_PH_HTML_HEAD',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_PH_HEADER
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_PH_HEADER',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_PH_FOOTER
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_PH_FOOTER',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_TFM_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_TFM_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_TFM_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_TFM_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_TFM_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_TFM_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_STD_RPT_COLS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_STD_RPT_COLS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_BC_ENTRIES
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_BC_ENTRIES',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_ITEM_ENCRYPT
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_URL_ITEM_ENCRYPT',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_AUTHENTICATION
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_PS_AUTHENTICATION',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_AUTHORIZATION
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_PS_AUTHORIZATION',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_APP_ITEMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_APP_ITEMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_STATIC_REGION
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_STATIC_REGION',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_PAGE_SENTRY
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_PAGE_SENTRY',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_PRE_AUTHENTICATION
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_PRE_AUTHENTICATION',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_AUTHENTICATION_FUNCTION
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_AUTHENTICATION_FUNCTION',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_SESSION_VERIFY
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_SESSION_VERIFY',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_INVALID_SESSION_PAGE
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_INVALID_SESSION_PAGE',
+  p_time_to_fix           => 1,
+  p_severity_level        => 2,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_COOKIE_DOMAIN
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_COOKIE_DOMAIN',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_COOKIE_PATH
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_COOKIE_PATH',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_POST_AUTHENTICATION
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_POST_AUTHENTICATION',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_RPT
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_RPT',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_COOKIE_NAME
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_COOKIE_NAME',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_INVALID_SESSION_URL
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_INVALID_SESSION_URL',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_LOGOUT_URL
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_LOGOUT_URL',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_SECURE_COOKIE
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_SECURE_COOKIE',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_POST_LOGOUT_PROC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_POST_LOGOUT_PROC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 3,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_AUTH_ENABLE_LEGACY_ATTR
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_AUTH_ENABLE_LEGACY_ATTR',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_ITEM_LABELS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_ITEM_LABELS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_CAL_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_CAL_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_CAL_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_CAL_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_CAL_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_CAL_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_FLS_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_FLS_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_FLS_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_FLS_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_FLS_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_FLS_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PLS_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_PLS_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PLS_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_PLS_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_PLS_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_PLS_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_RPT_EXP_DATA
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_PS_RPT_EXP_DATA',
+  p_time_to_fix           => 1,
+  p_severity_level        => 2,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_RPT_MAX_ROWS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_PS_RPT_MAX_ROWS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 2,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_BRN_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_BRN_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_BRN_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_BRN_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_BRN_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_BRN_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_BROWSER_CACHE
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_PS_BROWSER_CACHE',
+  p_time_to_fix           => 1,
+  p_severity_level        => 2,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_TRE_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_TRE_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_TRE_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_TRE_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_TRE_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_TRE_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_STAB_LABELS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_STAB_LABELS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_PTAB_LABELS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_PTAB_LABELS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_COL_HTML_EXPR
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_COL_HTML_EXPR',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_URL_PAGE_PROTECT
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_URL_PAGE_PROTECT',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_IR_RPT_COLS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_IR_RPT_COLS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_UNESCAPED_PROCESSES
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_UNESCAPED_PROCESSES',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_UNESCAPED_REGIONS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_UNESCAPED_REGIONS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_MOBILE_INCLUDE_LEGACY_JAVASCRIPT
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_UI_MOBILE_INCLUDE_LEGACY_JAVASCRIPT',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_MOBILE_INCLUDE_JQUERY_MIGRATE
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_UI_MOBILE_INCLUDE_JQUERY_MIGRATE',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_MOBILE_APP_LOGIN_URL
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_UI_MOBILE_APP_LOGIN_URL',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SET_UI_MOBILE_APP_HOME_LINK
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SET_UI_MOBILE_APP_HOME_LINK',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_PS_REJOIN_SESSION
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_PS_REJOIN_SESSION',
+  p_time_to_fix           => 1,
+  p_severity_level        => 2,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_IG_DBMS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_IG_DBMS',
   p_time_to_fix           => 1,
   p_severity_level        => 1,
   p_active_flag           => 'Y'
@@ -124995,6 +114266,473 @@ end;
 
 -->>END
 
+PROMPT == HELP_TEXT_INTER: JUSTIFICATION_REASON
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'P0_JUSTIFICATION',
+  p_component_type        => 'ITEM',
+  p_help_text_key         => 'JUSTIFICATION_REASON'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: REJECTION_REASON
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'P0_REJECTION',
+  p_component_type        => 'ITEM',
+  p_help_text_key         => 'REJECTION_REASON'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: APPLICATION_ID_LIST
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'P1_APPLICATION_ID',
+  p_component_type        => 'ITEM',
+  p_help_text_key         => 'APPLICATION_ID_LIST'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: EVALUATE_APPLICATION
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'evaluateApplication',
+  p_page_id               => 1,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'EVALUATE_APPLICATION'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: APP_EXCEPTIONS_AWAITING_APPROVAL
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'dashboardRegion',
+  p_page_id               => 1,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'APP_EXCEPTIONS_AWAITING_APPROVAL'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: NA
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'recentEvalReport',
+  p_page_id               => 1,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'NA'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: REGION_-_RECENT_EVALUATION_FOR_WORKSPACE
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'recentEvalRegion',
+  p_page_id               => 1,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'REGION_-_RECENT_EVALUATION_FOR_WORKSPACE'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => '575',
+  p_component_type        => 'PAGE',
+  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => '572',
+  p_component_type        => 'PAGE',
+  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => '515',
+  p_component_type        => 'PAGE',
+  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => '540',
+  p_component_type        => 'PAGE',
+  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => '560',
+  p_component_type        => 'PAGE',
+  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'tabLabels',
+  p_page_id               => 540,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SETTINGS_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'listEntries',
+  p_page_id               => 550,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SETTINGS_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'unescapedOutput',
+  p_page_id               => 560,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SETTINGS_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'onLoad',
+  p_page_id               => 572,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SETTINGS_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'htmlBody',
+  p_page_id               => 574,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SETTINGS_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'columnHTMLExpression',
+  p_page_id               => 580,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SETTINGS_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'SQLInjectionProcs',
+  p_page_id               => 720,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'SQLInjectionTabForms',
+  p_page_id               => 725,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'SQLInjectionComps',
+  p_page_id               => 730,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'SQLInjectionCalendars',
+  p_page_id               => 735,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'SQLInjectionPlugins',
+  p_page_id               => 740,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'SQLInjectionDynamicActions',
+  p_page_id               => 745,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'SQLInjectionAuthorizationSchemes',
+  p_page_id               => 750,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'SQLInjectionLOVs',
+  p_page_id               => 755,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'SQLInjectionTrees',
+  p_page_id               => 760,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'SQLInjectionValidations',
+  p_page_id               => 765,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'SQLInjectionBranches',
+  p_page_id               => 770,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => '711',
+  p_component_type        => 'PAGE',
+  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => '706',
+  p_component_type        => 'PAGE',
+  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => '707',
+  p_component_type        => 'PAGE',
+  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => '708',
+  p_component_type        => 'PAGE',
+  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => '712',
+  p_component_type        => 'PAGE',
+  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => '713',
+  p_component_type        => 'PAGE',
+  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'containsDBMSSQL',
+  p_page_id               => 711,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SETTINGS_REPORT'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
+BEGIN 
+sv_sec_import.help_text_inter(
+  p_component_id          => 'containsDBMSSQL',
+  p_page_id               => 716,
+  p_component_type        => 'REGION',
+  p_help_text_key         => 'SETTINGS_REPORT'
+  );
+end;
+/
+
+-->>END
+
 PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
 BEGIN 
 sv_sec_import.help_text_inter(
@@ -130430,473 +120168,6 @@ sv_sec_import.help_text_inter(
   p_component_id          => 'P0_EXCEPTION_PK',
   p_component_type        => 'ITEM',
   p_help_text_key         => 'NA'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: JUSTIFICATION_REASON
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'P0_JUSTIFICATION',
-  p_component_type        => 'ITEM',
-  p_help_text_key         => 'JUSTIFICATION_REASON'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: REJECTION_REASON
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'P0_REJECTION',
-  p_component_type        => 'ITEM',
-  p_help_text_key         => 'REJECTION_REASON'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: APPLICATION_ID_LIST
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'P1_APPLICATION_ID',
-  p_component_type        => 'ITEM',
-  p_help_text_key         => 'APPLICATION_ID_LIST'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: EVALUATE_APPLICATION
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'evaluateApplication',
-  p_page_id               => 1,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'EVALUATE_APPLICATION'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: APP_EXCEPTIONS_AWAITING_APPROVAL
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'dashboardRegion',
-  p_page_id               => 1,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'APP_EXCEPTIONS_AWAITING_APPROVAL'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: NA
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'recentEvalReport',
-  p_page_id               => 1,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'NA'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: REGION_-_RECENT_EVALUATION_FOR_WORKSPACE
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'recentEvalRegion',
-  p_page_id               => 1,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'REGION_-_RECENT_EVALUATION_FOR_WORKSPACE'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => '575',
-  p_component_type        => 'PAGE',
-  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => '572',
-  p_component_type        => 'PAGE',
-  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => '515',
-  p_component_type        => 'PAGE',
-  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => '540',
-  p_component_type        => 'PAGE',
-  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => '560',
-  p_component_type        => 'PAGE',
-  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'tabLabels',
-  p_page_id               => 540,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SETTINGS_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'listEntries',
-  p_page_id               => 550,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SETTINGS_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'unescapedOutput',
-  p_page_id               => 560,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SETTINGS_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'onLoad',
-  p_page_id               => 572,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SETTINGS_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'htmlBody',
-  p_page_id               => 574,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SETTINGS_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'columnHTMLExpression',
-  p_page_id               => 580,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SETTINGS_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'SQLInjectionProcs',
-  p_page_id               => 720,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'SQLInjectionTabForms',
-  p_page_id               => 725,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'SQLInjectionComps',
-  p_page_id               => 730,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'SQLInjectionCalendars',
-  p_page_id               => 735,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'SQLInjectionPlugins',
-  p_page_id               => 740,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'SQLInjectionDynamicActions',
-  p_page_id               => 745,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'SQLInjectionAuthorizationSchemes',
-  p_page_id               => 750,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'SQLInjectionLOVs',
-  p_page_id               => 755,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'SQLInjectionTrees',
-  p_page_id               => 760,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'SQLInjectionValidations',
-  p_page_id               => 765,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SQLI_CATEGORY_SUMMARY_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'SQLInjectionBranches',
-  p_page_id               => 770,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SQLI_CATEGORY_SUMMARY_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => '711',
-  p_component_type        => 'PAGE',
-  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => '706',
-  p_component_type        => 'PAGE',
-  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => '707',
-  p_component_type        => 'PAGE',
-  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => '708',
-  p_component_type        => 'PAGE',
-  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => '712',
-  p_component_type        => 'PAGE',
-  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: STANDARD_CATEGORY_PAGE_HELP
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => '713',
-  p_component_type        => 'PAGE',
-  p_help_text_key         => 'STANDARD_CATEGORY_PAGE_HELP'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'containsDBMSSQL',
-  p_page_id               => 711,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SETTINGS_REPORT'
-  );
-end;
-/
-
--->>END
-
-PROMPT == HELP_TEXT_INTER: SETTINGS_REPORT
-BEGIN 
-sv_sec_import.help_text_inter(
-  p_component_id          => 'containsDBMSSQL',
-  p_page_id               => 716,
-  p_component_type        => 'REGION',
-  p_help_text_key         => 'SETTINGS_REPORT'
   );
 end;
 /

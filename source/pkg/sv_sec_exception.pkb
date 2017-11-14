@@ -1165,7 +1165,7 @@ END LOOP;
 
 -- Update the Collection
   UPDATE sv_sec_collection_data SET 
-    exception = '<i class="fa fa-lg fa-plus-circle" style="color:green;"></i>', 
+    exception = '<i class="fa fa-plus-circle" style="color:green;"></i>', 
     exception_url = 'f?p=' || v('APP_ID') || ':10:' || v('APP_SESSION') || ':::10:P10_EXCEPTION_PK:' || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id,
     result = 'FAIL'   
   WHERE
@@ -1323,40 +1323,40 @@ WHEN MATCHED THEN
       CASE
       -- Approver
       WHEN l_is_approver = 'Y' AND e.created_by||e.created_ws != p_app_user||p_user_workspace_id THEN
-        '<i class="fa fa-lg fa-pencil-square" style="color:orange;"></i>'
+        '<i class="fa fa-pencil-square" style="color:orange;"></i>'
       -- Owner
       WHEN e.created_by||e.created_ws = p_app_user||p_user_workspace_id THEN
-        '<i class="fa fa-lg fa-pencil-square" style="color:green;"></i>'
+        '<i class="fa fa-pencil-square" style="color:green;"></i>'
       ELSE 
       -- Viewer
-        '<i class="fa fa-lg fa-info-circle" style="color:orange;"></i>'
+        '<i class="fa fa-info-circle" style="color:orange;"></i>'
       END,
     'R', -- REJECTED
       CASE
       -- Rejected and Owner
       WHEN e.created_by||e.created_ws = p_app_user||p_user_workspace_id THEN
-        '<i class="fa fa-lg fa-pencil-square" style="color:red;" title="Rejected by ' || e.rejected_by || ' on ' || TO_CHAR(e.rejected_on, 'DD-MON-YYYY HH:MIPM') || '"></i>'
+        '<i class="fa fa-pencil-square" style="color:red;" title="Rejected by ' || e.rejected_by || ' on ' || TO_CHAR(e.rejected_on, 'DD-MON-YYYY HH:MIPM') || '"></i>'
       ELSE
       -- Rejected and Not Owner
-        '<i class="fa fa-lg fa-info-circle" style="color:red;" title="Rejected by ' || e.rejected_by || ' on ' || TO_CHAR(e.rejected_on, 'DD-MON-YYYY HH:MIPM') || '"></i>'
+        '<i class="fa fa-info-circle" style="color:red;" title="Rejected by ' || e.rejected_by || ' on ' || TO_CHAR(e.rejected_on, 'DD-MON-YYYY HH:MIPM') || '"></i>'
       END,
     'S', -- STALE
       CASE
       -- Failed and Owner
       WHEN e.created_by = p_app_user THEN
-        '<i class="fa fa-lg fa-info-circle" style="color:red;"></i>'
+        '<i class="fa fa-info-circle" style="color:red;"></i>'
       ELSE
       -- Failed and Not Owner
-        '<i class="fa fa-lg fa-info-circle" style="color:red;"></i>'
+        '<i class="fa fa-info-circle" style="color:red;"></i>'
       END,
     'Y',
       CASE
       -- Approved and Owner
       WHEN e.created_by||e.created_ws = p_app_user||p_user_workspace_id THEN
-        '<i class="fa fa-lg fa-pencil-square" style="color:green;" title="Approved by ' || e.approved_by || ' on ' || TO_CHAR(e.approved_on, 'DD-MON-YYYY HH:MIPM') || '"></i>'
+        '<i class="fa fa-pencil-square" style="color:green;" title="Approved by ' || e.approved_by || ' on ' || TO_CHAR(e.approved_on, 'DD-MON-YYYY HH:MIPM') || '"></i>'
       ELSE
       -- Approved and Not Owner
-        '<i class="fa fa-lg fa-info-circle" style="color:green;" title="Approved by ' || e.approved_by || ' on ' || TO_CHAR(e.approved_on, 'DD-MON-YYYY HH:MIPM') || '"></i>'
+        '<i class="fa fa-info-circle" style="color:green;" title="Approved by ' || e.approved_by || ' on ' || TO_CHAR(e.approved_on, 'DD-MON-YYYY HH:MIPM') || '"></i>'
       END,
       NULL
       )

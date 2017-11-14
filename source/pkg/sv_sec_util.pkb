@@ -2626,7 +2626,7 @@ BEGIN
 
 -- Update all attributes with a Add Notation link
 UPDATE sv_sec_collection_data 
-  SET notation = '<i class="fa fa-lg fa-comment" style="color:#999;"></i>',
+  SET notation = '<i class="fa fa-comment" style="color:#999;"></i>',
       notation_url = 'f?p=' || p_sert_app_id || ':20:' || p_app_session || ':::20:P20_NOTATION_PK:' || attribute_id || '|' || CASE WHEN page_id = -1 THEN NULL ELSE page_id END || '|' || component_id || '|' || column_id
   WHERE notation IS NULL AND collection_id = p_collection_id;
         
@@ -2639,7 +2639,7 @@ LOOP
 
   UPDATE sv_sec_collection_data 
     SET notation = 
-        '<i class="fa fa-lg fa-comments" style="color:#999;padding-left:3px;" title="' || x.c || ' Comments"></i>',
+        '<i class="fa fa-comments" style="color:#999;padding-left:3px;" title="' || x.c || ' Comments"></i>',
         notation_url = 'f?p=' || p_sert_app_id || ':20:' || p_app_session || ':::20:P20_NOTATION_PK:' || attribute_id || '|' || CASE WHEN page_id = -1 THEN NULL ELSE page_id END || '|' || component_id || '|' || column_id-- Note Edit
     WHERE collection_id = p_collection_id
     AND
@@ -2720,7 +2720,7 @@ SELECT
   n.CREATED_ON comment_date,
   CASE 
     WHEN n.created_by = v(''APP_USER'') AND au.workspace_name = (SELECT workspace_name FROM apex_workspaces WHERE workspace_id = nv(''G_WORKSPACE_ID'')) THEN
-      ''<a href="#" id="'' || n.notation_id || ''" class="removeNotation"><i class="fa fa-lg fa-trash"></i></a>''
+      ''<a href="#" id="'' || n.notation_id || ''" class="removeNotation"><i class="fa fa-trash"></i></a>''
     ELSE NULL 
   END actions,
   NULL attribute_1,
