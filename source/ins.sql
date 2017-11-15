@@ -274,15 +274,7 @@ set termout off
 --  =================
 --  ================= Create the SV_SERT_LAUNCHER user
 --  =================
---
--- Create the SV_SERT_LAUNCHER User 
--- 
 @@ins/create_launcher
---
--- Create Grants for SV_SERT_LAUNCHER 
--- 
-@@ins/launcher_grants
-
 
 set termout on
 -- Using some SQL*PLUS magic, change the names of the scripts we would use to install the 
@@ -426,6 +418,11 @@ alter session set current_schema = SYS;
 set scan on
 set define on
 set define '^'
+
+PROMPT  =============================================================================
+PROMPT  == G R A N T S
+PROMPT  =============================================================================
+@@ins/launcher_grants
 
 PROMPT  =============================================================================
 PROMPT  == S Y N O N Y M S
