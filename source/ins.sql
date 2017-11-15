@@ -9,8 +9,8 @@
 --      Assumes the SYS user is connected.
 --
 --    REQUIREMENTS
---      - Requires Application Express 4.2.1 or higher to be installed
---      - Requires V10.2.0.3 of the database.
+--      - Requires Application Express 5.1.1 or higher to be installed
+--      - Requires V11.2.0.1 of the database.
 --
 --    Arguments:
 --
@@ -140,9 +140,9 @@ end;
 /
 
 --  =================
---  =================  Check for APEX 5.0.0 or above
+--  =================  Check for APEX 5.1.0 or above
 --  =================
-PROMPT  ...... Test for Valid Instance of APEX 5.0.0 or above
+PROMPT  ...... Test for Valid Instance of APEX 5.1.0 or above
 declare
     l_version number;
     l_status dba_registry.status%TYPE := 'INVALID';
@@ -153,7 +153,7 @@ begin
        into l_version, l_status;
     EXCEPTION
        when NO_DATA_FOUND then
-         dbms_output.put_line('SERT installation requires a VALID APEX installation of Version 4.1.1 or above.');
+         dbms_output.put_line('SERT installation requires a VALID APEX installation of Version 5.1.1 or above.');
           dbms_output.put_line('-- NO APEX INSTALLATION FOUND IN DBA_REGISTRY.');
           execute immediate 'bogus statement to force exit';
        when others then
@@ -162,8 +162,8 @@ begin
          execute immediate 'bogus statement to force exit'; 
     END; 
     
-    if l_version < 5000000 then
-        dbms_output.put_line('This APEX-SERT installation requires APEX version 5.0.0 or later.');
+    if l_version < 5110000 then
+        dbms_output.put_line('This APEX-SERT installation requires APEX version 5.1.0 or later.');
         execute immediate 'bogus statement to force exit';
     elsif l_status = 'INVALID' then
         dbms_output.put_line('Current version of APEX is marked as INVALID.');
