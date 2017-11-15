@@ -56,8 +56,8 @@ BEGIN
   -- Create the workspace
   APEX_INSTANCE_ADMIN.ADD_WORKSPACE(
       p_workspace           => l_workspace,
-      p_primary_schema      => '^myscript_parse_as_user',
-      p_additional_schemas  => NULL
+      p_primary_schema      => 'SV_SERT_LAUNCHER',
+      p_additional_schemas  => '^myscript_parse_as_user'
       );
   
   -- remove line to not enable the workspace
