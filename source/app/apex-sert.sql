@@ -14,7 +14,7 @@ begin
 wwv_flow_api.import_begin (
  p_version_yyyy_mm_dd=>'2016.08.24'
 ,p_release=>'5.1.3.00.05'
-,p_default_workspace_id=>2360239189128032
+,p_default_workspace_id=>2928292609509663
 ,p_default_application_id=>100
 ,p_default_owner=>'SV_SERT_APEX'
 );
@@ -27,7 +27,7 @@ prompt APPLICATION 100 - APEX-SERT
 -- Application Export:
 --   Application:     100
 --   Name:            APEX-SERT
---   Date and Time:   22:14 Monday November 13, 2017
+--   Date and Time:   10:40 Wednesday November 15, 2017
 --   Exported By:     ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -97,7 +97,7 @@ wwv_flow_api.create_flow(
 ,p_alias=>nvl(wwv_flow_application_install.get_application_alias,'SERT')
 ,p_page_view_logging=>'YES'
 ,p_page_protection_enabled_y_n=>'Y'
-,p_checksum_salt_last_reset=>'20171113220604'
+,p_checksum_salt_last_reset=>'20171114170435'
 ,p_bookmark_checksum_function=>'MD5'
 ,p_max_session_length_sec=>9999
 ,p_max_session_idle_sec=>1999
@@ -113,7 +113,7 @@ wwv_flow_api.create_flow(
 ,p_logo_image=>'TEXT:<span class="fa fa-cloud-lock" style="line-height:2.5;" aria-hidden="true"></span> APEX-SERT'
 ,p_public_user=>'APEX_PUBLIC_USER'
 ,p_proxy_server=> nvl(wwv_flow_application_install.get_proxy,'')
-,p_flow_version=>'000000'
+,p_flow_version=>'@SV_VERSION@'
 ,p_flow_status=>'AVAILABLE_W_EDIT_LINK'
 ,p_flow_unavailable_text=>'This application is currently unavailable at this time.'
 ,p_restrict_to_user_list=>'SV_DEV'
@@ -135,7 +135,7 @@ wwv_flow_api.create_flow(
 ,p_csv_encoding=>'Y'
 ,p_auto_time_zone=>'N'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20171113220604'
+,p_last_upd_yyyymmddhh24miss=>'20171114170435'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>30
 ,p_ui_type_name => null
@@ -20308,7 +20308,7 @@ wwv_flow_api.create_page(
 ,p_protection_level=>'C'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20171112125232'
+,p_last_upd_yyyymmddhh24miss=>'20171113222720'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(36739858891122526)
@@ -20743,7 +20743,7 @@ wwv_flow_api.create_report_region(
 '(',
 '  :APP_PAGE_ID BETWEEN 350 AND 799 ',
 '  AND :APP_PAGE_ID NOT IN ',
-'(400,500,600,700,705,710,715,720,725,730,735,740,745,750,755,760,765,770,570,450,775,780,785)',
+'(400,500,600,700,701,705,710,715,720,725,730,735,740,745,750,755,760,765,770,570,450,775,780,785)',
 '  AND :APP_PAGE_ID NOT BETWEEN 675 AND 699',
 ')'))
 ,p_display_condition_type=>'EXISTS'
@@ -21099,7 +21099,7 @@ wwv_flow_api.create_page_plug(
 ,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
 ,p_plug_query_show_nulls_as=>' - '
 ,p_plug_display_condition_type=>'CURRENT_PAGE_IN_CONDITION'
-,p_plug_display_when_condition=>'705,710,715,720,725,730,735,740,745,750,755,760,765,770,570,450,775,780,785'
+,p_plug_display_when_condition=>'701,705,710,715,720,725,730,735,740,745,750,755,760,765,770,570,450,775,780,785'
 ,p_pagination_display_position=>'BOTTOM_RIGHT'
 );
 wwv_flow_api.create_page_plug(
@@ -21885,6 +21885,7 @@ wwv_flow_api.create_page_da_action(
 '$("#a_Collapsible1_rpt_control_panel_content").css("display", "none");',
 '$("#rpt_control_panel_summary").css("display", "block");',
 ''))
+,p_stop_execution_on_error=>'Y'
 );
 wwv_flow_api.create_page_process(
  p_id=>wwv_flow_api.id(562594070815721518)
@@ -22609,8 +22610,8 @@ wwv_flow_api.create_page(
 ,p_protection_level=>'C'
 ,p_cache_mode=>'NOCACHE'
 ,p_cache_timeout_seconds=>21600
-,p_last_updated_by=>'SSPENDOL'
-,p_last_upd_yyyymmddhh24miss=>'20160830204141'
+,p_last_updated_by=>'ADMIN'
+,p_last_upd_yyyymmddhh24miss=>'20171114170434'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(551649416070465648)
@@ -22620,13 +22621,14 @@ wwv_flow_api.create_page_plug(
 ,p_plug_template=>wwv_flow_api.id(36169958992559408)
 ,p_plug_display_sequence=>10
 ,p_include_in_reg_disp_sel_yn=>'N'
-,p_plug_display_point=>'BODY_2'
+,p_plug_display_point=>'BODY'
 ,p_plug_item_display_point=>'BELOW'
 ,p_plug_source=>'The SERT application must have the Build Status property set to "Run Only" in order to function properly.'
 ,p_plug_query_row_template=>1
 ,p_plug_query_headings_type=>'QUERY_COLUMNS'
 ,p_plug_query_num_rows=>15
 ,p_plug_query_num_rows_type=>'NEXT_PREVIOUS_LINKS'
+,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
 ,p_plug_query_show_nulls_as=>' - '
 ,p_pagination_display_position=>'BOTTOM_RIGHT'
 ,p_attribute_01=>'N'
@@ -61981,8 +61983,9 @@ wwv_flow_api.create_page(
  p_id=>701
 ,p_user_interface_id=>wwv_flow_api.id(254131289224768590)
 ,p_name=>'SQLi: Interactive Grids'
+,p_alias=>'SV_SQLI_IG'
 ,p_page_mode=>'NORMAL'
-,p_step_title=>'SQLi: Interactive Grids'
+,p_step_title=>'SQL Injection: Interactive Grids'
 ,p_allow_duplicate_submissions=>'N'
 ,p_reload_on_submit=>'A'
 ,p_warn_on_unsaved_changes=>'N'
@@ -61992,15 +61995,12 @@ wwv_flow_api.create_page(
 ,p_autocomplete_on_off=>'OFF'
 ,p_page_template_options=>'#DEFAULT#'
 ,p_required_role=>'MUST_NOT_BE_PUBLIC_USER'
-,p_dialog_chained=>'Y'
 ,p_overwrite_navigation_list=>'N'
-,p_nav_list_template_options=>'#DEFAULT#'
 ,p_page_is_public_y_n=>'N'
 ,p_protection_level=>'C'
 ,p_cache_mode=>'NOCACHE'
-,p_cache_timeout_seconds=>21600
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20171113220520'
+,p_last_upd_yyyymmddhh24miss=>'20171113223948'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(551455956019896225)
