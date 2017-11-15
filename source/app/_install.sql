@@ -51,6 +51,10 @@ def script_admin_email_address = '^5'
 
 -- SERT Manager Application
 @@_install_app.sql apex-sert_admin.sql ^script_mgmt_id
+
+-- SERT Launcher Web Service
+@@_install_ws.sql apex-sert_launcher.sql
+
 set define '^'
 
 undef script_pw      

@@ -49,6 +49,10 @@ PAUSE   Press Enter to continue uninstallation or CTRL-C to EXIT
 
 whenever sqlerror continue
 
+PROMPT ****   Dropping the SV_SERT_LAUNCHER USER
+drop user SV_SERT_LAUNCHER cascade
+/
+
 PROMPT ****   Dropping the @SV_PARSE_AS@ USER
 drop user @SV_PARSE_AS@ cascade
 /
