@@ -9,8 +9,8 @@
 --      Assumes the SYS user is connected.
 --
 --    REQUIREMENTS
---      - Requires Application Express 4.2.1 or higher to be installed
---      - Requires V10.2.0.3 of the database.
+--      - Requires Application Express 5.0.0 or higher to be installed
+--      - Requires V11.2.0.4 of the database.
 --
 --    Arguments:
 --
@@ -153,7 +153,7 @@ begin
        into l_version, l_status;
     EXCEPTION
        when NO_DATA_FOUND then
-         dbms_output.put_line('SERT installation requires a VALID APEX installation of Version 4.1.1 or above.');
+         dbms_output.put_line('SERT installation requires a VALID APEX installation of Version 5.0.0 or above.');
           dbms_output.put_line('-- NO APEX INSTALLATION FOUND IN DBA_REGISTRY.');
           execute immediate 'bogus statement to force exit';
        when others then
