@@ -482,8 +482,7 @@ PROMPT
 PROMPT  In order to be able to launch APEX-SERT, paste the following into the System Message
 PROMPT  region in the INTERNAL workspace:
 PROMPT
-PROMPT  <a href="javascript:var launchSERT=window.open('sert/launch/' + $v('pInstance'));"><span class="a-Icon icon-run-page"></span>&nbsp;Launch APEX-SERT
-</a>
+PROMPT  <a href="javascript:var launchSERT=window.open('sert/launch/' + $v('pInstance'));"><span class="a-Icon icon-run-page"></span>&nbsp;Launch APEX-SERT</a>
 PROMPT
 PROMPT  To access the APEX-SERT Admin application, enter the following URL while
 PROMPT  substituting HOST, PORT and DAD with those from your APEX environment:
