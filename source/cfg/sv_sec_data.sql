@@ -116712,27 +116712,28 @@ DECLARE
 BEGIN
 
 a := null;
-b:=b||'<p>Report columns with a Display Type of Standard Report Column are susceptible to XSS as the do not escape any of special characters. This means that any JavaScript that might be entered into a form, and which is later displayed using a Standard Report Column, will be executed potentially without the knowledge of the user or system owner.</p>'||chr(10)||
-''||chr(10)||
-'<p>You should only use Standard Report Columns when y';
+b:=b||'<p>Some types of <strong>Interactive Grid</strong> columns allow developers to disable the <strong>Escape Special Characters</strong> attribute.&nbsp; When this option is set to <strong>No</strong>, then the columns&nbsp;susceptible to XSS attacks. This means that any JavaScript that might be entered into a form, and which is later displayed using an Interactive Grid, will be executed potentially ';
 
-b:=b||'ou can guarantee that the data being displayed within the report is not being entered by end user. &nbsp;</p>'||chr(10)||
+b:=b||'without the knowledge of the user or system owner.</p>'||chr(10)||
+''||chr(10)||
+'<p>You should only always escape all Interactive Grid columns.&nbsp; Should you need to augment your results with HTML, use the <strong>HTML Expression</strong> attribute.</p>'||chr(10)||
 '';
 
-c:=c||'<p>To protect an <strong>Interactive Report Column</strong> from potential XSS attacks:</p>'||chr(10)||
+c:=c||'<p>To protect an <strong>Interactive Grid Columns</strong> from potential XSS attacks:</p>'||chr(10)||
 ''||chr(10)||
-'<p>&nbsp;1. Navigate to the page containing the <strong>Interactive Report</strong>.<br />'||chr(10)||
-'&nbsp;2. Edit the Report attributes by right-clicking on the report name in the tree and selecting <strong>Edit Report Attributes</strong>.<br />'||chr(10)||
-'&nbsp;3. In the <u>Column Attributes</u> region set the <strong>Displa';
+'<p>&nbsp;1. Navigate to the page containing the <strong>Interactive Grid</strong>.<br />'||chr(10)||
+'&nbsp;2. Expand the <strong>Columns</strong> node of the report.<br />'||chr(10)||
+'&nbsp;3. Select the column in question.<br />'||chr(10)||
+'&nbsp;4. In the <u>Security</u> region set the <strong>Escape Special Characters&nbsp;</strong>item to';
 
-c:=c||'y Text As </strong>select list to the appropriate display option that <em><strong>Escapes Special Characters</strong></em>.<br />'||chr(10)||
-'&nbsp;4. Click <strong>Apply Changes</strong>.</p>'||chr(10)||
+c:=c||' <strong>No</strong>.<br />'||chr(10)||
+'&nbsp;5. Click <strong>Apply Changes</strong>.</p>'||chr(10)||
 ''||chr(10)||
-'<p>You may also drill down to the column in question and in the <u>Column Definition</u> region, set the <strong>Display Type</strong> as mentioned above.</p>'||chr(10)||
+'<p>If the <strong>Escape Special Characters</strong> option is not available, then APEX will automatically always escape the output of this column type.</p>'||chr(10)||
 ''||chr(10)||
-'<p>One thing to note: if you have any HTML embedded in you';
+'<p>One thing to note: if you have any HTML embedded in your SQL, you will need to move that to the <strong>HTML Expression</strong> attribute, which can be found ';
 
-c:=c||'r SQL, you will need to move that to the <strong>HTML Expression</strong> attribute, which can be found in the <u>Column Formatting</u> region. &nbsp;All HTML embedded in SQL will no longer render as HTML, but will rather be escaped.</p>'||chr(10)||
+c:=c||'in the <u>Column Formatting</u> region. &nbsp;All HTML embedded in SQL will no longer render as HTML, but will rather be escaped.</p>'||chr(10)||
 ''||chr(10)||
 '<p>This, a column that used to look like this:</p>'||chr(10)||
 ''||chr(10)||
@@ -116740,15 +116741,13 @@ c:=c||'r SQL, you will need to move that to the <strong>HTML Expression</strong>
 ''||chr(10)||
 '<p>Will look like this:</p>'||chr(10)||
 ''||chr(10)||
-'<p>&nbsp; &lt;b&gt;Syracuse, NY&lt;';
-
-c:=c||'/b&gt;</p>'||chr(10)||
+'<p>&nbsp; &lt;b&gt;Syracuse, NY&lt;/b&gt;</p>'||chr(10)||
 ''||chr(10)||
-'<p>Once you change the Display As attribute to Display as Text, you should remove all HTML from the SQL and move it to the&nbsp;<strong>HTML Expression</strong> attribute. &nbsp;Continuing with our example, you would enter the following in the <strong>HTML Expression</strong>, where <strong>#COLUMN_NAME#</strong> is the name of the corresponding column.</p>'||chr(10)||
-''||chr(10)||
-'<p>&nbsp; &lt;b&gt;#COLUMN_';
+'<p>Once you change the Display As attribute to Display as Text, you should remove all HTML f';
 
-c:=c||'NAME#&lt;/b&gt;</p>'||chr(10)||
+c:=c||'rom the SQL and move it to the&nbsp;<strong>HTML Expression</strong> attribute. &nbsp;Continuing with our example, you would enter the following in the <strong>HTML Expression</strong>, where <strong>#COLUMN_NAME#</strong> is the name of the corresponding column.</p>'||chr(10)||
+''||chr(10)||
+'<p>&nbsp; &lt;b&gt;#COLUMN_NAME#&lt;/b&gt;</p>'||chr(10)||
 '';
 
 sv_sec_import.attribute(
@@ -116775,10 +116774,6 @@ sv_sec_import.attribute(
   p_seq                      => 99,
 
   p_collection_name          => 'SV_XSS_IG_RPT_COLS',
-
-  p_display_page_id          => 567,
-
-  p_summary_page_id          => 500,
 
   p_rule_plsql               => a,
   p_info                     => b,
