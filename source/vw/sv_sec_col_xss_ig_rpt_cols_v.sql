@@ -33,6 +33,7 @@ SELECT
   c003               column_alias,
   c004               column_label,
   c005               display_as,
+  cd.val             val,
   exception          exception,
   notation           notation,
   exception_url,
