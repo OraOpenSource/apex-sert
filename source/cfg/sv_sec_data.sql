@@ -116775,6 +116775,10 @@ sv_sec_import.attribute(
 
   p_collection_name          => 'SV_XSS_IG_RPT_COLS',
 
+  p_display_page_id          => 567,
+
+  p_summary_page_id          => 500,
+
   p_rule_plsql               => a,
   p_info                     => b,
   p_fix                      => c
