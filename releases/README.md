@@ -1,5 +1,5 @@
 # Releases
-###APEX 5.1
+### APEX 5.1
 APEX-SERT is currently in beta for APEX 5.1 and can be downloaded from here.  
 
 ### APEX 5.0
