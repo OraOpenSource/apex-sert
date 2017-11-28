@@ -3134,7 +3134,7 @@ BEGIN
 sv_sec_import.attribute_value(
   p_attribute_key         => 'SV_SET_COMPATIBILITY_MODE',
   p_attribute_set_key     => 'DEFAULT',
-  p_value                 => '5.0',
+  p_value                 => '5.1',
   p_result                => 'PASS',
   p_active_flag           => 'Y'
   );
@@ -100283,6 +100283,32 @@ a:=a||'tion_pages p'||chr(10)||
 '    pi.page_id = p.page_id'||chr(10)||
 '    AND pi.application_id = p.application_id'||chr(10)||
 '    AND pi.application_id = #APPLICATION_ID#'||chr(10)||
+'  UNION ALL'||chr(10)||
+'  SELECT '||chr(10)||
+'    ig.application_id,'||chr(10)||
+'    ig.page_id,'||chr(10)||
+'    ig.region_id,'||chr(10)||
+'    ig.page_name,'||chr(10)||
+'    ig.region_name, '||chr(10)||
+'    ''Interactive Grid'' source_type,'||chr(10)||
+'    ig.enable_download enable_csv_output,'||chr(10)||
+'    4500 link_page,'||chr(10)||
+'    NULL link_req,'||chr(10)||
+'    ''1,4150'' link_cc,'||chr(10)||
+'    ''';
+
+a:=a||'FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P1_FLOW,F4000_P4150_GOTO_PAGE,F4000_P1_PAGE:'' || ig.application_id || '','' || ig.page_id || '','' || ig.application_id || '','' || ig.page_id || '','' || ig.page_id link,'||chr(10)||
+'    ig.last_updated_by last_updated_by,'||chr(10)||
+'    ig.last_updated_on last_updated_on,'||chr(10)||
+'    pr.component_signature'||chr(10)||
+'  FROM '||chr(10)||
+'    apex_appl_page_igs ig,'||chr(10)||
+'    apex_application_page_regions pr'||chr(10)||
+'  WHERE'||chr(10)||
+'    ig.region_id';
+
+a:=a||' = pr.region_id'||chr(10)||
+'    AND ig.application_id = #APPLICATION_ID#'||chr(10)||
 '  )';
 
 sv_sec_import.score_collection(
@@ -101338,14 +101364,14 @@ a:=a||'RY'', ''STRUCTURED_QUERY'')'||chr(10)||
 '    pi.region_id,'||chr(10)||
 '    pi.region_name, '||chr(10)||
 '    pi.show_download export_to_csv, '||chr(10)||
-'    ''Interactive'' report_type,'||chr(10)||
+'    ''Interactive Report'' report_type,'||chr(10)||
 '    TO_NUMBER(NVL(pi.max_row_count,10000)) max_row_count,'||chr(10)||
 '    601 link_page,'||chr(10)||
 '    NULL link_req,'||chr(10)||
 '    ''RP,4651,960,420,601,4050,27,196,121,232,695,754,832,287,2000'' link_cc,'||chr(10)||
-'    ''FB_FLOW_ID,FB';
+'    ''FB_FLO';
 
-a:=a||'_FLOW_PAGE_ID,F4000_P4651_ID,P601_REGION_ID:'' || pi.application_id || '','' '||chr(10)||
+a:=a||'W_ID,FB_FLOW_PAGE_ID,F4000_P4651_ID,P601_REGION_ID:'' || pi.application_id || '','' '||chr(10)||
 '      || pi.page_id || '','' || pi.interactive_report_id || '','' || pi.region_id link,'||chr(10)||
 '    pi.updated_by last_updated_by,'||chr(10)||
 '    pi.updated_on updated_on,'||chr(10)||
@@ -101355,10 +101381,37 @@ a:=a||'_FLOW_PAGE_ID,F4000_P4651_ID,P601_REGION_ID:'' || pi.application_id || ''
 '    apex_application_pages p'||chr(10)||
 '  WHERE'||chr(10)||
 '    pi.page_id = p.page_id'||chr(10)||
-'    AND pi.application_id = p.application_id';
+'    AND pi.application_id = p.applica';
 
-a:=a||''||chr(10)||
+a:=a||'tion_id'||chr(10)||
 '    AND pi.application_id = #APPLICATION_ID#'||chr(10)||
+'  UNION ALL'||chr(10)||
+'  SELECT '||chr(10)||
+'    ig.application_id,'||chr(10)||
+'    ig.page_id,'||chr(10)||
+'    ig.page_name,'||chr(10)||
+'    ig.region_id,'||chr(10)||
+'    ig.region_name, '||chr(10)||
+'    ig.enable_download export_to_csv, '||chr(10)||
+'    ''Interactive Grid'' report_type,'||chr(10)||
+'    TO_NUMBER(NVL(ig.max_row_count,10000)) max_row_count,'||chr(10)||
+'    4500 link_page,'||chr(10)||
+'    NULL link_req,'||chr(10)||
+'    ''1,4150'' link_cc,'||chr(10)||
+'    ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F40';
+
+a:=a||'00_P1_FLOW,F4000_P4150_GOTO_PAGE,F4000_P1_PAGE:'' || ig.application_id || '','' || ig.page_id || '','' || ig.application_id || '','' || ig.page_id || '','' || ig.page_id link,'||chr(10)||
+'    ig.last_updated_by last_updated_by,'||chr(10)||
+'    ig.last_updated_on updated_on,'||chr(10)||
+'    pr.component_signature'||chr(10)||
+'  FROM '||chr(10)||
+'    apex_appl_page_igs ig,'||chr(10)||
+'    apex_application_page_regions pr'||chr(10)||
+'  WHERE'||chr(10)||
+'    ig.region_id = pr.region_id'||chr(10)||
+'    AND ig.applicat';
+
+a:=a||'ion_id = #APPLICATION_ID#'||chr(10)||
 '  )';
 
 sv_sec_import.score_collection(
@@ -115889,6 +115942,218 @@ end;
 
 -->>END
 
+PROMPT == ..COLLECTION: SV_SQLI_IG_EXEC
+DECLARE
+  a CLOB;
+BEGIN 
+
+a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
+'  ('||chr(10)||
+'  collection_name,'||chr(10)||
+'  collection_id,'||chr(10)||
+'  category_key,'||chr(10)||
+'  application_id,'||chr(10)||
+'  attribute_id,'||chr(10)||
+'  page_id,'||chr(10)||
+'  component_id,'||chr(10)||
+'  last_updated_by,'||chr(10)||
+'  last_updated_on,'||chr(10)||
+'  component_signature,'||chr(10)||
+'  edit,'||chr(10)||
+'  link_page,'||chr(10)||
+'  link_req,'||chr(10)||
+'  link_cc,'||chr(10)||
+'  link_desc,'||chr(10)||
+'  link,'||chr(10)||
+'  c001,'||chr(10)||
+'  c002,'||chr(10)||
+'  c003,'||chr(10)||
+'  result,'||chr(10)||
+'  val,'||chr(10)||
+'  checksum,'||chr(10)||
+'  component_name'||chr(10)||
+'  )'||chr(10)||
+'SELECT'||chr(10)||
+'  ''#COLLECTION_NAME#'','||chr(10)||
+'  #COLLECTION_ID#,';
+
+a:=a||''||chr(10)||
+'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
+'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_IG_EXEC'')) '||chr(10)||
+'    category_key,'||chr(10)||
+'  application_id,'||chr(10)||
+'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_IG_EXEC'') '||chr(10)||
+'    attribute_id,'||chr(10)||
+'  page_id,'||chr(10)||
+'  region_id,'||chr(10)||
+'  last_updated_by,'||chr(10)||
+'  last_updated_on,'||chr(10)||
+'  component_signature,'||chr(10)||
+'  ''Edit'' edit,'||chr(10)||
+'';
+
+a:=a||'  link_page,'||chr(10)||
+'  link_req,'||chr(10)||
+'  link_cc,'||chr(10)||
+'  link_desc,'||chr(10)||
+'  link,'||chr(10)||
+'  page_name,'||chr(10)||
+'  region_name,'||chr(10)||
+'  region_name_esc,'||chr(10)||
+'  result,'||chr(10)||
+'  val,'||chr(10)||
+'  checksum,'||chr(10)||
+'  region_name'||chr(10)||
+'FROM'||chr(10)||
+'('||chr(10)||
+'SELECT'||chr(10)||
+'  apr.application_id,'||chr(10)||
+'  ''4500'' link_page,'||chr(10)||
+'  NULL link_req,'||chr(10)||
+'  ''1,4150'' link_cc,'||chr(10)||
+'  ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P1_FLOW,F4000_P4150_GOTO_PAGE,F4000_P1_PAGE:'' || apr.application_id || '','' || apr.page_id || '','' || apr.application_id || '',';
+
+a:=a||''' || apr.page_id || '','' || apr.page_id link,'||chr(10)||
+'  ''SQL Injection - Interactive Grids'' link_desc,'||chr(10)||
+'  apr.page_id,'||chr(10)||
+'  apr.page_name,'||chr(10)||
+'  apr.region_name,'||chr(10)||
+'  htf.escape_sc(apr.region_name) region_name_esc,'||chr(10)||
+'  apr.region_id,'||chr(10)||
+'  apr.last_updated_by,'||chr(10)||
+'  apr.last_updated_on,'||chr(10)||
+'  apr.component_signature,'||chr(10)||
+'  sv_sec_rules.check_exe_imm(apr.region_source) result,'||chr(10)||
+'  apr.region_source val,'||chr(10)||
+'  sv_sec_util.get_checksum(apr.reg';
+
+a:=a||'ion_source) checksum  '||chr(10)||
+'FROM'||chr(10)||
+'  apex_application_page_regions apr,'||chr(10)||
+'  apex_appl_page_igs ig'||chr(10)||
+'WHERE'||chr(10)||
+'  apr.region_id = ig.region_id'||chr(10)||
+'  AND apr.application_id = #APPLICATION_ID#'||chr(10)||
+')';
+
+sv_sec_import.score_collection(
+  p_collection_name       => 'SV_SQLI_IG_EXEC',
+  p_collection_key        => 'SV_SQLI_IG_EXEC',
+  p_category_key          => 'SV_SQLI_IG',
+  p_internal_flag         => 'Y',
+  p_apex_version          => '5.1',
+  p_collection_sql        => a
+  );
+end;
+/
+
+-->>END
+PROMPT == ..COLLECTION: SV_SQLI_IG_ITEM
+DECLARE
+  a CLOB;
+BEGIN 
+
+a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
+'  ('||chr(10)||
+'  collection_name,'||chr(10)||
+'  collection_id,'||chr(10)||
+'  category_key,'||chr(10)||
+'  application_id,'||chr(10)||
+'  attribute_id,'||chr(10)||
+'  page_id,'||chr(10)||
+'  component_id,'||chr(10)||
+'  last_updated_by,'||chr(10)||
+'  last_updated_on,'||chr(10)||
+'  component_signature,'||chr(10)||
+'  edit,'||chr(10)||
+'  link_page,'||chr(10)||
+'  link_req,'||chr(10)||
+'  link_cc,'||chr(10)||
+'  link_desc,'||chr(10)||
+'  link,'||chr(10)||
+'  c001,'||chr(10)||
+'  c002,'||chr(10)||
+'  c003,'||chr(10)||
+'  result,'||chr(10)||
+'  val,'||chr(10)||
+'  checksum,'||chr(10)||
+'  component_name'||chr(10)||
+'  )'||chr(10)||
+'SELECT'||chr(10)||
+'  ''#COLLECTION_NAME#'','||chr(10)||
+'  #COLLECTION_ID#,';
+
+a:=a||''||chr(10)||
+'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
+'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_IG_ITEM'')) '||chr(10)||
+'    category_key,'||chr(10)||
+'  application_id,'||chr(10)||
+'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_IG_ITEM'') '||chr(10)||
+'    attribute_id,'||chr(10)||
+'  page_id,'||chr(10)||
+'  region_id,'||chr(10)||
+'  last_updated_by,'||chr(10)||
+'  last_updated_on,'||chr(10)||
+'  component_signature,'||chr(10)||
+'  ''Edit'' edit,'||chr(10)||
+'';
+
+a:=a||'  link_page,'||chr(10)||
+'  link_req,'||chr(10)||
+'  link_cc,'||chr(10)||
+'  link_desc,'||chr(10)||
+'  link,'||chr(10)||
+'  page_name,'||chr(10)||
+'  region_name,'||chr(10)||
+'  region_name_esc,'||chr(10)||
+'  result,'||chr(10)||
+'  val,'||chr(10)||
+'  checksum,'||chr(10)||
+'  region_name'||chr(10)||
+'FROM'||chr(10)||
+'('||chr(10)||
+'SELECT'||chr(10)||
+'  apr.application_id,'||chr(10)||
+'  ''4500'' link_page,'||chr(10)||
+'  NULL link_req,'||chr(10)||
+'  ''1,4150'' link_cc,'||chr(10)||
+'  ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P1_FLOW,F4000_P4150_GOTO_PAGE,F4000_P1_PAGE:'' || apr.application_id || '','' || apr.page_id || '','' || apr.application_id || '',';
+
+a:=a||''' || apr.page_id || '','' || apr.page_id link,'||chr(10)||
+'  ''SQL Injection - Interactive Grids'' link_desc,'||chr(10)||
+'  apr.page_id,'||chr(10)||
+'  apr.page_name,'||chr(10)||
+'  apr.region_name,'||chr(10)||
+'  htf.escape_sc(apr.region_name) region_name_esc,'||chr(10)||
+'  apr.region_id,'||chr(10)||
+'  apr.last_updated_by,'||chr(10)||
+'  apr.last_updated_on,'||chr(10)||
+'  apr.component_signature,'||chr(10)||
+'  sv_sec_rules.check_item_syntax(apr.region_source) result,'||chr(10)||
+'  apr.region_source val,'||chr(10)||
+'  sv_sec_util.get_checksum(apr';
+
+a:=a||'.region_source) checksum  '||chr(10)||
+'FROM'||chr(10)||
+'  apex_application_page_regions apr,'||chr(10)||
+'  apex_appl_page_igs ig'||chr(10)||
+'WHERE'||chr(10)||
+'  apr.region_id = ig.region_id'||chr(10)||
+'  AND apr.application_id = #APPLICATION_ID#'||chr(10)||
+')';
+
+sv_sec_import.score_collection(
+  p_collection_name       => 'SV_SQLI_IG_ITEM',
+  p_collection_key        => 'SV_SQLI_IG_ITEM',
+  p_category_key          => 'SV_SQLI_IG',
+  p_internal_flag         => 'Y',
+  p_apex_version          => '5.1',
+  p_collection_sql        => a
+  );
+end;
+/
+
+-->>END
 PROMPT == ..COLLECTION: SV_SQLI_IG_DBMS
 DECLARE
   a CLOB;
@@ -115915,7 +116180,6 @@ a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
 '  c001,'||chr(10)||
 '  c002,'||chr(10)||
 '  c003,'||chr(10)||
-'  c004,'||chr(10)||
 '  result,'||chr(10)||
 '  val,'||chr(10)||
 '  checksum,'||chr(10)||
@@ -115923,24 +116187,24 @@ a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
 '  )'||chr(10)||
 'SELECT'||chr(10)||
 '  ''#COLLECTION_NAME#'','||chr(10)||
-'  #COLLECT';
+'  #COLLECTION_ID#,';
 
-a:=a||'ION_ID#,'||chr(10)||
+a:=a||''||chr(10)||
 '  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
-'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_RPT_DBMS'')) '||chr(10)||
+'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_IG_DBMS'')) '||chr(10)||
 '    category_key,'||chr(10)||
 '  application_id,'||chr(10)||
-'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_RPT_DBMS'') '||chr(10)||
+'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_SQLI_IG_DBMS'') '||chr(10)||
 '    attribute_id,'||chr(10)||
 '  page_id,'||chr(10)||
 '  region_id,'||chr(10)||
 '  last_updated_by,'||chr(10)||
 '  last_updated_on,'||chr(10)||
 '  component_signature,'||chr(10)||
-'  ''Ed';
+'  ''Edit'' edit,'||chr(10)||
+'';
 
-a:=a||'it'' edit,'||chr(10)||
-'  link_page,'||chr(10)||
+a:=a||'  link_page,'||chr(10)||
 '  link_req,'||chr(10)||
 '  link_cc,'||chr(10)||
 '  link_desc,'||chr(10)||
@@ -115948,7 +116212,6 @@ a:=a||'it'' edit,'||chr(10)||
 '  page_name,'||chr(10)||
 '  region_name,'||chr(10)||
 '  region_name_esc,'||chr(10)||
-'  report_type,'||chr(10)||
 '  result,'||chr(10)||
 '  val,'||chr(10)||
 '  checksum,'||chr(10)||
@@ -115957,66 +116220,31 @@ a:=a||'it'' edit,'||chr(10)||
 '('||chr(10)||
 'SELECT'||chr(10)||
 '  apr.application_id,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
+'  ''4500'' link_page,'||chr(10)||
 '  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' || apr.region_id || '','' '||chr(10)||
-'    || ap.application_id || '','' || ap.page_id link,'||chr(10)||
-'  ''SQ';
+'  ''1,4150'' link_cc,'||chr(10)||
+'  ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P1_FLOW,F4000_P4150_GOTO_PAGE,F4000_P1_PAGE:'' || apr.application_id || '','' || apr.page_id || '','' || apr.application_id || '',';
 
-a:=a||'L Injection - Interactive Reports'' link_desc,'||chr(10)||
-'  apr.page_id,'||chr(10)||
-'  ap.page_name,'||chr(10)||
-'  r.region_name,'||chr(10)||
-'  htf.escape_sc(r.region_name) region_name_esc,'||chr(10)||
-'  apr.region_id,'||chr(10)||
-'  ''Interactive'' report_type,'||chr(10)||
-'  r.last_updated_by,'||chr(10)||
-'  r.last_updated_on,'||chr(10)||
-'  r.component_signature,'||chr(10)||
-'  sv_sec_rules.check_dyn_sql(apr.sql_query) result,'||chr(10)||
-'  apr.sql_query val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.sql_query) checksum'||chr(10)||
-'  FROM'||chr(10)||
-'    apex_appli';
-
-a:=a||'cation_page_ir apr,'||chr(10)||
-'    apex_application_pages ap,'||chr(10)||
-'    apex_application_page_regions r'||chr(10)||
-'  WHERE'||chr(10)||
-'    apr.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.page_id = ap.page_id'||chr(10)||
-'    AND ap.application_id = #APPLICATION_ID#'||chr(10)||
-'    AND apr.region_id = r.region_id'||chr(10)||
-'UNION ALL'||chr(10)||
-'SELECT'||chr(10)||
-'  apr.application_id,'||chr(10)||
-'  ''4651'' link_page,'||chr(10)||
-'  NULL link_req,'||chr(10)||
-'  ''4651,960,420'' link_cc,'||chr(10)||
-'  ''F4000_P4651_ID,FB_FLOW_ID,FB_FLOW_PAGE_ID:'' ';
-
-a:=a||'|| apr.region_id || '','' '||chr(10)||
-'    || apr.application_id || '','' || apr.page_id link,'||chr(10)||
-'  ''SQL Injection - Standard Reports'' link_desc,'||chr(10)||
+a:=a||''' || apr.page_id || '','' || apr.page_id link,'||chr(10)||
+'  ''SQL Injection - Interactive Grids'' link_desc,'||chr(10)||
 '  apr.page_id,'||chr(10)||
 '  apr.page_name,'||chr(10)||
 '  apr.region_name,'||chr(10)||
 '  htf.escape_sc(apr.region_name) region_name_esc,'||chr(10)||
 '  apr.region_id,'||chr(10)||
-'  ''Standard'' report_type,'||chr(10)||
 '  apr.last_updated_by,'||chr(10)||
 '  apr.last_updated_on,'||chr(10)||
 '  apr.component_signature,'||chr(10)||
 '  sv_sec_rules.check_dyn_sql(apr.region_source) result,'||chr(10)||
-'';
+'  apr.region_source val,'||chr(10)||
+'  sv_sec_util.get_checksum(apr.reg';
 
-a:=a||'  apr.region_source val,'||chr(10)||
-'  sv_sec_util.get_checksum(apr.region_source) checksum'||chr(10)||
+a:=a||'ion_source) checksum  '||chr(10)||
 'FROM'||chr(10)||
-'  apex_application_page_regions apr'||chr(10)||
+'  apex_application_page_regions apr,'||chr(10)||
+'  apex_appl_page_igs ig'||chr(10)||
 'WHERE'||chr(10)||
-'  apr.source_type = ''Report'''||chr(10)||
+'  apr.region_id = ig.region_id'||chr(10)||
 '  AND apr.application_id = #APPLICATION_ID#'||chr(10)||
 ')';
 
@@ -116024,7 +116252,7 @@ sv_sec_import.score_collection(
   p_collection_name       => 'SV_SQLI_IG_DBMS',
   p_collection_key        => 'SV_SQLI_IG_DBMS',
   p_category_key          => 'SV_SQLI_IG',
-  p_internal_flag         => 'N',
+  p_internal_flag         => 'Y',
   p_apex_version          => '5.1',
   p_collection_sql        => a
   );
@@ -116079,7 +116307,7 @@ sv_sec_import.attribute(
   p_rule_type                => 'FUNCTION',
   p_table_name               => '',
   p_column_name              => '',
-  p_view_name                => 'SV_SEC_COL_SQLI_RPT_DBMS_V',
+  p_view_name                => 'SV_SEC_COL_SQLI_IG_DBMS_V',
   p_component_table          => '',
   p_component_column_id      => '',
   p_component_column_display => '',
@@ -116135,7 +116363,7 @@ sv_sec_import.attribute(
   p_rule_type                => 'FUNCTION',
   p_table_name               => '',
   p_column_name              => '',
-  p_view_name                => 'SV_SEC_COL_SQLI_RPT_EXEC_V',
+  p_view_name                => 'SV_SEC_COL_SQLI_IG_EXEC_V',
   p_component_table          => '',
   p_component_column_id      => '',
   p_component_column_display => '',
@@ -116149,7 +116377,7 @@ sv_sec_import.attribute(
   p_help_page                => '',
   p_seq                      => 99,
 
-  p_collection_name          => 'SV_SQLI_IG_DBMS',
+  p_collection_name          => 'SV_SQLI_IG_EXEC',
 
   p_display_page_id          => 703,
 
@@ -116300,7 +116528,7 @@ sv_sec_import.attribute(
   p_rule_type                => 'FUNCTION',
   p_table_name               => '',
   p_column_name              => '',
-  p_view_name                => 'SV_SEC_COL_SQLI_RPT_ITEM_V',
+  p_view_name                => 'SV_SEC_COL_SQLI_IG_ITEM_V',
   p_component_table          => '',
   p_component_column_id      => '',
   p_component_column_display => '',
@@ -116314,7 +116542,7 @@ sv_sec_import.attribute(
   p_help_page                => '',
   p_seq                      => 99,
 
-  p_collection_name          => 'SV_SQLI_IG_DBMS',
+  p_collection_name          => 'SV_SQLI_IG_ITEM',
 
   p_display_page_id          => 704,
 
@@ -116323,6 +116551,266 @@ sv_sec_import.attribute(
   p_rule_plsql               => a,
   p_info                     => b,
   p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == CATEGORY: XSS: Interactive Grid Columns
+BEGIN
+
+sv_sec_import.category(
+  p_category_name         => 'XSS: Interactive Grid Columns',
+  p_category_short_name   => 'XSS: Interactive Grid Columns',
+  p_category_key          => 'SV_XSS_IG_RPT_COLS',
+  p_classification_key    => 'CROSS_SITE_SCRIPTING',
+  p_category_link         => '',
+  p_display_page          => 'SV_XSS_IG_RPT_COLS',
+  p_rpt_attribute_key     => '',
+  p_internal_flag         => 'Y'
+  );
+end;
+/
+
+-->>END
+
+PROMPT == ..COLLECTION: SV_XSS_IG_RPT_COLS
+DECLARE
+  a CLOB;
+BEGIN 
+
+a:=a||'INSERT INTO sv_sec_collection_data'||chr(10)||
+'  ('||chr(10)||
+'  collection_name,'||chr(10)||
+'  collection_id,'||chr(10)||
+'  category_key,'||chr(10)||
+'  application_id,'||chr(10)||
+'  attribute_id,'||chr(10)||
+'  page_id,'||chr(10)||
+'  component_id,'||chr(10)||
+'  column_id,'||chr(10)||
+'  last_updated_by,'||chr(10)||
+'  last_updated_on,'||chr(10)||
+'  component_signature,'||chr(10)||
+'  edit,'||chr(10)||
+'  link_page,'||chr(10)||
+'  link_req,'||chr(10)||
+'  link_cc,'||chr(10)||
+'  link,'||chr(10)||
+'  link_desc,'||chr(10)||
+'  c001,'||chr(10)||
+'  c002,'||chr(10)||
+'  c003,'||chr(10)||
+'  c004,'||chr(10)||
+'  c005,'||chr(10)||
+'  result,'||chr(10)||
+'  val,'||chr(10)||
+'  checksum,'||chr(10)||
+'  component_name,'||chr(10)||
+'  column_name'||chr(10)||
+'  )'||chr(10)||
+'SELE';
+
+a:=a||'CT'||chr(10)||
+'  ''#COLLECTION_NAME#'','||chr(10)||
+'  #COLLECTION_ID#,'||chr(10)||
+'  (SELECT category_key FROM sv_sec_categories WHERE category_id = '||chr(10)||
+'    (SELECT category_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_IG_RPT_COLS'')) '||chr(10)||
+'    category_key,'||chr(10)||
+'  application_id,'||chr(10)||
+'  (SELECT attribute_id FROM sv_sec_attributes WHERE attribute_key = ''SV_XSS_IG_RPT_COLS'') '||chr(10)||
+'    attribute_id,'||chr(10)||
+'  page_id,'||chr(10)||
+'  region_id,'||chr(10)||
+'  column_id,'||chr(10)||
+'  last_update';
+
+a:=a||'d_by,'||chr(10)||
+'  last_updated_on,'||chr(10)||
+'  component_signature,'||chr(10)||
+'  ''Edit'' edit,'||chr(10)||
+'  link_page,'||chr(10)||
+'  NULL link_req,'||chr(10)||
+'  link_cc,'||chr(10)||
+'  link,  '||chr(10)||
+'  ''XSS - Interactive Grid Columns'' link_desc,'||chr(10)||
+'  page_name,'||chr(10)||
+'  region_name,'||chr(10)||
+'  column_alias,'||chr(10)||
+'  column_label,'||chr(10)||
+'  INITCAP(REPLACE(display_as, ''_'', '' '')) display_as,'||chr(10)||
+'  sv_sec.get_result '||chr(10)||
+'    ('||chr(10)||
+'    ''SV_XSS_IG_RPT_COLS'','||chr(10)||
+'    #ATTRIBUTE_SET_ID#,'||chr(10)||
+'    escape_on_http_output,'||chr(10)||
+'    NULL,'||chr(10)||
+'    ''N'','||chr(10)||
+'    ';
+
+a:=a||'''Y'','||chr(10)||
+'    NULL'||chr(10)||
+'    ) result,'||chr(10)||
+'  escape_on_http_output val,'||chr(10)||
+'  sv_sec_util.get_checksum(escape_on_http_output) checksum,'||chr(10)||
+'  region_name,'||chr(10)||
+'  column_alias'||chr(10)||
+'FROM'||chr(10)||
+'  ('||chr(10)||
+'  SELECT'||chr(10)||
+'    c.column_id,'||chr(10)||
+'    c.name column_alias,'||chr(10)||
+'    c.heading column_label,'||chr(10)||
+'    c.item_type display_as,'||chr(10)||
+'    NVL(c.escape_on_http_output, ''Yes'') escape_on_http_output,'||chr(10)||
+'    c.page_id,'||chr(10)||
+'    p.page_name,'||chr(10)||
+'    c.region_id,'||chr(10)||
+'    r.region_name,'||chr(10)||
+'    c.';
+
+a:=a||'application_id,'||chr(10)||
+'    c.last_updated_by last_updated_by,'||chr(10)||
+'    c.last_updated_on last_updated_on,'||chr(10)||
+'    r.component_signature || '','' || c.name component_signature,'||chr(10)||
+'    ''4500'' link_page,'||chr(10)||
+'    ''1,4150'' link_cc,'||chr(10)||
+'    ''FB_FLOW_ID,FB_FLOW_PAGE_ID,F4000_P1_FLOW,F4000_P4150_GOTO_PAGE,F4000_P1_PAGE:'' || c.application_id || '','' || c.page_id || '','' || c.application_id || '','' || c.page_id || '','' || c.page_id link   ';
+
+a:=a||' '||chr(10)||
+'  FROM'||chr(10)||
+'    apex_appl_page_ig_columns c,'||chr(10)||
+'    apex_application_pages p,'||chr(10)||
+'    apex_application_page_regions r'||chr(10)||
+'  WHERE'||chr(10)||
+'    c.page_id = p.page_id'||chr(10)||
+'    AND c.region_id = r.region_id'||chr(10)||
+'    AND p.application_id = c.application_id'||chr(10)||
+'    AND r.application_id = c.application_id'||chr(10)||
+'    AND c.application_id = #APPLICATION_ID#'||chr(10)||
+')';
+
+sv_sec_import.score_collection(
+  p_collection_name       => 'SV_XSS_IG_RPT_COLS',
+  p_collection_key        => 'SV_XSS_IG_RPT_COLS',
+  p_category_key          => 'SV_XSS_IG_RPT_COLS',
+  p_internal_flag         => 'Y',
+  p_apex_version          => '5.1',
+  p_collection_sql        => a
+  );
+end;
+/
+
+-->>END
+PROMPT == ..ATTRIBUTE: Interactive Grid Columns
+DECLARE
+  a CLOB;
+  b CLOB;
+  c CLOB;
+  d CLOB;
+  e CLOB;
+BEGIN
+
+a := null;
+b:=b||'<p>Report columns with a Display Type of Standard Report Column are susceptible to XSS as the do not escape any of special characters. This means that any JavaScript that might be entered into a form, and which is later displayed using a Standard Report Column, will be executed potentially without the knowledge of the user or system owner.</p>'||chr(10)||
+''||chr(10)||
+'<p>You should only use Standard Report Columns when y';
+
+b:=b||'ou can guarantee that the data being displayed within the report is not being entered by end user. &nbsp;</p>'||chr(10)||
+'';
+
+c:=c||'<p>To protect an <strong>Interactive Report Column</strong> from potential XSS attacks:</p>'||chr(10)||
+''||chr(10)||
+'<p>&nbsp;1. Navigate to the page containing the <strong>Interactive Report</strong>.<br />'||chr(10)||
+'&nbsp;2. Edit the Report attributes by right-clicking on the report name in the tree and selecting <strong>Edit Report Attributes</strong>.<br />'||chr(10)||
+'&nbsp;3. In the <u>Column Attributes</u> region set the <strong>Displa';
+
+c:=c||'y Text As </strong>select list to the appropriate display option that <em><strong>Escapes Special Characters</strong></em>.<br />'||chr(10)||
+'&nbsp;4. Click <strong>Apply Changes</strong>.</p>'||chr(10)||
+''||chr(10)||
+'<p>You may also drill down to the column in question and in the <u>Column Definition</u> region, set the <strong>Display Type</strong> as mentioned above.</p>'||chr(10)||
+''||chr(10)||
+'<p>One thing to note: if you have any HTML embedded in you';
+
+c:=c||'r SQL, you will need to move that to the <strong>HTML Expression</strong> attribute, which can be found in the <u>Column Formatting</u> region. &nbsp;All HTML embedded in SQL will no longer render as HTML, but will rather be escaped.</p>'||chr(10)||
+''||chr(10)||
+'<p>This, a column that used to look like this:</p>'||chr(10)||
+''||chr(10)||
+'<p><strong>&nbsp; Syracuse, NY</strong></p>'||chr(10)||
+''||chr(10)||
+'<p>Will look like this:</p>'||chr(10)||
+''||chr(10)||
+'<p>&nbsp; &lt;b&gt;Syracuse, NY&lt;';
+
+c:=c||'/b&gt;</p>'||chr(10)||
+''||chr(10)||
+'<p>Once you change the Display As attribute to Display as Text, you should remove all HTML from the SQL and move it to the&nbsp;<strong>HTML Expression</strong> attribute. &nbsp;Continuing with our example, you would enter the following in the <strong>HTML Expression</strong>, where <strong>#COLUMN_NAME#</strong> is the name of the corresponding column.</p>'||chr(10)||
+''||chr(10)||
+'<p>&nbsp; &lt;b&gt;#COLUMN_';
+
+c:=c||'NAME#&lt;/b&gt;</p>'||chr(10)||
+'';
+
+sv_sec_import.attribute(
+  p_category_key             => 'SV_XSS_IG_RPT_COLS',
+  p_attribute_name           => 'Interactive Grid Columns',
+  p_attribute_key            => 'SV_XSS_IG_RPT_COLS',
+  p_active_flag              => 'Y',
+  p_rule_source              => 'COLLECTION',
+  p_rule_type                => 'COMPARISON',
+  p_table_name               => '',
+  p_column_name              => '',
+  p_view_name                => 'SV_SEC_COL_XSS_IG_RPT_COLS_V',
+  p_component_table          => 'APEX_APPLICATION_PAGE_REGIONS',
+  p_component_column_id      => 'REGION_ID',
+  p_component_column_display => 'REGION_NAME',
+  p_column_table             => 'APEX_APPL_PAGE_IG_COLUMNS',
+  p_column_column_id         => 'COLUMN_ID',
+  p_column_column_display    => 'COLUMN_ALIAS',
+  p_when_not_found           => 'PASS',
+  p_internal_flag            => 'Y',
+  p_impact                   => 'COLUMN',
+  p_component_sig_key        => 'REGION',
+  p_help_page                => '',
+  p_seq                      => 99,
+
+  p_collection_name          => 'SV_XSS_IG_RPT_COLS',
+
+  p_display_page_id          => 567,
+
+  p_summary_page_id          => 500,
+
+  p_rule_plsql               => a,
+  p_info                     => b,
+  p_fix                      => c
+  );
+END;
+/
+
+-->>END
+PROMPT == ....ATTRIBUTE VALUE: Interactive Grid Columns
+BEGIN
+
+sv_sec_import.attribute_value(
+  p_attribute_key         => 'SV_XSS_IG_RPT_COLS',
+  p_attribute_set_key     => 'DEFAULT',
+  p_value                 => 'No',
+  p_result                => 'FAIL',
+  p_active_flag           => 'Y'
+  );
+END;
+/
+
+-->>END
+PROMPT == ....ATTRIBUTE VALUE: Interactive Grid Columns
+BEGIN
+
+sv_sec_import.attribute_value(
+  p_attribute_key         => 'SV_XSS_IG_RPT_COLS',
+  p_attribute_set_key     => 'DEFAULT',
+  p_value                 => 'Yes',
+  p_result                => 'PASS',
+  p_active_flag           => 'Y'
   );
 END;
 /
@@ -118279,6 +118767,42 @@ BEGIN
 sv_sec_import.attr_set_mapping(
   p_attribute_set_key     => 'DEFAULT',
   p_attribute_key         => 'SV_SQLI_IG_DBMS',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_IG_EXEC
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_IG_EXEC',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_SQLI_IG_ITEM
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_SQLI_IG_ITEM',
+  p_time_to_fix           => 1,
+  p_severity_level        => 1,
+  p_active_flag           => 'Y'
+  );
+end;
+/
+
+PROMPT == ATTRIBUTE SET MAPPING: DEFAULT - SV_XSS_IG_RPT_COLS
+BEGIN 
+sv_sec_import.attr_set_mapping(
+  p_attribute_set_key     => 'DEFAULT',
+  p_attribute_key         => 'SV_XSS_IG_RPT_COLS',
   p_time_to_fix           => 1,
   p_severity_level        => 1,
   p_active_flag           => 'Y'
