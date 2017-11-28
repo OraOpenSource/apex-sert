@@ -160,6 +160,33 @@ CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_sqli_rpt_dbms_v FOR SV_SERT_
 /
 
 
+-- Interactive Grids
+PROMPT == SV_SEC_COL_SQLI_IG_V
+/
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_sqli_ig_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_sqli_ig_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_sqli_ig_v
+/
+PROMPT == SV_SEC_COL_SQLI_IG_ITEM_V
+/
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_sqli_ig_item_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_sqli_ig_item_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_sqli_ig_item_v
+/
+PROMPT == SV_SEC_COL_SQLI_IG_EXEC_V
+/
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_sqli_ig_exec_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_sqli_ig_exec_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_sqli_ig_exec_v
+/
+PROMPT == SV_SEC_COL_SQLI_IG_DBMS_V
+/
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_sqli_ig_dbms_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_sqli_ig_dbms_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_sqli_ig_dbms_v
+/
+
+
 -- Tabular Forms
 PROMPT == SV_SEC_COL_SQLI_TFM_V
 /
@@ -742,6 +769,12 @@ PROMPT == SV_SEC_COL_XSS_IR_RPT_COLS_V
 GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_xss_ir_rpt_cols_v TO ^parse_as_user
 /
 CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_xss_ir_rpt_cols_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_xss_ir_rpt_cols_v
+/
+
+PROMPT == SV_SEC_COL_XSS_IG_RPT_COLS_V
+GRANT SELECT ON SV_SERT_@SV_VERSION@.sv_sec_col_xss_ig_rpt_cols_v TO ^parse_as_user
+/
+CREATE OR REPLACE SYNONYM ^parse_as_user.sv_sec_col_xss_ig_rpt_cols_v FOR SV_SERT_@SV_VERSION@.sv_sec_col_xss_ig_rpt_cols_v
 /
 
 PROMPT == SV_SEC_COL_XSS_IR_LINK_V

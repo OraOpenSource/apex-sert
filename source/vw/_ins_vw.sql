@@ -106,6 +106,18 @@ PROMPT == SV_SEC_COL_SQLI_FLS_ITEM_V
 PROMPT == SV_SEC_COL_SQLI_FLS_V
 @vw/sv_sec_col_sqli_fls_v.sql
 
+PROMPT == SV_SEC_COL_SQLI_IG_DBMS_V
+@vw/sv_sec_col_sqli_ig_dbms_v.sql
+
+PROMPT == SV_SEC_COL_SQLI_IG_EXEC_V
+@vw/sv_sec_col_sqli_ig_exec_v.sql
+
+PROMPT == SV_SEC_COL_SQLI_IG_ITEM_V
+@vw/sv_sec_col_sqli_ig_item_v.sql
+
+PROMPT == SV_SEC_COL_SQLI_IG_V
+@vw/sv_sec_col_sqli_ig_v.sql
+
 PROMPT == SV_SEC_COL_SQLI_LOV_DBMS_V
 @vw/sv_sec_col_sqli_lov_dbms_v.sql
 
@@ -330,6 +342,9 @@ PROMPT == SV_SEC_COL_XSS_STD_RPT_COLS_V
 
 PROMPT == SV_SEC_COL_XSS_IR_RPT_COLS_V
 @vw/sv_sec_col_xss_ir_rpt_cols_v.sql
+
+PROMPT == SV_SEC_COL_XSS_IG_RPT_COLS_V
+@vw/sv_sec_col_xss_ig_rpt_cols_v.sql
 
 PROMPT == SV_SEC_COL_XSS_IR_LINK_V
 @vw/sv_sec_col_xss_ir_link_v.sql
