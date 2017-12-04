@@ -1,14 +1,55 @@
-CREATE OR REPLACE PACKAGE BODY pl_fpdf AS
-
+CREATE OR REPLACE PACKAGE BODY pl_fpdf
+AS
 /*******************************************************************************
 * Logiciel : PL_FPDF                                                           *
-* Version :  0.9.2                                                             *
-*/
+* Version :  0.9.4                                                             *
+* Date :     13/06/2006                                                        *
+* Auteur :   Pierre-Gilles Levallois                                           *
+* Licence :  GPL                                                               *
+*                                                                              *
+********************************************************************************
+* Cette librairie PL/SQL est un portage de la version 1.53 de FPDF, c�l�bre    *
+* classe PHP d�velopp�e par Olivier PLATHEY (http://www.fpdf.org/)             *
+********************************************************************************
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
 
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-gb_mode_debug boolean := true;
- 
--- Privates types
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+********************************************************************************/
+
+/*******************************************************************************
+   TODO :
+    - Known bugs :
+
+    CHANGELOG : 
+    0.9.4 -> 0.9.5 :
+        - Merged several bug fixes and enhancements from various contributors.
+    0.9.3 -> 0.9.4 :
+        - Fixed printing links on pages, both URL and internal links now work.
+        - Added the ability to put more than one link on a page.
+        - Rob Duke (Columbia Forest Products).
+    0.9.2 -> 0.9.3 : 
+        - Added Sample on setHeaderProc and setFooterProc procedures.
+        - Added parameter implementation to thes procedures.
+        - Modify Header and footer procedure behaviour to get parameter values
+        - declared subtype 'word' ans type 'tv4000a' in the specs.
+        
+    0.9.1 -> 0.9.2 : 
+        - Added procedure helloword Example.
+        - Added procedure testImg Example.
+
+*******************************************************************************/
+
+-- Privates types 
 subtype flag is boolean;
 subtype car is varchar2(1);
 subtype phrase is varchar2(255);
@@ -17,15 +58,17 @@ subtype bigtext is varchar2(32767);
 subtype margin is number;
 
 -- type tv1 is table of varchar2(1) index by binary_integer;
-type tbool 	is table of boolean index by binary_integer;
-type tn 		is table of number index by binary_integer;
+type tbool is table of boolean index by binary_integer;
+type tn is table of number index by binary_integer;
 type tv4000 is table of varchar2(4000) index by binary_integer;
-type tvclob 	is table of clob  index by binary_integer;
+type tv32k is table of varchar2(32767) index by binary_integer;
+
+type tclob is table of clob index by binary_integer;
 
 type charSet is table of pls_integer index by car;
 
-type recFont is record ( i    word,
-	 		 		   	 n pls_integer,
+type recFont is record ( i    word, 
+	 		 		   	 n pls_integer, 
 	 		 		   	 type word,
 						 name word,
 						 dsc  tv4000,
@@ -44,42 +87,47 @@ type recImage is record ( n number,  	 	  	 		-- indice d'insertion dans le docu
 	 		  	 		  i number,  	 	 			-- ?
 	 		  	 		  w number,  		 			-- width
 	 		  	 		  h number,  		 			-- height
-						  	cs txt,				    -- colorspace
-						  	bpc txt,				 	-- Bit per color
+						  cs txt,				    -- colorspace
+						  bpc txt,				 	-- Bit per color
 	 		  	 		  f txt,  	 			 	-- File Format
-						  	parms txt,			 	-- pdf parameter for this image
-						  	pal txt,				 	-- colors palette informations
-						  	trns tn,			 	 	-- transparency
-						  	data blob	 			 	-- Data
+						  parms txt,			 	-- pdf parameter for this image
+						  pal txt,				 	-- colors palette informations 
+						  trns tn,			 	 	-- transparency 
+						  data blob	 			 	-- Data
  );
 
 type imagesArray is table of recImage index by txt;
 
-type recFormat is record ( largeur number, hauteur number);
+type recFormat is record ( largeur number, 
+	 		 		       hauteur number);
+						 
+type rec2chp is record ( zero txt, 
+	 		 		   	 un txt); 
 
-type rec2chp is record ( zero txt, un txt);
-
-type rec5 is record ( zero txt,
-                      un txt,
-                      deux txt,
-                      trois txt,
-                      quatre txt);
-
+type rec5 is record ( page number,
+            zero txt, 
+	 		 		  un txt,
+					  deux txt,
+					  trois txt,
+					  quatre txt);
+					  
 type LinksArray is table of rec5;
 
 type Array2dim is table of rec2chp;
 
 type ArrayCharWidths is table of charSet index by word;
 
--- Private properties
+-- Private properties 
  page number;               -- current page number
  n number;                  -- current object number
  offsets tv4000;            -- array of object offsets
- pdfDoc clob;         	    -- buffer holding in-memory final PDF document.
+ --pdfDoc tv32k;             -- buffer holding in-memory final PDF document. 									   
+ pdfDoc tclob;
  imgBlob blob;              -- allows creation of persistent blobs for images
- pages tvclob;               -- array containing pages
+ --pages tv32k;               -- array containing pages 
+ pages tclob;
  state word;                -- current document state
- b_compress flag := false;  -- compression flag
+ b_compress flag := false;  -- compression flag 
  DefOrientation car;        -- default orientation
  CurOrientation car;        -- current orientation
  OrientationChanges tbool;    -- array indicating orientation changes
@@ -99,16 +147,16 @@ type ArrayCharWidths is table of charSet index by word;
  cMargin margin;            -- cell margin
  x number;
  y number;               	-- current position in user unit for cell positioning
- lasth number;              -- height of last cell printed
+ lasth number;              -- height of last cell printed 
  LineWidth number;          -- line width in user unit
  CoreFonts tv4000a;          	-- array of standard font names
- fonts fontsArray;
-                                -- array of used fonts
+ fonts fontsArray;  
+               -- array of used fonts
  FontFiles fontsArray;          	-- array of font files
- diffs tv4000;              	-- array of encoding differences
+ diffs tv4000;              	-- array of encoding differences 
  images imagesArray;             	-- array of used images
- PageLinks LinksArray;          -- array of links in pages
- links Array2dim;              -- array of internal links
+ PageLinks LinksArray:=LinksArray();          -- array of links in pages
+ links Array2dim:= Array2dim();              -- array of internal links
  FontFamily word;         	-- current font family
  FontStyle word;          	-- current font style
  underline flag;          	-- underlining flag
@@ -119,7 +167,7 @@ type ArrayCharWidths is table of charSet index by word;
  FillColor phrase;          -- commands for filling color
  TextColor phrase;          -- commands for txt color
  ColorFlag flag;          	-- indicates whether fill and txt colors are different
- ws word;                 	-- word spacing
+ ws word;                 	-- word spacing 
  AutoPageBreak flag;      	-- automatic page breaking
  PageBreakTrigger number;   -- threshold used to trigger page breaks
  InFooter flag;           	-- flag set when processing footer
@@ -132,10 +180,10 @@ type ArrayCharWidths is table of charSet index by word;
  creator txt;            	-- creator
  AliasNbPages word;       	-- alias for total number of pages
  PDFVersion word;         	-- PDF version number
-
-	jsIncluded		boolean	:= false;
-	jsNbr					number;
- 	jsStr					varchar2(4000);
+ 
+ jsIncluded                 boolean := false;
+ jsNbr                      number;
+ jsStr                      varchar2(4000);
  
  -- Propriet�s ajout�es lors du portage en PLSQL.
  fpdf_charwidths ArrayCharWidths;		-- Characters table.
@@ -144,8 +192,10 @@ type ArrayCharWidths is table of charSet index by word;
  MyFooter_Proc txt;						-- Personal Footer procedure.
  MyFooter_ProcParam tv4000a;            -- Table of parameters of the personal footer Proc.
  formatArray recFormat;					-- Dimension of the format (variable : format).
+ gb_mode_debug boolean := false;
  Linespacing number;
 
+ 
  -- variables dont je ne maitrise pas bien l'emploi.
  -- A v�rifier au court de la validation du portage.
  originalsize word;
@@ -173,7 +223,7 @@ end print;
 -- lv_existing_methods MUST reference all the "p_put..." procedure of the package.
 ----------------------------------------------------------------------------------
 function methode_exists(pMethodName varchar2) return boolean is
-lv_existing_methods varchar2(2000)
+lv_existing_methods varchar2(2000) 
 := 'p_putstream,p_putxobjectdict,p_putresourcedict,p_putfonts,p_putimages,p_putresources,'||
    'p_putinfo,p_putcatalog,p_putheader,p_puttrailer,p_putpages';
 begin
@@ -181,7 +231,7 @@ begin
      return true;
    end if;
    return false;
-exception
+exception 
   when others then
    return false;
 end methode_exists;
@@ -192,14 +242,11 @@ end methode_exists;
 function getPDFDocLength return pls_integer is
   lg pls_integer := 0;
 begin
-
-	return dbms_lob.getlength(pdfDoc);
-  
-  --for i in pdfDoc.first..pdfDoc.last loop
-  --  lg := lg + nvl(length(pdfDoc(i)), 0);
-  --end loop;
-  --return lg;
-exception
+  for i in pdfDoc.first..pdfDoc.last loop
+    lg := lg + nvl(length(pdfDoc(i)), 0);
+  end loop;
+  return lg;
+exception 
   when others then
    error('getPDFDocLength : '||sqlerrm);
    return -1;
@@ -210,7 +257,7 @@ end getPDFDocLength;
 ----------------------------------------------------------------------------------
 function getFontCourier return charSet is
 mySet charSet;
-begin
+begin 
 	--
 	-- Courier font.
 	--
@@ -226,7 +273,7 @@ end getFontCourier;
 ----------------------------------------------------------------------------------
 function getFontHelvetica return charSet is
 mySet charSet;
-begin
+begin 
 	-- helvetica font.
 	mySet(chr(0)) := 278; mySet(chr(1)) := 278; mySet(chr(2)) := 278; mySet(chr(3)) := 278; mySet(chr(4)) := 278; mySet(chr(5)) := 278; mySet(chr(6)) := 278; mySet(chr(7)) := 278; mySet(chr(8)) := 278; mySet(chr(9)) := 278; mySet(chr(10)) := 278; mySet(chr(11)) := 278; mySet(chr(12)) := 278; mySet(chr(13)) := 278; mySet(chr(14)) := 278; mySet(chr(15)) := 278; mySet(chr(16)) := 278; mySet(chr(17)) := 278; mySet(chr(18)) := 278; mySet(chr(19)) := 278; mySet(chr(20)) := 278; mySet(chr(21)) := 278;
 	mySet(chr(22)) := 278; mySet(chr(23)) := 278; mySet(chr(24)) := 278; mySet(chr(25)) := 278; mySet(chr(26)) := 278; mySet(chr(27)) := 278; mySet(chr(28)) := 278; mySet(chr(29)) := 278; mySet(chr(30)) := 278; mySet(chr(31)) := 278;
@@ -249,7 +296,7 @@ end getFontHelvetica;
 ----------------------------------------------------------------------------------
 function getFontHelveticai return charSet is
 mySet charSet;
-begin
+begin 
 	-- helvetica Italic font.
 	mySet(chr(0)) := 278; mySet(chr(1)) := 278; mySet(chr(2)) := 278; mySet(chr(3)) := 278; mySet(chr(4)) := 278; mySet(chr(5)) := 278; mySet(chr(6)) := 278; mySet(chr(7)) := 278; mySet(chr(8)) := 278; mySet(chr(9)) := 278; mySet(chr(10)) := 278; mySet(chr(11)) := 278; mySet(chr(12)) := 278; mySet(chr(13)) := 278; mySet(chr(14)) := 278; mySet(chr(15)) := 278; mySet(chr(16)) := 278; mySet(chr(17)) := 278; mySet(chr(18)) := 278; mySet(chr(19)) := 278; mySet(chr(20)) := 278; mySet(chr(21)) := 278;
 	mySet(chr(22)) := 278; mySet(chr(23)) := 278; mySet(chr(24)) := 278; mySet(chr(25)) := 278; mySet(chr(26)) := 278; mySet(chr(27)) := 278; mySet(chr(28)) := 278; mySet(chr(29)) := 278; mySet(chr(30)) := 278; mySet(chr(31)) := 278; mySet(' ') := 278; mySet('!') := 278; mySet('"') := 355; mySet('#') := 556; mySet('$') := 556; mySet('%') := 889; mySet('&') := 667; mySet('''') := 191; mySet('(') := 333; mySet(')') := 333; mySet('*') := 389; mySet('+') := 584;
@@ -271,7 +318,7 @@ end getFontHelveticai;
 ----------------------------------------------------------------------------------
 function getFontHelveticab return charSet is
 mySet charSet;
-begin
+begin 
 	-- helvetica bold font.
 	mySet(chr(0)) := 278; mySet(chr(1)) := 278; mySet(chr(2)) := 278; mySet(chr(3)) := 278; mySet(chr(4)) := 278; mySet(chr(5)) := 278; mySet(chr(6)) := 278; mySet(chr(7)) := 278; mySet(chr(8)) := 278; mySet(chr(9)) := 278; mySet(chr(10)) := 278; mySet(chr(11)) := 278; mySet(chr(12)) := 278; mySet(chr(13)) := 278; mySet(chr(14)) := 278; mySet(chr(15)) := 278; mySet(chr(16)) := 278; mySet(chr(17)) := 278; mySet(chr(18)) := 278; mySet(chr(19)) := 278; mySet(chr(20)) := 278; mySet(chr(21)) := 278;
 	mySet(chr(22)) := 278; mySet(chr(23)) := 278; mySet(chr(24)) := 278; mySet(chr(25)) := 278; mySet(chr(26)) := 278; mySet(chr(27)) := 278; mySet(chr(28)) := 278; mySet(chr(29)) := 278; mySet(chr(30)) := 278; mySet(chr(31)) := 278; mySet(' ') := 278; mySet('!') := 333; mySet('"') := 474; mySet('#') := 556; mySet('$') := 556; mySet('%') := 889; mySet('&') := 722; mySet('''') := 238; mySet('(') := 333; mySet(')') := 333; mySet('*') := 389; mySet('+') := 584;
@@ -293,7 +340,7 @@ end getFontHelveticab;
 ----------------------------------------------------------------------------------
 function getFontHelveticabi return charSet is
 mySet charSet;
-begin
+begin 
 	-- helvetica bold italic font.
 	mySet(chr(0)) := 278; mySet(chr(1)) := 278; mySet(chr(2)) := 278; mySet(chr(3)) := 278; mySet(chr(4)) := 278; mySet(chr(5)) := 278; mySet(chr(6)) := 278; mySet(chr(7)) := 278; mySet(chr(8)) := 278; mySet(chr(9)) := 278; mySet(chr(10)) := 278; mySet(chr(11)) := 278; mySet(chr(12)) := 278; mySet(chr(13)) := 278; mySet(chr(14)) := 278; mySet(chr(15)) := 278; mySet(chr(16)) := 278; mySet(chr(17)) := 278; mySet(chr(18)) := 278; mySet(chr(19)) := 278; mySet(chr(20)) := 278; mySet(chr(21)) := 278;
 	mySet(chr(22)) := 278; mySet(chr(23)) := 278; mySet(chr(24)) := 278; mySet(chr(25)) := 278; mySet(chr(26)) := 278; mySet(chr(27)) := 278; mySet(chr(28)) := 278; mySet(chr(29)) := 278; mySet(chr(30)) := 278; mySet(chr(31)) := 278; mySet(' ') := 278; mySet('!') := 333; mySet('"') := 474; mySet('#') := 556; mySet('$') := 556; mySet('%') := 889; mySet('&') := 722; mySet('''') := 238; mySet('(') := 333; mySet(')') := 333; mySet('*') := 389; mySet('+') := 584;
@@ -315,7 +362,7 @@ end getFontHelveticabi;
 ----------------------------------------------------------------------------------
 function getFontTimes return charSet is
 mySet charSet;
-begin
+begin 
 	-- Times font.
 	mySet(chr(0)) := 250; mySet(chr(1)) := 250; mySet(chr(2)) := 250; mySet(chr(3)) := 250; mySet(chr(4)) := 250; mySet(chr(5)) := 250; mySet(chr(6)) := 250; mySet(chr(7)) := 250; mySet(chr(8)) := 250; mySet(chr(9)) := 250; mySet(chr(10)) := 250; mySet(chr(11)) := 250; mySet(chr(12)) := 250; mySet(chr(13)) := 250; mySet(chr(14)) := 250; mySet(chr(15)) := 250; mySet(chr(16)) := 250; mySet(chr(17)) := 250; mySet(chr(18)) := 250; mySet(chr(19)) := 250; mySet(chr(20)) := 250; mySet(chr(21)) := 250;
 	mySet(chr(22)) := 250; mySet(chr(23)) := 250; mySet(chr(24)) := 250; mySet(chr(25)) := 250; mySet(chr(26)) := 250; mySet(chr(27)) := 250; mySet(chr(28)) := 250; mySet(chr(29)) := 250; mySet(chr(30)) := 250; mySet(chr(31)) := 250; mySet(' ') := 250; mySet('!') := 333; mySet('"') := 408; mySet('#') := 500; mySet('$') := 500; mySet('%') := 833; mySet('&') := 778; mySet('''') := 180; mySet('(') := 333; mySet(')') := 333; mySet('*') := 500; mySet('+') := 564;
@@ -337,7 +384,7 @@ end getFontTimes;
 ----------------------------------------------------------------------------------
 function getFontTimesi return charSet is
 mySet charSet;
-begin
+begin 
 	-- Times italic font.
 	mySet(chr(0)) := 250; mySet(chr(1)) := 250; mySet(chr(2)) := 250; mySet(chr(3)) := 250; mySet(chr(4)) := 250; mySet(chr(5)) := 250; mySet(chr(6)) := 250; mySet(chr(7)) := 250; mySet(chr(8)) := 250; mySet(chr(9)) := 250; mySet(chr(10)) := 250; mySet(chr(11)) := 250; mySet(chr(12)) := 250; mySet(chr(13)) := 250; mySet(chr(14)) := 250; mySet(chr(15)) := 250; mySet(chr(16)) := 250; mySet(chr(17)) := 250; mySet(chr(18)) := 250; mySet(chr(19)) := 250; mySet(chr(20)) := 250; mySet(chr(21)) := 250;
 	mySet(chr(22)) := 250; mySet(chr(23)) := 250; mySet(chr(24)) := 250; mySet(chr(25)) := 250; mySet(chr(26)) := 250; mySet(chr(27)) := 250; mySet(chr(28)) := 250; mySet(chr(29)) := 250; mySet(chr(30)) := 250; mySet(chr(31)) := 250; mySet(' ') := 250; mySet('!') := 333; mySet('"') := 420; mySet('#') := 500; mySet('$') := 500; mySet('%') := 833; mySet('&') := 778; mySet('''') := 214; mySet('(') := 333; mySet(')') := 333; mySet('*') := 500; mySet('+') := 675;
@@ -359,7 +406,7 @@ end getFontTimesi;
 ----------------------------------------------------------------------------------
 function getFontTimesb return charSet is
 mySet charSet;
-begin
+begin 
 	-- Times bold font.
 	mySet(chr(0)) := 250; mySet(chr(1)) := 250; mySet(chr(2)) := 250; mySet(chr(3)) := 250; mySet(chr(4)) := 250; mySet(chr(5)) := 250; mySet(chr(6)) := 250; mySet(chr(7)) := 250; mySet(chr(8)) := 250; mySet(chr(9)) := 250; mySet(chr(10)) := 250; mySet(chr(11)) := 250; mySet(chr(12)) := 250; mySet(chr(13)) := 250; mySet(chr(14)) := 250; mySet(chr(15)) := 250; mySet(chr(16)) := 250; mySet(chr(17)) := 250; mySet(chr(18)) := 250; mySet(chr(19)) := 250; mySet(chr(20)) := 250; mySet(chr(21)) := 250;
 	mySet(chr(22)) := 250; mySet(chr(23)) := 250; mySet(chr(24)) := 250; mySet(chr(25)) := 250; mySet(chr(26)) := 250; mySet(chr(27)) := 250; mySet(chr(28)) := 250; mySet(chr(29)) := 250; mySet(chr(30)) := 250; mySet(chr(31)) := 250; mySet(' ') := 250; mySet('!') := 333; mySet('"') := 555; mySet('#') := 500; mySet('$') := 500; mySet('%') := 1000; mySet('&') := 833; mySet('''') := 278; mySet('(') := 333; mySet(')') := 333; mySet('*') := 500; mySet('+') := 570;
@@ -381,7 +428,7 @@ end getFontTimesb;
 ----------------------------------------------------------------------------------
 function getFontTimesbi return charSet is
 mySet charSet;
-begin
+begin 
 	-- Times bold italic font.
 	mySet(chr(0)) := 250; mySet(chr(1)) := 250; mySet(chr(2)) := 250; mySet(chr(3)) := 250; mySet(chr(4)) := 250; mySet(chr(5)) := 250; mySet(chr(6)) := 250; mySet(chr(7)) := 250; mySet(chr(8)) := 250; mySet(chr(9)) := 250; mySet(chr(10)) := 250; mySet(chr(11)) := 250; mySet(chr(12)) := 250; mySet(chr(13)) := 250; mySet(chr(14)) := 250; mySet(chr(15)) := 250; mySet(chr(16)) := 250; mySet(chr(17)) := 250; mySet(chr(18)) := 250; mySet(chr(19)) := 250; mySet(chr(20)) := 250; mySet(chr(21)) := 250;
 	mySet(chr(22)) := 250; mySet(chr(23)) := 250; mySet(chr(24)) := 250; mySet(chr(25)) := 250; mySet(chr(26)) := 250; mySet(chr(27)) := 250; mySet(chr(28)) := 250; mySet(chr(29)) := 250; mySet(chr(30)) := 250; mySet(chr(31)) := 250; mySet(' ') := 250; mySet('!') := 389; mySet('"') := 555; mySet('#') := 500; mySet('$') := 500; mySet('%') := 833; mySet('&') := 778; mySet('''') := 278; mySet('(') := 333; mySet(')') := 333; mySet('*') := 500; mySet('+') := 570;
@@ -403,7 +450,7 @@ end getFontTimesbi;
 ----------------------------------------------------------------------------------
 function getFontSymbol return charSet is
 mySet charSet;
-begin
+begin 
 	-- Symbol font.
 	mySet(chr(0)) := 250; mySet(chr(1)) := 250; mySet(chr(2)) := 250; mySet(chr(3)) := 250; mySet(chr(4)) := 250; mySet(chr(5)) := 250; mySet(chr(6)) := 250; mySet(chr(7)) := 250; mySet(chr(8)) := 250; mySet(chr(9)) := 250; mySet(chr(10)) := 250; mySet(chr(11)) := 250; mySet(chr(12)) := 250; mySet(chr(13)) := 250; mySet(chr(14)) := 250; mySet(chr(15)) := 250; mySet(chr(16)) := 250; mySet(chr(17)) := 250; mySet(chr(18)) := 250; mySet(chr(19)) := 250; mySet(chr(20)) := 250; mySet(chr(21)) := 250;
 	mySet(chr(22)) := 250; mySet(chr(23)) := 250; mySet(chr(24)) := 250; mySet(chr(25)) := 250; mySet(chr(26)) := 250; mySet(chr(27)) := 250; mySet(chr(28)) := 250; mySet(chr(29)) := 250; mySet(chr(30)) := 250; mySet(chr(31)) := 250; mySet(' ') := 250; mySet('!') := 333; mySet('"') := 713; mySet('#') := 500; mySet('$') := 549; mySet('%') := 833; mySet('&') := 778; mySet('''') := 439; mySet('(') := 333; mySet(')') := 333; mySet('*') := 500; mySet('+') := 549;
@@ -425,7 +472,7 @@ end getFontSymbol;
 ----------------------------------------------------------------------------------
 function getFontZapfdingbats return charSet is
 mySet charSet;
-begin
+begin 
 	-- zapfdingbats font.
 	mySet(chr(0)) := 0; mySet(chr(1)) := 0; mySet(chr(2)) := 0; mySet(chr(3)) := 0; mySet(chr(4)) := 0; mySet(chr(5)) := 0; mySet(chr(6)) := 0; mySet(chr(7)) := 0; mySet(chr(8)) := 0; mySet(chr(9)) := 0; mySet(chr(10)) := 0; mySet(chr(11)) := 0; mySet(chr(12)) := 0; mySet(chr(13)) := 0; mySet(chr(14)) := 0; mySet(chr(15)) := 0; mySet(chr(16)) := 0; mySet(chr(17)) := 0; mySet(chr(18)) := 0; mySet(chr(19)) := 0; mySet(chr(20)) := 0; mySet(chr(21)) := 0;
 	mySet(chr(22)) := 0; mySet(chr(23)) := 0; mySet(chr(24)) := 0; mySet(chr(25)) := 0; mySet(chr(26)) := 0; mySet(chr(27)) := 0; mySet(chr(28)) := 0; mySet(chr(29)) := 0; mySet(chr(30)) := 0; mySet(chr(31)) := 0; mySet(' ') := 278; mySet('!') := 974; mySet('"') := 961; mySet('#') := 974; mySet('$') := 980; mySet('%') := 719; mySet('&') := 789; mySet('''') := 790; mySet('(') := 791; mySet(')') := 690; mySet('*') := 960; mySet('+') := 939;
@@ -448,7 +495,7 @@ end getFontZapfdingbats;
 procedure p_includeFont (pfontname varchar2) is
 mySet charSet;
 begin
-  if (pfontname is not null) then
+  if (pfontname is not null) then 
   	 case pfontname
 	 when 'courier' then -- courier
 	    mySet := getFontCourier;
@@ -486,9 +533,9 @@ begin
 	  mySet := getFontZapfdingbats;
 	  --
 	  else null;
-	  end case;
+	  end case; 
 	  fpdf_charwidths(pfontname) := mySet;
-  end if;
+  end if; 
 end p_includeFont;
 
 
@@ -498,7 +545,7 @@ end p_includeFont;
 function p_getFontMetrics(pFontName varchar2) return charSet is
 mySet charSet;
 begin
-  if (pfontname is not null) then
+  if (pfontname is not null) then 
   	 case pfontname
 	 when 'courier' then -- courier
 	    mySet := getFontCourier;
@@ -533,13 +580,13 @@ begin
 	    mySet := getFontZapfdingbats;
 	  --
 	  else null;
-	  end case;
-  end if;
+	  end case; 
+  end if; 
   return mySet;
 end p_getFontMetrics;
 
 ----------------------------------------------------------------------------------
--- Parcours le tableau des images et renvoie true si l'image cherch� existe
+-- Parcours le tableau des images et renvoie true si l'image cherch� existe 
 -- dans le tableau.
 ----------------------------------------------------------------------------------
 function imageExists(pFile varchar2) return boolean is
@@ -548,7 +595,7 @@ begin
      return true;
   end if;
   return false;
-exception
+exception 
   when others then
    error('imageExists : '||sqlerrm);
    return false;
@@ -597,7 +644,7 @@ end fontsExists;
 -- The image is converted  on the fly to PNG format.
 --------------------------------------------------------------------------------
 function getImageFromUrl(p_Url varchar2) return ordsys.ordImage is
-	myImg ordsys.ordImage;
+	myImg ordsys.ordImage; 
 	lv_url varchar2(2000) := p_Url;
 	urityp URIType;
 begin
@@ -605,13 +652,13 @@ begin
      if (instr(lv_url, 'http') = 0 ) then
 	   lv_url := 'http://'||owa_util.get_cgi_env('SERVER_NAME')||'/'||lv_url;
 	 end if;
-
+	 
 	 urityp := URIFactory.getURI(lv_url);
 
 	 myImg := ORDSYS.ORDImage.init();
 	 myImg.source.localdata := urityp.getBlob();
-	 myImg.setMimeType(urityp.getContentType());
-
+	 myImg.setMimeType(urityp.getContentType());	
+	 	 
 	 begin
 	 	  myImg.setProperties();
 	 Exception
@@ -681,8 +728,8 @@ end GetLineSpacing;
 --------------------------------------------------------------------------------
 Procedure SetLineSpacing (pls number) is
 begin
-    -- Set LineSpacing property
-    LineSpacing := pls;
+	-- Set LineSpacing property
+	LineSpacing := pls;
 end SetLineSpacing;
 
 ----------------------------------------------------------------------------------
@@ -696,9 +743,9 @@ end ord;
 
 function empty (p_myvar varchar2) return boolean is
 begin
-  if (p_myvar is null) then
+  if (p_myvar is null) then 
     return true;
-  end if;
+  end if; 
   return false;
 end empty;
 
@@ -719,9 +766,8 @@ end strlen;
 
 function strlen (pstr clob) return number is
 begin
-  return  DBMS_LOB.GETLENGTH (pstr);
+  return length(pstr);
 end strlen;
-
 
 function tonumber(v_str in varchar2) return number is
    v_num number;
@@ -757,11 +803,11 @@ begin
   ceilnum := nvl(substr(mynum,1,instr(mynum,'.')-1), '0');
   decnum := nvl(substr(mynum,instr(mynum,'.')+1), '0');
   decnum := substr(decnum,1, pprecision);
-  if (pprecision = 0 ) then
+  if (pprecision = 0 ) then 
   	 mynum := ceilnum;
   else
   	 mynum := ceilnum || '.' ||decnum;
-  end if;
+  end if; 
   return mynum;
 end tochar;
 
@@ -802,9 +848,9 @@ function substr_count (ptxt varchar2, pstr varchar2) return number is
 begin
   for i in 1..length(ptxt)
   loop
-    if (substr(ptxt,i,1) = pstr) then
+    if (substr(ptxt,i,1) = pstr) then 
 	  nbr := nbr + 1;
-	end if;
+	end if; 
   end loop;
   return nbr;
 end substr_count;
@@ -814,9 +860,10 @@ end substr_count;
 ----------------------------------------------------------------------------------------
 procedure p_dochecks is
 begin
-	null;
-  -- Check for decimal separator
+	-- Check for decimal separator 
+  -- MBR 15.03.2011: commented out to use the established NLS settings for session -- PDF generation seems to work without this anyway... 
   --  execute immediate 'alter session set NLS_NUMERIC_CHARACTERS = '',.''';
+  null;
 end p_dochecks;
 
 ----------------------------------------------------------------------------------------
@@ -826,53 +873,51 @@ begin
 	return null;
 end p_getfontpath;
 
-
-procedure p_out(pstr varchar2 default null, pCRLF boolean default true) is
+----------------------------------------------------------------------------------------
+procedure p_out(pstr varchar2 default null, pCRLF boolean default true) is 
 lv_CRLF varchar2(2) := null;
+begin
+    if (pCRLF) then
+	  lv_CRLF := chr(10);
+	end if;
+	-- Add a line to the document
+	if(state = 2) then
+		pages(page):= pages(page) || pstr || lv_CRLF;
+	else
+		pdfDoc(pdfDoc.last + 1) :=  pstr || lv_CRLF;
+	end if; 
+exception 
+  when others then
+   error('p_out : '||sqlerrm);
+end p_out;
+
+
+procedure p_out(pstr clob default null, pCRLF boolean default true)
+is 
+  lv_CRLF varchar2(2) := null;
 begin
   if (pCRLF) then
 	  lv_CRLF := chr(10);
 	end if;
 	-- Add a line to the document
 	if(state = 2) then
-		pages(page):= concat(pages(page) ,  pstr || lv_CRLF);
+		pages(page):= pages(page) || pstr || lv_CRLF;
 	else
-		pdfDoc := concat(pdfDoc, pstr ||lv_CRLF); --pdfDoc(pdfDoc.last + 1) :=  concat(pstr , lv_CRLF);
-	end if;
-  
-exception
+		pdfDoc(pdfDoc.last + 1) :=  pstr || lv_CRLF;
+	end if; 
+exception 
   when others then
-	  error('p_out : '||sqlerrm);
+   error('p_out (clob) : '||sqlerrm);
 end p_out;
 
-
-procedure p_out(pstr clob, pCRLF boolean default true) is
-lv_CRLF varchar2(2) := null;
-begin
-  if (pCRLF) then
-	  lv_CRLF := chr(10);
-	end if;
-	-- Add a line to the document
-	if(state = 2) then
-		pages(page):= concat(pages(page), pstr || lv_CRLF);
-	else
-		pdfDoc := concat(pdfDoc, pstr || lv_CRLF); --pdfDoc(pdfDoc.last + 1) := concat(pstr, lv_CRLF);
-	end if;
-  
-exception
-  when others then
-   -- bug('p_out : '||sqlerrm);
- 	 error('p_out : '||sqlerrm);
-end p_out;
-
-
+----------------------------------------------------------------------------------------
 procedure p_newobj is
 begin
 	-- Begin a new object
 	n := n + 1;
 	offsets(n) := getPDFDocLength();
 	p_out(n || ' 0 obj');
-exception
+exception 
   when others then
    error('p_newobj : '||sqlerrm);
 end p_newobj;
@@ -893,33 +938,33 @@ begin
 end p_textstring;
 
 ----------------------------------------------------------------------------------------
-procedure p_putstream(pstr varchar2) is
+procedure p_putstream(pstr varchar2) is 
 begin
 	p_out('stream');
 	p_out(pstr);
 	p_out('endstream');
-exception
+exception 
   when others then
    error('p_putstream : '||sqlerrm);
 end p_putstream;
 
-
-procedure p_putstream(pstr clob) is
+----------------------------------------------------------------------------------------
+procedure p_putstream(pstr clob) is 
 begin
 	p_out('stream');
 	p_out(pstr);
 	p_out('endstream');
-exception
+exception 
   when others then
-   error('p_putstream : '||sqlerrm);
+   error('p_putstream (clob): '||sqlerrm);
 end p_putstream;
 
 
-procedure p_putstream(pData in out NOCOPY blob) is
-	offset 						integer := 1;
-  lv_content_length number := dbms_lob.getlength(pdata);
-	buf_size 					integer := 2000;
-	buf 							raw(2000);
+procedure p_putstream(pData in out NOCOPY blob) is 
+	offset integer := 1;
+    lv_content_length number := dbms_lob.getlength(pdata);
+	buf_size integer := 2000;
+	buf raw(2000);
 begin
 	p_out('stream');
 	-- read the blob and put it in small pieces in a varchar
@@ -931,12 +976,12 @@ begin
 	-- put a CRLF at te end of the blob
 	p_out(chr(10), false);
 	p_out('endstream');
-exception
+exception 
   when others then
    error('p_putstream : '||sqlerrm);
 end p_putstream;
 
-
+----------------------------------------------------------------------------------------
 procedure p_putxobjectdict is
 v txt;
 begin
@@ -957,7 +1002,7 @@ begin
 	p_out('/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]');
 	p_out('/Font <<');
 	v := fonts.first;
-	while (v is not null)
+	while (v is not null) 
 	loop
 	    p_out('/F' || fonts(v).i || ' ' || fonts(v).n  ||' 0 R');
 	    v := fonts.next(v);
@@ -966,13 +1011,13 @@ begin
 	p_out('/XObject <<');
 	p_putxobjectdict();
 	p_out('>>');
-exception
+exception 
   when others then
    error('p_putresourcedict : '||sqlerrm);
 end p_putresourcedict;
 
 ----------------------------------------------------------------------------------------
-procedure p_putfonts is
+procedure p_putfonts is 
 nf number := n;
 i pls_integer;
 k varchar2(200);
@@ -991,7 +1036,7 @@ methode word;
 begin
     null;
 	i := diffs.first;
-	while (i is not null)
+	while (i is not null) 
 	loop
 		-- Encodings
 		p_newobj();
@@ -999,64 +1044,64 @@ begin
 		p_out('endobj');
 	    i:= diffs.next(i);
 	end loop;
-
+		
 	-- foreach($this->FontFiles as $file=>$info)
 	v := FontFiles.first;
-	while (v is not null)
+	while (v is not null) 
 	loop
 		null;
 		-- Font file embedding
 		p_newobj();
 		FontFiles(v).n:= n;
 		myFont := null;
-
-
+		
+		
 		mySet := p_getFontMetrics(FontFiles(v).file);
 		for i in mySet.first..mySet.last loop
 		  myFont := myFont || mySet(i);
 		end loop;
-
+		
 		if (mySet.count = 0) then
 		  Error('Font file not found');
 		end if;
-
+		
 		if(FontFiles(v).length2 is not null) then
-
+		    
 			myHeader := false;
 			if ( ord(myFont) = 128) then
 			  myHeader := true;
 			end if;
-
+			
 			if(myHeader) then
 				-- Strip first binary header
 				myFont := substr(myFont,6);
-			end if;
-
+			end if; 
+			
 			if(myHeader and ord(substr(myFont,(FontFiles(v).length1), 1)) = 128) then
 				-- Strip second binary header
 				myFont := substr(myFont, 1, FontFiles(v).length1) || substr(myFont, FontFiles(v).length1 + 6);
-			end if;
-		end if;
+			end if; 
+		end if; 
 		p_out('<</Length ' || strlen(myFont));
 
 		p_out('/Length1 ' || FontFiles(v).length1);
 		if(FontFiles(v).length2 is not null) then
 			p_out('/Length2 '|| FontFiles(v).length2 ||' /Length3 0');
-		end if;
+		end if; 
 		p_out('>>');
 		p_putstream(myFont);
 		p_out('endobj');
-
+		
 		v := FontFiles.next(v);
 	end loop;
 
-
+	
 	k := fonts.first;
 	while (k is not null) loop
-
-
+	
+	
 	--foreach(fonts as $k=>myFont)
-	--{
+	--{ 
 		-- Font objects
 		fonts(k).n := n+1;
 		myType := fonts(k).type;
@@ -1081,7 +1126,7 @@ begin
 			p_out('/FirstChar 32 /LastChar 255');
 			p_out('/Widths ' || (n+1) || ' 0 R');
 			p_out('/FontDescriptor ' || (n+2) || ' 0 R');
-			if(fonts(k).enc is not null) then
+			if(fonts(k).enc is not null) then 			
 				if(fonts(k).diff is not null) then
 					p_out('/Encoding ' || (nf + fonts(k).diff) || ' 0 R');
 				else
@@ -1092,7 +1137,7 @@ begin
 			p_out('endobj');
 			-- Widths
 			p_newobj();
-
+			
 			cw := fonts(k).cw;
 			s := '[';
 			for i in 32..255 loop
@@ -1103,16 +1148,16 @@ begin
 			-- Descriptor
 			p_newobj();
 			s := '<</Type /FontDescriptor /FontName /' || myName;
-
+			
 			for l in fonts(k).dsc.first..fonts(k).dsc.last loop
 				s := s || ' /' || l || ' ' || fonts(k).dsc(l);
 			end loop;
-
+			
 			myFile := fonts(k).file;
 			if (myFile is not null) then
 			    if (lower(myType) = 'type1') then
 				  theType := '';
-				 else
+				 else 
 				  theType := '2';
 				 end if;
 				 s := s || ' /FontFile' || theType || ' ' || FontFiles(myFile).n || ' 0 R';
@@ -1122,7 +1167,7 @@ begin
 		else
 			-- Allow for additional types
 			methode := 'p_put' || strtolower(myType);
-
+			
 			if(not methode_exists(methode)) then
 				Error('Unsupported font type: ' || myType);
 -- 			else
@@ -1130,10 +1175,10 @@ begin
 -- 			  execute immediate plsqlmethode;
 			end if;
 		end if;
-
+		
 		k := fonts.next(k);
 	end loop;
-exception
+exception 
   when others then
    error('p_putfonts : '||sqlerrm);
 end p_putfonts;
@@ -1177,7 +1222,7 @@ begin
 		if(info.parms is not null) then
 			p_out(info.parms);
 		end if;
-
+		
 		if(info.trns.first is not null ) then
 			 trns := '';
 			for i in info.trns.first..info.trns.count  loop
@@ -1194,7 +1239,7 @@ begin
 		--Palette
 		if(info.cs = 'Indexed') then
 			p_newobj();
-			 if (b_compress) then
+			 if (b_compress) then 
 			   -- gzcompress($info('pal'))
 			   null;
 			 else
@@ -1292,19 +1337,19 @@ begin
 	p_out('/Producer ' || p_textstring('PL_FPDF ' || PL_FPDF_VERSION || ' portage pour Laclasse.com par P.G. Levallois de la version '|| FPDF_VERSION ||' de PHP/FPDF d''Olivier Plathey.'));
 	if(not empty(title)) then
 		p_out('/Title ' || p_textstring(title));
-	end if;
+	end if; 
 	if(not empty(subject)) then
 		p_out('/Subject ' || p_textstring(subject));
-	end if;
+	end if; 
 	if(not empty(author)) then
 		p_out('/Author ' || p_textstring(author));
-	end if;
+	end if; 
 	if(not empty(keywords)) then
 		p_out('/Keywords ' || p_textstring(keywords));
-	end if;
+	end if; 
 	if(not empty(creator)) then
 		p_out('/Creator ' || p_textstring(creator));
-	end if;
+	end if; 
 	p_out('/CreationDate ' || p_textstring('D:' || date_YmdHis()));
 exception
   when others then
@@ -1325,14 +1370,14 @@ begin
 		p_out('/OpenAction [3 0 R /XYZ null null 1]');
 	elsif(not is_string(ZoomMode)) then
 		p_out('/OpenAction [3 0 R /XYZ null null ' || (ZoomMode/100) || ']');
-    end if;
+    end if; 
 	if(LayoutMode='single') then
 		p_out('/PageLayout /SinglePage');
 	elsif(LayoutMode='continuous') then
 		p_out('/PageLayout /OneColumn');
 	elsif(LayoutMode='two') then
 		p_out('/PageLayout /TwoColumnLeft');
-  end if;
+    end if; 
 
   if jsIncluded then p_out('/Names <</JavaScript '||jsNbr||' 0 R>>'); end if;
 
@@ -1352,7 +1397,7 @@ end p_putheader;
 
 
 ----------------------------------------------------------------------------------------
-procedure p_puttrailer is
+procedure p_puttrailer is 
 begin
 	p_out('/Size ' || (n+1));
 	p_out('/Root ' || n || ' 0 R');
@@ -1372,8 +1417,8 @@ procedure p_putpages is
    filter varchar2(200);
    annots bigtext;
    rect txt;
-   -- l Array2dim;
-   -- h number;
+    l number;
+    h number;
    kids txt;
    v_0 varchar2(255);
    v_1 varchar2(255);
@@ -1390,22 +1435,22 @@ begin
 		   for i in 1..nb loop
 		      pages(i) := str_replace(AliasNbPages,nb,pages(i));
 		   end loop;
-	 end if;
-
+	 end if; 
+	
 	 if DefOrientation = 'P' then
 		  wPt:=fwPt;
 		  hPt:=fhPt;
 	 else
 		  wPt:=fhPt;
 		  hPt:=fwPt;
-   end if;
-
-	 if (b_compress) then
+   end if; 
+	
+	 if (b_compress) then 
 	    filter := '/Filter /FlateDecode ';
 	 else
 	    filter := '';
-	 end if;
-
+	 end if; 
+	
    for i in 1..nb loop
 		  -- Page
 		  p_newobj();
@@ -1413,41 +1458,44 @@ begin
 		  p_out('/Parent 1 0 R');
 		  if(OrientationChanges.exists(i)) then
 			   p_out('/MediaBox [0 0 '||tochar(hPt)||' '||tochar(wPt)||']');
-	    end if;
+	    end if; 
 		  p_out('/Resources 2 0 R');
-
-      if(PageLinks.exists(i)) then
-			   --Links     [one/page]
-			   annots := '/Annots [';
-			   --for v in PageLinks(i).first..PageLinks(i).last loop
-         v_0 := PageLinks(i).zero;
+		
+      annots := '/Annots [';
+      if PageLinks.count > 0 then
+      for j in 1..PageLinks.last loop		
+      if(nvl(PageLinks(j).page,0)=i) then
+         v_0 := PageLinks(j).zero;
          v_0n := tonumber(v_0);
-         v_1 := PageLinks(i).un;
+         v_1 := PageLinks(j).un;
          v_1n := tonumber(v_1);
-         v_2 := PageLinks(i).deux;
+         v_2 := PageLinks(j).deux;
          v_2n := tonumber(v_2);
-         v_3 := PageLinks(i).trois;
+         v_3 := PageLinks(j).trois;
          v_3n := tonumber(v_3);
-         v_4 := PageLinks(i).quatre;
-			   rect := tochar(v_0) || ' ' || tochar(v_1) || ' ' || tochar(v_0n + v_2n) || ' ' || tochar(v_1n - v_3n);
-			   annots := annots || '<</Type /Annot /Subtype /Link /Rect [' || rect || '] /Border [0 0 0] ';
-         if is_string(PageLinks(i).quatre) then
-					  annots := annots ||'/A <</S /URI /URI '||p_textstring(PageLinks(i).quatre) || '>>>>';
-/* ????
+         v_4 := PageLinks(j).quatre; 
+			   rect := tochar(v_0) || ' ' || tochar(v_1) || ' ' || tochar(v_0n + v_2n) 
+            || ' ' || tochar(v_1n - v_3n);
+			   annots := annots || '<</Type /Annot /Subtype /Link /Rect [' || rect || 
+            '] /Border [0 0 0] ';
+         if is_string(PageLinks(j).quatre) then
+					  annots := annots ||'/A <</S /URI /URI '||p_textstring(PageLinks(j).quatre) 
+               || '>>>>';
 				else
-					l := links(PageLinks(i).quatre);
-					if (OrientationChanges(l.zero) is not null) then
+          if (OrientationChanges(PageLinks(j).zero) is not null) then
 					  h := wPt;
 					else
 					  h := hPt;
 					end if;
-					annots := annots || '/Dest ('||tochar(1 + 2 * l.zero,2)||' 0 R /XYZ 0 '||tochar(h - l.un * k)||' null)>>';
-*/
+          annots := annots || '/Dest ['||to_char(3+2*(links(PageLinks(j).quatre).zero-1))||' 0 R /XYZ 0 '||
+                              to_char(links(PageLinks(j).quatre).un)||' null]>>';
          end if;
-			   --end loop;
-			   p_out(annots || ']');
-      end if;
+      end if; 
+      end loop;
 
+			   --end loop of PageLinks;
+      p_out(annots || ']');
+end if;
 		  p_out('/Contents ' || to_char(n+1) || ' 0 R>>');
 		  p_out('endobj');
 		  -- Page content
@@ -1465,20 +1513,19 @@ begin
 	 kids := '/Kids [';
      -- Bug dicoverd by Alexandre : arodichevski@newmed.net
 	 --for i in 0..nb loop
-   
-   for i in 0..nb-1 loop
+     for i in 0..nb-1 loop
 	    kids := kids || to_char(3+2*i) || ' 0 R ';
 	 end loop;
-	 
-   p_out( kids || ']');
+	 p_out( kids || ']');
 	 p_out('/Count '|| nb);
 	 p_out('/MediaBox [0 0 '||tochar(wPt)||' '||tochar(hPt)||']');
 	 p_out('>>');
 	 p_out('endobj');
    
---exception
---   when others then
---      error('p_putpages : '||sqlerrm);
+exception
+   when others then
+      error('p_putpages : '||sqlerrm);
+      
 end p_putpages;
 
 ----------------------------------------------------------------------------------------
@@ -1505,7 +1552,7 @@ begin
 	p_out('xref');
 	p_out('0 ' || (n+1));
 	p_out('0000000000 65535 f ');
-	for i in 1..n
+	for i in 1..n 
 	loop
 	  p_out(substr('0000000000', 1, 10 - length(offsets(i)) ) ||offsets(i) || ' 00000 n ');
 	end loop;
@@ -1518,9 +1565,9 @@ begin
 	p_out(o);
 	p_out('%%EOF');
 	state := 3;
---exception
---  when others then
---    error('p_enddoc : '||sqlerrm);
+exception
+  when others then
+    error('p_enddoc : '||sqlerrm);
 end p_enddoc;
 
 ----------------------------------------------------------------------------------------
@@ -1541,8 +1588,8 @@ begin
 		Myorientation:=strtoupper(Myorientation);
 		if(Myorientation!=DefOrientation) then
 			OrientationChanges(page):=true;
-		end if;
-	end if;
+		end if; 
+	end if; 
 	if(Myorientation!=CurOrientation) then
 		-- Change orientation
 		if(orientation='P') then
@@ -1555,10 +1602,10 @@ begin
 			hPt:=fwPt;
 			w:=fh;
 			h:=fw;
-		end if;
+		end if; 
 		pageBreakTrigger:=h-bMargin;
 		CurOrientation:=Myorientation;
-	end if;
+	end if; 
 exception
   when others then
     error('p_beginpage : '||sqlerrm);
@@ -1648,7 +1695,7 @@ function p_parseImage(pFile varchar2) return recImage is
   begin
 	return utl_raw.cast_to_varchar2(freadb(pBlob, pHandle, pLength));
   end fread;
-
+  
   ---------------------------------------------------------------------------------------------
 
 begin
@@ -1663,16 +1710,16 @@ begin
 	if(fread(myblob, f, amount) != png_signature ) then
 	    Error('Not a PNG file: ' || pFile);
 	end if;
-
+	
 	-- Read header chunk
 	amount := 4;
 	buf := fread(myblob, f, amount);
-
-	buf := fread(myblob, f, amount);
+	
+	buf := fread(myblob, f, amount);	
 	if(buf != 'IHDR') then
 	   Error('Incorrect PNG file: ' || pFile);
 	end if;
-
+	
     myImgInfo.w := myImg.getWidth();
     myImgInfo.h := myImg.getHeight();
 
@@ -1681,13 +1728,13 @@ begin
 	buf := fread(myblob, f, amount);
 
 	amount := 1;
-
-	myImgInfo.bpc := ord(fread(myblob, f, amount));
+	
+	myImgInfo.bpc := ord(fread(myblob, f, amount));	
 	if( myImgInfo.bpc > 8) then
-		Error('16-bit depth not supported: ' || pFile);
-	end if;
-
-	ct := ord(fread(myblob, f, amount));
+		Error('16-bit depth not supported: ' || pFile);    
+	end if;  
+	
+	ct := ord(fread(myblob, f, amount));	
 	if( ct = 0 ) then
 		myImgInfo.cs := 'DeviceGray';
 	elsif( ct = 2 ) then
@@ -1706,16 +1753,16 @@ begin
 	if( ord(fread(myblob, f, amount)) != 0 ) then
 		Error('Interlacing not supported: ' || pFile);
 	end if;
-
+	
 	amount := 4;
 	buf := fread(myblob, f, amount);
-
+	
 	if (ct = 2 ) then
 	  colors := 3;
 	else
 	  colors := 1;
 	end if;
-
+	
 	myImgInfo.parms := '/DecodeParms <</Predictor 15 /Colors ' || to_char(colors) || ' /BitsPerComponent ' || myImgInfo.bpc || ' /Columns ' || myImgInfo.w || '>>';
 	-- scan chunks looking for palette, transparency and image data
 	loop
@@ -1758,7 +1805,7 @@ begin
 		end if;
 		exit when n is null or n = 0;
 	end loop;
-
+	
 	imgDataStopsHere := dbms_lob.instr(myblob, utl_raw.cast_to_raw('IEND'),1,1);
 	-- copy image in the structure.
 	amount_rd := 8192;
@@ -1833,15 +1880,15 @@ function p_parseImage(pFile varchar2) return recImage is
   begin
     return utl_raw.cast_to_varchar2(freadb(pBlob, pHandle, pLength));
   end fread;
-
-  procedure fread_blob(pBlob in out nocopy blob, pHandle in out number,
+  
+  procedure fread_blob(pBlob in out nocopy blob, pHandle in out number, 
                        pLength in out number, pDestBlob in out nocopy blob ) is
   begin
     dbms_lob.trim( pDestBlob, 0);
     dbms_lob.copy( pDestBlob, pBlob, pLength, 1, pHandle );
     pHandle := pHandle + pLength;
   end fread_blob;
-
+  
   ---------------------------------------------------------------------------------------------
 
 begin
@@ -1867,7 +1914,7 @@ begin
 
     -- scan chunks looking for palette, transparency and image data
     loop
-
+    
         chunkdata_len := utl_raw.cast_to_binary_integer(freadb(myblob, f, chunklength_len));
         myType := fread(myblob, f, chunktype_len);
     --read chunk contents into separate blob
@@ -1884,12 +1931,12 @@ begin
       -- ^^^ I have already get width and height, so go forward (read 4 Bytes twice)
       buf := fread(chunk_content, f_chunk, widthheight_len);
 
-      myImgInfo.bpc := ord(fread(chunk_content, f_chunk, hdrflag_len));
+      myImgInfo.bpc := ord(fread(chunk_content, f_chunk, hdrflag_len));    
       if( myImgInfo.bpc > 8) then
-        Error('16-bit depth not supported: ' || pFile);
-      end if;
-
-      ct := ord(fread(chunk_content, f_chunk, hdrflag_len));
+        Error('16-bit depth not supported: ' || pFile);    
+      end if;  
+      
+      ct := ord(fread(chunk_content, f_chunk, hdrflag_len));    
       if( ct = 0 ) then
         myImgInfo.cs := 'DeviceGray';
       elsif( ct = 2 ) then
@@ -1913,9 +1960,9 @@ begin
       else
         colors := 1;
       end if;
-
+      
       myImgInfo.parms := '/DecodeParms <</Predictor 15 /Colors ' || to_char(colors) || ' /BitsPerComponent ' || myImgInfo.bpc || ' /Columns ' || myImgInfo.w || '>>';
-
+          
         elsif(myType = 'PLTE') then
             -- Read palette
             myImgInfo.pal := fread(chunk_content, f_chunk, chunkdata_len ) ;
@@ -1940,7 +1987,7 @@ begin
             exit;
         end if;
     end loop;
-
+    
     if( myImgInfo.cs = 'Indexed' and myImgInfo.pal is null) then
         Error('Missing palette in '|| pFile);
     end if;
@@ -1978,27 +2025,22 @@ begin
 	end if;
     p_out(s);
 end SetDash;
-
+  
 ----------------------------------------------------------------------------------------
 -- Methods from FPDF primary class
 ----------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------
 procedure Error(pmsg varchar2) is
 begin
-
     if gb_mode_debug then
 	  print('<pre>');
-    htpc(pdfDoc);
-    
-	  --for i in pdfDoc.first..pdfDoc.last loop
-	  --  if i is not null then
-	  --    print(replace(replace(pdfDoc(i),'>',';'),'<',';'));
-		--end if;
-	  --end loop;
+	  for i in pdfDoc.first..pdfDoc.last loop
+	    if i is not null then
+	      print(replace(replace(pdfDoc(i),'>','&gt;'),'<','&lt;'));
+		end if;
+	  end loop;
 	  print('</pre>');
-    return;
 	end if;
- 
 	-- Fatal error
 	raise_application_error(-20100,'<B>PL_FPDF error: </B>'|| pmsg);
 end Error;
@@ -2034,7 +2076,7 @@ begin
 		y:= y + lasth;
 	else
 		y:= y + h;
-    end if;
+    end if; 
 end Ln;
 
 ----------------------------------------------------------------------------------------
@@ -2048,11 +2090,11 @@ end GetX;
 procedure SetX(px number) is
 begin
 	-- Set x position
-	if(px>=0) then
+	if(px>=0) then 
 		x:=px;
 	else
 		x:=w+px;
-	end if;
+	end if; 
 end SetX;
 
 ----------------------------------------------------------------------------------------
@@ -2063,7 +2105,7 @@ begin
 end GetY;
 
 ----------------------------------------------------------------------------------------
-procedure SetY(py number) is
+procedure SetY(py number) is 
 begin
 	-- Set y position and reset x
 	x:=lMargin;
@@ -2071,11 +2113,11 @@ begin
 		y:=py;
 	else
 		y:=h+py;
-	end if;
+	end if; 
 end SetY;
 
 ----------------------------------------------------------------------------------------
-procedure SetXY(x number,y number) is
+procedure SetXY(x number,y number) is 
 begin
 	-- Set x and y positions
 	SetY(y);
@@ -2101,7 +2143,7 @@ begin
 end;
 
 ----------------------------------------------------------------------------------------
-procedure SetMargins(left number,top number ,right number default -1) is
+procedure SetMargins(left number,top number ,right number default -1) is 
 myright margin := right;
 begin
 	-- Set left, top and right margins
@@ -2109,18 +2151,18 @@ begin
 	tMargin:=top;
 	if(myright=-1) then
 		myright:=left;
-	end if;
+	end if; 
 	rMargin:=myright;
 end SetMargins;
 
 ----------------------------------------------------------------------------------------
-procedure SetLeftMargin( pMargin number) is
+procedure SetLeftMargin( pMargin number) is 
 begin
 	-- Set left margin
 	lMargin:=pMargin;
 	if(page > 0 and  x < pMargin) then
 		x:= pMargin;
-	end if;
+	end if; 
 end SetLeftMargin;
 
 ----------------------------------------------------------------------------------------
@@ -2131,14 +2173,14 @@ begin
 end SetTopMargin;
 
 ----------------------------------------------------------------------------------------
-procedure SetRightMargin(pMargin number) is
+procedure SetRightMargin(pMargin number) is 
 begin
 	-- Set right margin
 	rMargin := pMargin;
 end SetRightMargin;
 
 ----------------------------------------------------------------------------------------
-procedure SetAutoPageBreak(pauto boolean, pMargin number default 0) is
+procedure SetAutoPageBreak(pauto boolean, pMargin number default 0) is  
 begin
 	-- Set auto page break mode and triggering margin
 	AutoPageBreak := pauto;
@@ -2154,12 +2196,12 @@ begin
 		ZoomMode:= zoom;
 	else
 		Error('Incorrect zoom display mode: ' || zoom);
-	end if;
+	end if; 
 	if(layout in ('single', 'continuous', 'two', 'default')) then
 		LayoutMode := layout;
 	else
 		Error('Incorrect layout display mode: ' || layout);
-	end if;
+	end if; 
 end SetDisplayMode;
 
 ----------------------------------------------------------------------------------------
@@ -2170,7 +2212,7 @@ begin
 		b_compress:=p_compress;
 	else
 		b_compress:=false;
-	end if;
+	end if; 
 end SetCompression;
 
 ----------------------------------------------------------------------------------------
@@ -2250,15 +2292,15 @@ procedure Header is
     plsqStmt bigtext;
 begin
 	-- MyHeader_Proc defined in Declaration
-	if (not empty(MyHeader_Proc)) then
+	if (not empty(MyHeader_Proc)) then  
         -- building plsql stmt.
         plsqStmt := buildPlsqlStatment(MyHeader_Proc, MyHeader_ProcParam);
         -- Executing callback.
         execute immediate plsqStmt;
-	end if;
+	end if; 
 exception
     when others then
-        error('Header : '||sqlerrm||' statment : '||plsqStmt);
+        error('Header : '||sqlerrm||' statement : '||plsqStmt);
 end Header;
 
 ----------------------------------------------------------------------------------------
@@ -2268,19 +2310,19 @@ procedure Footer is
     plsqStmt bigtext;
 begin
 	-- MyFooter_Proc defined in Declaration
-	if (not empty(MyFooter_Proc)) then
+	if (not empty(MyFooter_Proc)) then  
         -- building plsql stmt.
         plsqStmt := buildPlsqlStatment(MyFooter_Proc, MyFooter_ProcParam);
         -- Executing callback.
 	   execute immediate plsqStmt;
-	end if;
+	end if; 
 exception
     when others then
-        error('Footer : '||sqlerrm||' statment : '||plsqStmt);
+        error('Footer : '||sqlerrm||' statement : '||plsqStmt);
 end Footer;
 
 ----------------------------------------------------------------------------------------
-function PageNo return number is
+function PageNo return number is 
 begin
 	-- Get current page number
 	return page;
@@ -2290,14 +2332,14 @@ end PageNo;
 procedure SetDrawColor(r number,g number default -1,b number default -1) is
 begin
 	-- Set color for all stroking operations
-	if((r=0 and g=0 and b=0) or g=-1)  then
+	if((r=0 and g=0 and b=0) or g=-1)  then 
 		DrawColor:=tochar(r/255,3)||' G';
 	else
 		DrawColor:=tochar(r/255,3) || ' ' || tochar(g/255,3) || ' ' || tochar(b/255,3) || ' RG';
-	end if;
+	end if; 
 	if(page>0) then
 		p_out(DrawColor);
-	end if;
+	end if; 
 end SetDrawColor;
 
 ----------------------------------------------------------------------------------------
@@ -2309,14 +2351,14 @@ begin
 	else
 		FillColor:=tochar(r/255,3) ||' '|| tochar(g/255,3) ||' '|| tochar(b/255,3) || ' rg';
 	end if;
-	if (FillColor!=TextColor) then
+	if (FillColor!=TextColor) then 
 	  ColorFlag:=true;
 	else
 	  ColorFlag:=false;
-	end if;
+	end if; 
 	if(page>0) then
 		p_out(FillColor);
-	end if;
+	end if; 
 end SetFillColor;
 
 ----------------------------------------------------------------------------------------
@@ -2327,31 +2369,31 @@ begin
 		TextColor:=tochar(r/255,3) || ' g';
 	else
 		TextColor:=tochar(r/255,3) ||' '|| tochar(g/255,3) ||' '|| tochar(b/255,3) || ' rg';
-	end if;
-	if (FillColor!=TextColor) then
+	end if; 
+	if (FillColor!=TextColor) then 
 	  ColorFlag:=true;
 	else
 	  ColorFlag:=false;
-	end if;
+	end if; 
 end SetTextColor;
 
 ----------------------------------------------------------------------------------------
-procedure SetLineWidth(width number) is
+procedure SetLineWidth(width number) is 
 begin
 	-- Set line width
 	LineWidth:=width;
-	if(page>0) then
+	if(page>0) then 
 		p_out(tochar(width*k,2) ||' w');
-	end if;
+	end if; 
 end SetLineWidth;
 
 ----------------------------------------------------------------------------------------
-procedure Line(x1 number,y1 number,x2 number,y2 number) is
+procedure Line(x1 number,y1 number,x2 number,y2 number) is 
 begin
 	-- Draw a line
-	p_out( tochar(x1*k,2) ||
-		   ' ' || tochar((h-y1)*k,2) ||
-		   ' m ' || tochar(x2*k,2) ||
+	p_out( tochar(x1*k,2) || 
+		   ' ' || tochar((h-y1)*k,2) || 
+		   ' m ' || tochar(x2*k,2) || 
 		   ' ' || tochar((h-y2)*k,2) || ' l S');
 end Line;
 
@@ -2366,15 +2408,18 @@ begin
 		op:='B';
 	else
 		op:='S';
-	end if;
+	end if; 
 	p_out(tochar(px*k,2) || ' ' || tochar((h-py)*k,2) || ' ' || tochar(pw*k,2) || ' ' || tochar(-ph*k,2) || ' re ' || op);
 end Rect;
 
 
 ----------------------------------------------------------------------------------------
 function AddLink return number is
-nb_link number := links.count + 1;
+nb_link number;
+--:= links.count + 1;
 begin
+nb_link := nvl(links.last+1,1);
+links.extend(1);
 	-- Create a new internal link
 	links(nb_link).zero := 0;
 	links(nb_link).un := 0;
@@ -2389,10 +2434,10 @@ begin
 	-- Set destination of internal link
 	if(mypy=-1) then
 		mypy:=y;
-	end if;
+	end if; 
 	if(myppage=-1) then
 		myppage:=page;
-	end if;
+	end if; 
 	links(plink).zero:=myppage;
 	links(plink).un:=mypy;
 end SetLink;
@@ -2404,25 +2449,17 @@ procedure Link(px number,py number,pw number,ph number,plink varchar2) is
   v_rec rec5;
 begin
 	-- Put a link on the page
-  -- Init PageLinks, if not exists
-  begin
-     v_last_plink := PageLinks.count;
-  exception
-     when others then
-        PageLinks := linksArray(v_rec);
-  end;
-  -- extend, so PageLinks(page) exists
-  v_last_plink := PageLinks.last;
-  v_ntoextend := page-v_last_plink;
-  if v_ntoextend > 0 then
-     PageLinks.extend(v_ntoextend);
-  end if;
+  
+  v_last_plink := nvl(PageLinks.last,0);
+  v_ntoextend := v_last_plink+1;
+     PageLinks.extend(1);
   -- set values
-	PageLinks(page).zero:=px*k;
-	PageLinks(page).un:=hPt-py*k;
-	PageLinks(page).deux:=pw*k;
-	PageLinks(page).trois:=ph*k;
-	PageLinks(page).quatre:=plink;
+  PageLinks(v_ntoextend).page:=page;
+	PageLinks(v_ntoextend).zero:=px*k;
+	PageLinks(v_ntoextend).un:=hPt-py*k;
+	PageLinks(v_ntoextend).deux:=pw*k;
+	PageLinks(v_ntoextend).trois:=ph*k;
+	PageLinks(v_ntoextend).quatre:=plink;
 end Link;
 
 
@@ -2434,10 +2471,10 @@ begin
 	s:='BT '|| tochar(px*k,2) ||' '|| tochar((h-py)*k,2) ||' Td ('||p_escape(ptxt)||') Tj ET';
 	if(underline and ptxt is not null) then
 		s := s || ' ' || p_dounderline(px,py,ptxt);
-	end if;
+	end if; 
 	if(ColorFlag) then
 		s := 'q '|| TextColor ||' ' || s || ' Q';
-	end if;
+	end if; 
 	p_out(s);
 end Text;
 
@@ -2462,10 +2499,10 @@ begin
 	-- Terminate document
 	if(state=3) then
 		return;
-	end if;
+	end if; 
 	if(page=0) then
 		AddPage();
-	end if;
+	end if; 
 	-- Page footer
 	InFooter:=true;
 	Footer();
@@ -2477,7 +2514,7 @@ begin
 end ClosePDF;
 
 ----------------------------------------------------------------------------------------
-procedure AddPage(orientation varchar2 default '') is
+procedure AddPage(orientation varchar2 default '') is 
 myFamily txt;
 myStyle txt;
 mySize number := fontsizePt;
@@ -2493,9 +2530,9 @@ begin
 		OpenPDF();
 	end if;
 	myFamily:= FontFamily;
-	if (underline) then
+	if (underline) then 
 	   myStyle := FontStyle || 'U';
-	end if;
+	end if; 
 	if(page>0) then
 		-- Page footer
 		InFooter:=true;
@@ -2503,7 +2540,7 @@ begin
 		InFooter:=false;
 		-- Close page
 		p_endpage();
-	end if;
+	end if; 
 	-- Start new page
 	p_beginpage(orientation);
 	-- Set line cap style to square
@@ -2514,16 +2551,16 @@ begin
 	-- Set font
 	if(myFamily is not null) then
 		SetFont(myFamily,myStyle,mySize);
-	end if;
+	end if; 
 	-- Set colors
 	DrawColor:=dc;
 	if(dc!='0 G') then
 		p_out(dc);
-	end if;
+	end if; 
 	FillColor:=fc;
 	if(fc!='0 g') then
 		p_out(fc);
-	end if;
+	end if; 
 	TextColor:= tc;
 	ColorFlag:= cf;
 	-- Page header
@@ -2532,21 +2569,21 @@ begin
 	if(LineWidth!=lw) then
 		LineWidth:=lw;
 		p_out(tochar(lw*k)||' w');
-	end if;
+	end if; 
 	-- Restore font
 
 	if myFamily is null then
 		SetFont(myFamily,myStyle,mySize);
-	end if;
+	end if; 
 	-- Restore colors
 	if(DrawColor!=dc) then
 		DrawColor:=dc;
 		p_out(dc);
-	end if;
-	if(FillColor!=fc) then
+	end if; 
+	if(FillColor!=fc) then 
 		FillColor:=fc;
 		p_out(fc);
-	end if;
+	end if; 
 	TextColor:=tc;
 	ColorFlag:=cf;
 end AddPage;
@@ -2566,7 +2603,7 @@ begin
 	page:=0;
 	n:=2;
 	-- Open the final structure for the PDF document.
-	--pdfDoc(1) := null;
+	pdfDoc(1) := null;
 	state:=0;
 	InFooter:=false;
 	lasth:=0;
@@ -2596,8 +2633,8 @@ begin
 	CoreFonts('timesBI') := 'Times-BoldItalic';
 	CoreFonts('symbol') := 'Symbol';
 	CoreFonts('zapfdingbats') := 'ZapfDingbats';
-
-	-- Scale factor
+	
+	-- Scale factor 
 	if(unit='pt') then
 		k:=1;
 	elsif(unit='mm') then
@@ -2608,11 +2645,11 @@ begin
 		k:=72;
 	else
 		Error('Incorrect unit: ' || unit);
-	end if;
-
+	end if; 
+	
 	-- Others added properties
 	Linespacing := fontsizePt / k;	-- minimum line spacing in multicell
-
+	
 	-- Page format
 	if(is_string(myformat)) then
 		myformat:=strtolower(myformat);
@@ -2633,13 +2670,13 @@ begin
 			formatArray.hauteur := 1008;
 		else
 			Error('Unknown page format: '|| myformat);
-		end if;
+		end if; 
 		fwPt:=formatArray.largeur;
 		fhPt:=formatArray.hauteur;
 	else
 		fwPt:=formatArray.largeur*k;
 		fhPt:=formatArray.hauteur*k;
-	end if;
+	end if; 
 	fw:=fwPt/k;
 	fh:=fhPt/k;
 	-- Page orientation
@@ -2654,14 +2691,14 @@ begin
 		hPt:=fwPt;
 	else
 		Error('Incorrect orientation: ' || myorientation);
-	end if;
+	end if; 
 	CurOrientation:=DefOrientation;
 	w:=wPt/k;
 	h:=hPt/k;
-	-- Page margins (1 cm)
+	-- Page margins (1 cm) 
 	mymargin:=28.35/k;
 	SetMargins(mymargin,mymargin);
-	-- Interior cell margin (1 mm)
+	-- Interior cell margin (1 mm) 
 	cMargin:=mymargin/10;
 	-- Line width (0.2 mm)
 	LineWidth:=.567/k;
@@ -2673,6 +2710,10 @@ begin
 	SetCompression(false);
 	-- Set default PDF version number
 	PDFVersion:='1.3';
+  
+  -- MBR 03.03.2010: re-initialize images collection
+  images.delete;
+  
 end fpdf;
 
 ----------------------------------------------------------------------------------------
@@ -2693,22 +2734,22 @@ begin
 	myfamily:=strtolower(myfamily);
 	if myfile is null then
 		myfile:=str_replace(' ','',myfamily) || strtolower(mystyle) || '.php';
-	end if;
+	end if; 
 	if(myfamily='arial') then
 		myfamily:='helvetica';
-	end if;
+	end if; 
 	mystyle:=strtoupper(mystyle);
 	if(mystyle='IB')  then
 		mystyle:='BI';
-	end if;
-
+	end if; 
+	
 	fontkey:=myfamily || mystyle;
 	if(fonts.exists(fontkey)) then
 		Error('Font already added: ' || myfamily || ' ' || mystyle);
-	end if;
-
+	end if; 
+    
 	p_includeFont(fontkey);
-
+	
 
 	fontCount:=nvl(fonts.count, 0) + 1;
 
@@ -2719,7 +2760,7 @@ begin
 	fonts(fontkey).ut := 50;
 	fonts(fontkey).cw := fpdf_charWidths(fontkey);
 	fonts(fontkey).file := myfile;
-
+	
 	if(myDiff is not null) then
 		-- Search existing encodings
 		d:=0;
@@ -2729,14 +2770,14 @@ begin
 			if(diffs(i) = myDiff) then
 				d:=i;
 				exit;
-			end if;
+			end if; 
 		end loop;
 		if(d=0) then
 			d:=nb+1;
 			diffs(d):=myDiff;
-		end if;
+		end if; 
 		fonts(fontkey).diff:=d;
-	end if;
+	end if; 
 
 	if(myfile is not null) then
 		if(myType = 'TrueType') then
@@ -2744,8 +2785,8 @@ begin
 		else
 		    FontFiles(myfile).length1 := size1;
 		    FontFiles(myfile).length2 := size2;
-		end if;
-	end if;
+		end if; 
+	end if; 
 end AddFont;
 
 ----------------------------------------------------------------------------------------
@@ -2763,68 +2804,68 @@ begin
 
 	if myfamily is null then
 		myfamily:=FontFamily;
-	end if;
-
+	end if; 
+	
 	if(myfamily='arial') then
 		myfamily:='helvetica';
 	elsif(myfamily='symbol' or  myfamily='zapfdingbats') then
 		mystyle:='';
-	end if;
+	end if; 
 	mystyle:=strtoupper(mystyle);
-
+	
 	if(instr(mystyle,'U') > 0) then
 		underline:=true;
 		mystyle:=str_replace('U','',mystyle);
 	else
 		underline:=false;
-	end if;
+	end if; 
 	if(mystyle='IB') then
 		mystyle:='BI';
-	end if;
+	end if; 
 	if(mysize=0) then
 		mysize:=fontsizePt;
-	end if;
+	end if; 
 
 	-- Test if font is already selected
 	if(FontFamily=myfamily and fontstyle=mystyle and fontsizePt=mysize) then
 		return;
-	end if;
-
-	-- Test if used for the first time
+	end if; 
+	
+	-- Test if used for the first time	
 	fontkey:=nvl(myfamily || mystyle, '');
 
 
 	--if(not fontsExists(fontkey)) then
 	if(not fonts.exists(fontkey)) then
 		-- Check if one of the standard fonts
-
+		
 		if(CoreFonts.exists(fontkey)) then
 			--if(not fpdf_charwidthsExists(fontkey)) then
 			if(not fpdf_charwidths.exists(fontkey)) then
 				-- Load metric file
-
+				
 				myFontFile:=myfamily;
 				if(myfamily='times' or myfamily='helvetica') then
 					myFontFile:=myFontFile || strtolower(mystyle);
-				end if;
-				--
+				end if; 
+				-- 
 				p_includeFont(fontkey);
-				--
+				-- 
 				if(not fpdf_charwidthsExists(fontkey)) then
 					Error('Could not include font metric file');
-				end if;
-			end if;
+				end if; 
+			end if; 
 			FontCount:=nvl(fonts.count,0) + 1;
 			fonts(fontkey).i := FontCount;
 	 		fonts(fontkey).type := 'core';
-			fonts(fontkey).name := CoreFonts(fontkey);
-			fonts(fontkey).up  := -100;
-			fonts(fontkey).ut := 50;
-			fonts(fontkey).cw  := fpdf_charwidths(fontkey);
+			fonts(fontkey).name := CoreFonts(fontkey); 
+			fonts(fontkey).up  := -100;  
+			fonts(fontkey).ut := 50;   
+			fonts(fontkey).cw  := fpdf_charwidths(fontkey);  
 		else
 			Error('Undefined font: ' || myfamily || ' ' || mystyle);
-		end if;
-	end if;
+		end if; 
+	end if; 
 	-- Select it
 	FontFamily:=myfamily;
 	fontstyle:=mystyle;
@@ -2835,7 +2876,7 @@ begin
 	-- end if;
 	if(page>0) then
 		p_out('BT /F'||CurrentFont.i||' '||tochar(fontsizePt,2)||' Tf ET');
-	end if;
+	end if; 
 end SetFont;
 
 
@@ -2870,12 +2911,12 @@ begin
 	-- Set font size in points
 	if(fontsizePt=psize) then
 		return;
-	end if;
+	end if; 
 	fontsizePt:=psize;
 	fontsize:=psize/k;
 	if(page>0) then
 		p_out('BT /F'||CurrentFont.i||' '||tochar(fontsizePt,2)||' Tf ET');
-	end if;
+	end if; 
 end SetFontSize;
 
 ----------------------------------------------------------------------------------------
@@ -2893,60 +2934,60 @@ procedure Cell
  myX x%type := x;
  myY y%type := y;
  myWS ws%type := ws;
- myS txt;
- myOP txt;
+ myS bigtext; -- was: txt
+ myOP bigtext; -- was: txt
  myDX number;
- myTXT2 txt;
+ myTXT2 bigtext; -- was: txt
 begin
   null;
-	-- Output a cell
+	-- Output a cell 
 	if( ( y + ph > pageBreakTrigger) and  not InFooter and AcceptPageBreak()) then
 		-- Automatic page break
 		if(myWS > 0) then
 			ws:=0;
 			p_out('0 Tw');
-		end if;
+		end if; 
 		AddPage(CurOrientation);
 		x:=myX;
 		if(myWS > 0) then
 			ws := myWS;
 			p_out(tochar(myWS * myK,3) ||' Tw');
-		end if;
-	end if;
+		end if; 
+	end if; 
 
 	if(myPW = 0) then
 		myPW := w - rMargin - x;
-	end if;
+	end if; 
 	myS := '';
 	if(pfill = 1 or pborder = '1') then
-		if(pfill = 1) then
-		  if (pborder = '1') then
+		if(pfill = 1) then 
+		  if (pborder = '1') then 
 		    myOP :=  'B';
 		  else
 		    myOP := 'f';
-		  end if;
+		  end if; 
 		else
 			myOP := 'S';
-		end if;
+		end if; 
 		myS := tochar(x*myK,2)||' '||tochar((h-y)*myK,2)||' '||tochar(myPW*myK,2)||' '||tochar(-ph*myK,2)||' re '||myOP||' ';
-	end if;
-
+	end if; 
+	
 	if(is_string(pborder)) then
 		myX := x;
 		myY := y;
 		if(instr(pborder,'L') > 0) then
 			myS := myS || tochar(myX*myK,2) ||' '||tochar((h-myY)*myK,2)||' m '||tochar(myX*myK,2)||' '||tochar((h-(myY+ph))*myK,2)||' l S ';
-		end if;
+		end if; 
 		if(instr(pborder,'T') > 0) then
 			myS := myS || tochar(myX*myK,2)||' '||tochar((h-myY)*myK,2)||' m '||tochar((myX+myPW)*myK,2)||' '||tochar((h-myY)*myK,2)||' l S ';
-		end if;
+		end if; 
 		if(instr(pborder,'R') > 0) then
 			myS := myS || tochar((myX+myPW)*myK,2)||' '||tochar((h-myY)*myK,2)||' m '||tochar((myX+myPW)*myK,2)||' '||tochar((h-(myY+ph))*myK,2)||' l S ';
-		end if;
+		end if; 
 		if(instr(pborder,'B') > 0) then
 			myS := myS || tochar(myX*myK,2)||' '||tochar((h-(myY+ph))*myK,2)||' m '||tochar((myX+myPW)*myK,2)||' '||tochar((h-(myY+ph))*myK,2)||' l S ';
-		end if;
-	end if;
+		end if; 
+	end if; 
 	if ptxt is not null then
 		if(palign='R') then
 			myDX := myPW - cMargin - GetStringWidth(ptxt);
@@ -2954,26 +2995,30 @@ begin
 			myDX := (myPW - GetStringWidth(ptxt))/2;
 		else
 			myDX := cMargin;
-		end if;
+		end if; 
 		if(ColorFlag) then
 			myS := myS || 'q ' || TextColor || ' ';
-	    end if;
+	    end if; 
 		-- myTXT2 := str_replace(')','\\)',str_replace('(','\\(',str_replace('\\','\\\\',ptxt)));
 		myTXT2 := str_replace('\\','\\\\',ptxt);
+		
+  -- FDL 20.06.2011: Need to espace paranthesis in the text
+  myTXT2 := p_escape (myTXT2);
+		
     myS := myS || 'BT '||tochar((x+myDX)*myK,2)||' '||tochar((h-(y+.5*ph+.3*fontsize))*myK,2)||' Td ('||myTXT2||') Tj ET';
 		if(underline) then
 			myS := myS || ' ' || p_dounderline(x+myDX,y+.5*ph+.3*fontsize,ptxt);
-		end if;
+		end if; 
 		if(ColorFlag) then
 			myS := myS || ' Q';
-		end if;
+		end if; 
 		if(not empty(plink)) then
 			Link(x + myDX,y + .5*ph - .5*fontsize, GetStringWidth(ptxt), fontsize, plink);
-	    end if;
-	end if;
+	    end if; 
+	end if; 
 	if(not empty(myS)) then
 		p_out(myS);
-	end if;
+	end if; 
 
 	lasth := ph;
 	if( pln>0 ) then
@@ -2981,13 +3026,13 @@ begin
 		y := y + ph;
 		if(pln=1) then
 			x := lMargin;
-		end if;
+		end if; 
 	else
 		x := x + myPW;
-	end if;
-exception
+	end if; 
+exception 
   when others then
-   error('MultiCell : '||sqlerrm);
+   error('Cell : '||sqlerrm);
 end Cell;
 
 ----------------------------------------------------------------------------------------
@@ -3003,15 +3048,15 @@ procedure MultiCell
 	palign varchar2 default 'J',
 	pfill number default 0,
 	phMax number default 0) is
-
+	
   charSetWidth CharSet;
   myPW number := pw;
   myBorder word := pborder;
-  myS txt;
+  myS bigtext; -- was: txt
   myNB number;
   wmax number;
-  myB txt;
-  myB2 txt;
+  myB bigtext; -- was: txt
+  myB2 bigtext; -- was: txt
   sep number := -1;
 --  i number := 0;
 --  j number := 0;
@@ -3027,22 +3072,22 @@ procedure MultiCell
   myH number := pH;
 begin
 	-- Output text with automatic or explicit line breaks
-
+	
 	-- see if we need to set Height to the minimum linespace
 	if (myH = 0) then
 	  myH := getLineSpacing;
 	end if;
-
+	
 	charSetWidth := CurrentFont.cw;
 	if(myPW = 0) then
 		myPW:=w - rMargin - x;
-	end if;
+	end if; 
 	wmax := (myPW - 2 * cMargin) * 1000 / fontsize;
 	myS := str_replace(CHR(13),'',ptxt);
 	myNB := strlen(myS);
 	if(myNB > 0 and substr(myS,-1) = CHR(10) ) then
 		myNB := myNB - 1;
-	end if;
+	end if; 
 	myB := 0;
 
 	if (myBorder is not null) then
@@ -3054,17 +3099,17 @@ begin
 			myB2 := '';
 			if(instr(myBorder,'L') > 0) then
 				myB2 := myB2 || 'L';
-			end if;
+			end if; 
 			if(instr(myBorder,'R') > 0) then
 				myB2 := myB2 || 'R';
-			end if;
-			if (instr(myBorder,'T') > 0) then
+			end if; 
+			if (instr(myBorder,'T') > 0) then 
 			  myB := myB2 || 'T';
 			else
 			  myB := myB2;
-			end if;
-		end if;
-	end if;
+			end if; 
+		end if; 
+	end if; 
 
 	while(i <= myNB)
 	loop
@@ -3076,7 +3121,7 @@ begin
 			if(ws > 0) then
 				ws := 0;
 				p_out('0 Tw');
-			end if;
+			end if; 
 			Cell(myPW,myH,substr(myS,j,i-j),myB,2,palign,pfill);
 			cumulativeHeight := cumulativeHeight + myH;
 			i := i + 1;
@@ -3087,42 +3132,42 @@ begin
 			nl := nl + 1;
 			if(myBorder is not null and nl = 2) then
 				myB := myB2;
-			end if;
-			-- si on passe l� on continue � la prochaine it�ration de la boucle
+			end if; 
+			-- si on passe l� on continue � la prochaine it�ration de la boucle 
 			-- en PHP il y avait l'instruction "continue" .
 			lb_skip := true;
-		end if;
-
-		if (not lb_skip) then
+		end if; 
+		
+		if (not lb_skip) then 
 			if(carac =' ') then
 				sep := i;
 				ls := l;
 				ns := ns + 1;
-			end if;
+			end if; 
 			l := l + charSetWidth (carac);
 			if( l > wmax) then
 				-- Automatic line break
 				if(sep=-1) then
 					if(i=j) then
 						i := i + 1;
-					end if;
+					end if; 
 					if(ws > 0) then
 						ws := 0;
 						p_out('0 Tw');
-					end if;
+					end if; 
 					Cell(myPW,myH,substr(myS,j,i-j),myB,2,palign,pfill);
 				else
 					if(palign = 'J') then
-					    if (ns > 1) then
+					    if (ns > 1) then 
 						  ws := (wmax - ls)/1000*fontsize/(ns-1);
 						else
 						  ws := 0;
-						end if;
+						end if; 
 						p_out(''|| tochar(ws*k,3) ||' Tw');
-					end if;
+					end if; 
 					Cell(myPW,myH,substr(myS,j,sep-j),myB,2,palign,pfill);
 					i := sep + 1;
-				end if;
+				end if; 
 				cumulativeHeight := cumulativeHeight + myH;
 				sep := -1;
 				j := i;
@@ -3131,19 +3176,19 @@ begin
 				nl := nl + 1;
 				if(myBorder is not null and nl = 2) then
 					myB := myB2;
-				end if;
+				end if; 
 			else
 			  i := i + 1;
-			end if;
-		end if;
+			end if; 
+		end if; 
 	end loop;
 
 	-- Last chunk
 	if(ws > 0) then
 		ws := 0;
 		p_out('0 Tw');
-	end if;
-
+	end if; 
+	
 	if(myBorder is not null and instr(myBorder,'B') > 0) then
 	  if (phMax > 0) then
 	    if (cumulativeHeight >= phMax) then
@@ -3152,24 +3197,24 @@ begin
 	  else
 	    myB := myB || 'B';
 	  end if;
-	end if;
+	end if; 
 	Cell(myPW,myH,substr(myS,j,i-j),myB,2,palign,pfill);
 	cumulativeHeight := cumulativeHeight + myH;
-
+	
     -- add an empty cell if phMax is not reached.
 	if (phMax > 0) then
 	    if ( cumulativeHeight < phMax ) then
 		    -- dealing with the bottom border.
 			if(myBorder is not null and instr(myBorder,'B') > 0) then
 				myB := myB || 'B';
-			end if;
+			end if; 
 	        Cell(myPW,phMax-cumulativeHeight,null,myB,2,palign,pfill);
 	    end if;
 	end if;
 
 	x := lMargin;
 
-exception
+exception 
   when others then
    error('MultiCell : '||sqlerrm);
 end MultiCell;
@@ -3177,14 +3222,14 @@ end MultiCell;
 
 
 ----------------------------------------------------------------------------------------
-procedure image ( pFile varchar2,
-		  		  pX number,
-				  pY number,
+procedure image ( pFile varchar2, 
+		  		  pX number, 
+				  pY number, 
 				  pWidth number default 0,
 				  pHeight number default 0,
 				  pType varchar2 default null,
 				  pLink varchar2 default null) is
-
+				  
    myFile varchar2(2000) := pFile;
    -- myType varchar2(256) := pType;
    myW number := pWidth;
@@ -3217,7 +3262,7 @@ begin
 	if(pLink is not null) then
 		Link(pX,pY,myW,myH,pLink);
 	end if;
-exception
+exception 
   when others then
    error('image : '||sqlerrm);
 end image;
@@ -3254,10 +3299,10 @@ begin
 	while i <= nb  loop
 		-- Get next character
 		c := substr(s, i, 1);
-
+    
     -- Explicit line break
 		if(c = chr(10)) then
-			Cell(myW, pH, substr(s,j,i-j), 0, 1, '', 0, plink);
+			Cell(myW, pH, substr(s,j,i-j), 0, 1, '', 0, plink);   
       -- positioned at beginning of new line
 			i := i + 1;
 			sep := -1;
@@ -3265,15 +3310,15 @@ begin
 			l := 0;
       myW := w - rMargin - x;
 			myWmax := (myW - 2 * cMargin) * 1000 / FontSize;  -- whole line
-
-    else
+		
+    else 
 			if c = ' ' then
 				 sep := i;
          lsep := 0;
          lastl := l;
       else
          lsep := lsep + charSetWidth(c);
-			end if;
+			end if; 
 			l := l + charSetWidth(c);
 			if l > myWmax then
 				-- Automatic line break
@@ -3288,7 +3333,7 @@ begin
           j := i;
           sep := -1;
           l := lsep-(myWmax-lastl);  -- rest remaining space from previous line
-                                     -- WHY ????
+                                     -- WHY ????   
 				end if;
         myW := w - rMargin - x;
 				myWmax := (myW - 2 * cMargin) * 1000 / FontSize;
@@ -3301,10 +3346,35 @@ begin
 	if( i != j ) then
 		 Cell((l+2*cMargin) / 1000 * FontSize, pH, substr(s,j), 0, 0, '', 0, plink);
   end if;
-exception
+exception 
    when others then
       error('write : '||sqlerrm);
 end write;
+
+
+procedure htp_print_clob (p_clob in clob)
+as
+  l_buffer   varchar2(32767);
+  c_max_size constant integer := 8000; -- 32767
+  l_start    integer := 1;
+  l_cloblen  integer; 
+begin
+
+  if p_clob is not null then
+  
+    l_cloblen := dbms_lob.getlength (p_clob );
+  
+    loop
+      l_buffer := dbms_lob.substr (p_clob, c_max_size, l_start);
+      htp.prn (l_buffer);
+      l_start := l_start + c_max_size;
+      exit when l_start > l_cloblen;
+    end loop ;
+  
+  end if;
+
+end htp_print_clob;
+
 
 ----------------------------------------------------------------------------------------
 procedure Output(pname varchar2 default null,pdest varchar2 default null) is
@@ -3319,14 +3389,13 @@ procedure Output(pname varchar2 default null,pdest varchar2 default null) is
    v_warning pls_integer;
    v_len pls_integer;
 begin
-	 htp.init;
    dbms_lob.createtemporary(v_blob, false, dbms_lob.session);
    dbms_lob.createtemporary(v_doc, false, dbms_lob.session);
 	 -- Output PDF to some destination
 	 -- Finish document if necessary
 	 if state < 3 then
 		  ClosePDF();
-	 end if;
+	 end if; 
 	 myDest := strtoupper(myDest);
 	 if(myDest is null) then
 		  if(myName is null) then
@@ -3334,242 +3403,156 @@ begin
 			   myDest := 'I';
 		  else
 			   myDest := 'D';
-		  end if;
-	 end if;
-
-  --_application_error(-20100,'<B>PL_FPDF error: </B>');
-      
-
-	 if (myDest = 'I') then
+		  end if; 
+	 end if; 
+		
+	 if (myDest = 'I') then 
       -- Send as pdf to a browser
       OWA_UTIL.MIME_HEADER('application/pdf',false);
       htp.print('Content-Length: ' || getPDFDocLength());
       htp.print('Content-disposition: inline; filename="' || myName || '"');
       owa_util.http_header_close;
 
+			-- restitution du contenu...
       v_len := 1;
-			/*
       for i in pdfDoc.first..pdfDoc.last loop
          v_clob := pdfDoc(i);
          if v_clob is not null then
-            v_in 			:= 1;
-            v_out 		:= 1;
-            v_lang 		:= 0;
+            v_in := 1;
+            v_out := 1;
+            v_lang := 0;
             v_warning := 0;
-            v_len 		:= dbms_lob.getlength(v_clob);
+            v_len := dbms_lob.getlength(v_clob); 
+
+            -- empty the blob (otherwise it will keep growing because the converttoblob parameter is in/out)
+            dbms_lob.trim(v_blob,0);
+
             dbms_lob.convertToBlob(v_blob, v_clob, v_len, v_in, v_out, dbms_lob.default_csid, v_lang, v_warning);
-            --dbms_lob.append(v_doc, dbms_lob.substr(v_blob, v_len));
-						dbms_lob.append(v_doc, v_blob);
+            --dbms_lob.convertToBlob(v_blob, v_clob, v_len, v_in, v_out, nls_charset_id('AL32UTF8'), v_lang, v_warning);
+            dbms_lob.append(v_doc, dbms_lob.substr(v_blob, v_len));   
          end if;
       end loop;
-			*/
-
-      v_in 			:= 1;
-      v_out 		:= 1;
-      v_lang 		:= 0;
-      v_warning := 0;
-      v_len 		:= dbms_lob.getlength(pdfDoc);
-    	dbms_lob.convertToBlob(v_blob, pdfDoc, v_len, v_in, v_out, dbms_lob.default_csid, v_lang, v_warning);
-      dbms_lob.append(v_doc, v_blob);
-        
-			wpg_docload.download_file(v_doc);
-
+      wpg_docload.download_file(v_doc);
+       
 		elsif (myDest = 'D') then
-
+   
 			-- Download file
 			if(not empty(owa_util.get_cgi_env('HTTP_USER_AGENT')) and instr(owa_util.get_cgi_env('HTTP_USER_AGENT'),'MSIE') > 0) then
 				OWA_UTIL.MIME_HEADER('application/force-download',false);
 			else
 				OWA_UTIL.MIME_HEADER('application/octet-stream',false);
-			end if;
+			end if; 
 			htp.print('Content-Length: ' || getPDFDocLength());
 			htp.print('Content-disposition: attachment; filename="' || myName || '"');
 			owa_util.http_header_close;
-				
-      htpc(pdfDoc);
-				
-			-- restitution du contenu...
-			--	for i in pdfDoc.first..pdfDoc.last loop
-			--	  htp.prn(pdfDoc(i));
-			--	end loop;
 
-		elsif (myDest = 'S') then
+			-- restitution du contenu...
+				for i in pdfDoc.first..pdfDoc.last loop
+				  --htp.prn(pdfDoc(i));
+          htp_print_clob (pdfDoc(i));
+				end loop;
+								
+		elsif (myDest = 'S') then 
 		    --OWA_UTIL.MIME_HEADER('application/pdf');
 			OWA_UTIL.MIME_HEADER('text/html');
-			htpc(replace(replace(replace(pdfDoc,'<', ';'),'>',';'),chr(10),'<br/>'));
-			
-      -- Return as a string
-			--for i in pdfDoc.first..pdfDoc.last loop
-			--  htp.prn(replace(replace(replace(pdfDoc(i),'<', ';'),'>',';'),chr(10),'<br/>'));
-			--end loop;
+			-- Return as a string
+			for i in pdfDoc.first..pdfDoc.last loop
+			  htp.prn(replace(replace(replace(pdfDoc(i),'<', '&lt;'),'>','&gt;'),chr(10),'<br/>'));
+			end loop;
 		else
-			Error('Incorrect output destination: ' || myDest);
-		end if;
-    
-exception
-	when others then
-		error('Output : '||sqlerrm);
+			error('Incorrect output destination: ' || myDest);
+		end if; 
+     
+exception 
+   when others then
+      error('Output : '||sqlerrm);
 end Output;
+ 
 
-
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------
--- Test procedures, and samples code.
-----------------------------------------------------------------------------------------
-procedure helloworld is
+function get_output return blob
+as
+  l_returnvalue                  blob;
+  
+  l_blob                         blob;
+  l_clob                         clob;
+  l_in                           pls_integer;
+  l_out                          pls_integer;
+  l_lang                         pls_integer;
+  l_warning                      pls_integer;
+   
+  c_max_size                     constant pls_integer := 8000; -- 32767
+  l_start                        pls_integer := 1;
+  l_cloblen                      pls_integer; 
+   
 begin
-    FPDF('P','cm','A4');
-    openpdf;
-    AddPage();
-    SetFont('Arial','B',16);
-    Cell(0,1.2,'Hello World',0,1,'C');
-    Output();
-end helloworld;
-
-----------------------------------------------------------------------------------------
--- testImg :  Testing with an image.
-----------------------------------------------------------------------------------------
-procedure testImg is
- img varchar2(2000);
-begin
-    FPDF('P','cm','A4');
-    openpdf;
-    AddPage();
-    SetFont('Arial','B',16);
-    img := 'http://www.laclasse.com/v2/images/picto_laclassev2.png';
-    Image(img,1, 1, 10);
-    Output();
-end testImg;
-
-----------------------------------------------------------------------------------------
--- test :  Generic Testing proc. Put here what you want !
--------------------------------------------- --------------------------------------------
-procedure test(pdest varchar2 default 'D') is
-  myImgInfo recImage;
-  img varchar2(2000);
-  someTxt bigtext;
-begin
-	FPDF('P','cm','A4');
-	openpdf;
-	--setMargins(2,2,-2);
-	AddPage();
-	SetFont('Arial','B',16);
-	SetTextColor(132,0,132);
-
-/* TEST HELLOWORD */
-	Cell(0,1.2,'(Helloworld avec des parenth�ses !)',0,1,'C');
-
-
-/*
- -- Test image
-   print('Test de chargement d''une image � partir d''une url...<br>');
-   --img := '/v2/images/b2i/fonds/fd_livret_college.png';
-   img := '/v2/images/picto_laclassev2.png';
-   --img := '/v2/images/picto_calendar.jpg';
-
-   print('<img src="'||img||'"/><br>');
-   myImgInfo := p_parseImage(img);
-   print('i='||myImgInfo.i||'<br>');
-   print('w='||myImgInfo.w||'<br>');
-   print('h='||myImgInfo.h||'<br>');
-   print('bpc='||myImgInfo.bpc||'<br>');
-   print('lg='||dbms_lob.getlength( myImgInfo.data) ||' octets<br>');
-   print('f='||myImgInfo.f||'<br>');
-   print('cs='||myImgInfo.cs||'<br>');
-   print('parms='||myImgInfo.parms||'<br>');
-   print('pal='||myImgInfo.pal||'<br>');
-   /*
-   for i in myImgInfo.trns.first..myImgInfo.trns.last loop
-     if i is not null then
-   	   print('trns='||myImgInfo.trns(i)||'<br>');
-	 end if;
-   end loop;
-  */
-
-
- -- TEST Image
-
- img := '/v2/images/b2i/fonds/fd_livret_college.png';
- --img := '/v2/images/picto_laclassev2.png';
-
- Image(img,1, 1, 10);
- Cell(0,1.2,'Validation des comp�tences du B2i',0,1,'C');
-
-/*
-  AddPage();
-  Cell(0,1.2,'Validation des comp�tences du B2i page 2',0,1,'C');
 
   /*
-  someTxt := 'some Texte some Texte some Texte some Texte some Texte some Texte some Texte some Texte ';
-  someTxt := someTxt || someTxt;
-  --someTxt := someTxt || someTxt;
 
-  -- TEST DE Text
-    SetFont('Arial','',12);
-	text(10, 20, someTxt);
-   */
+  Purpose:    Return PDF file as BLOB
 
-	Output(pdest=>pdest);
+  Remarks:    
+
+  Who     Date        Description
+  ------  ----------  -------------------------------------
+  MBR     08.01.2010  Created
+
+  */
+
+  dbms_lob.createtemporary(l_blob, true, dbms_lob.session);
+  dbms_lob.createtemporary(l_returnvalue, true, dbms_lob.session);
+
+	-- Finish document if necessary
+
+	if state < 3 then
+	  ClosePDF();
+	end if; 
+
+  for i in pdfDoc.first .. pdfDoc.last loop
+         
+     --debug_pkg.printf('i = %1', i);
+         
+     l_clob := pdfDoc(i);
+         
+     if l_clob is not null then
+
+        l_cloblen := dbms_lob.getlength (l_clob);
+        l_in := 1;
+        l_out := 1;
+        l_lang := 0;
+        l_warning := 0;
+
+        --debug_pkg.printf('clob length = %1', l_cloblen);
+
+        -- empty the blob (otherwise it will keep growing because the converttoblob parameter is in/out)
+        dbms_lob.trim(l_blob,0);
+
+        dbms_lob.converttoblob(l_blob, l_clob, l_cloblen, l_in, l_out, dbms_lob.default_csid, l_lang, l_warning);
+            
+        --debug_pkg.printf('blob length = %1', dbms_lob.getlength(v_blob));
+
+        l_start := 1;
+
+        loop
+          --debug_pkg.printf('... appending from position %1', l_start);
+          dbms_lob.append(l_returnvalue, dbms_lob.substr (l_blob, c_max_size, l_start));
+          l_start := l_start + c_max_size;
+          exit when l_start > l_cloblen;
+        end loop ;
+               
+     end if;
+         
+  end loop;
+      
+  return l_returnvalue;
+
+end get_output; 
+ 
+ 
+procedure test(pdest varchar2 default 'D')
+is
+begin
+  null;
 end test;
-
-
-----------------------------------------------------------------------------------------
--- MyRepetitiveHeader :  Proc that illustrates Header hooks.
--- The Header hook procedure has to be PUBLIC. (Spec declaration needeed).
-----------------------------------------------------------------------------------------
-procedure MyRepetitiveHeader(param1 varchar2, param2 varchar2) is
-begin
-    SetFont('Arial','I',9);
-    cell(0,0,'Repetitive Header param1='||param1||', param2='||param2,0,1,'C');
-    line(1,1.2,20,1.2);
-end MyRepetitiveHeader;
-
-----------------------------------------------------------------------------------------
--- MyRepetitiveFooter :  Proc that illustrates Footer hooks.
--- The Footer hook procedure has to be PUBLIC. (Spec declaration needeed).
-----------------------------------------------------------------------------------------
-procedure MyRepetitiveFooter is
-begin
-    SetFont('Arial',null,9);
-    line(1,28,20,28);
-    write(52,'Repetitive Footer');
-end MyRepetitiveFooter;
-
-----------------------------------------------------------------------------------------
--- testHeader :  Proc that illustrates how to call header and footer hooks.
-----------------------------------------------------------------------------------------
-procedure testHeader is
- img varchar2(2000);
- tHdr tv4000a; -- This is a table for the custom header proc hooked
-begin
-    -- setting parameter values for proc 'MyRepetitiveHeader'
-    tHdr('param1') := 'Value for Param1';
-    tHdr('param2') := '123456';
-
-    setHeaderProc('pl_fpdf.MyRepetitiveHeader', tHdr);
-    setFooterProc('pl_fpdf.MyRepetitiveFooter');
-    FPDF('P','cm','A4');
-    openpdf;
-    -- first page
-    AddPage();
-    SetFont('Arial','B',16);
-    Cell(0,1.2,'This is the first Page (left alignment)',0,1,'L');
-    -- Second page
-    AddPage();
-    SetFont('Arial','B',16);
-    Cell(0,1.2,'This is the second Page (right alignment)',0,1,'R');
-    -- third page
-    AddPage();
-    SetFont('Arial','B',16);
-    Cell(0,1.2,'This is the second Page (centered)',0,1,'C');
-    Output();
-end testHeader;
-
-
-
 
 
 END pl_fpdf;

@@ -1,7 +1,7 @@
 CREATE OR REPLACE PACKAGE pl_fpdf AS
 /*******************************************************************************
 * Logiciel : PL_FPDF                                                           *
-* Version :  0.9.2                                                             *
+* Version :  0.9.1                                                             *
 * Date :     13/06/2006                                                        *
 * Auteur :   Pierre-Gilles Levallois                                           *
 * Licence :  GPL                                                               *
@@ -24,14 +24,23 @@ CREATE OR REPLACE PACKAGE pl_fpdf AS
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ********************************************************************************/
+
+/*
+
+Original by Pierre-Gilles Levallois, with modifications and additions by several others;
+see package body for details.
+
+*/
+
+
 -- Public types and subtypes.
 subtype word is varchar2(80);
-
 type tv4000a is table of varchar2(4000) index by word;
+
 
 -- Constantes globales
 FPDF_VERSION constant varchar2(10) := '1.53'; 
-PL_FPDF_VERSION constant varchar2(10) := '0.9.3'; 
+PL_FPDF_VERSION constant varchar2(10) := '0.9.5'; 
 noParam tv4000a;
 
 -- methods added to FPDF
@@ -123,17 +132,7 @@ function getImageFromUrl(p_Url varchar2) return ordsys.ordImage;
 procedure jsSet(theJs varchar2);
 procedure jsAutoPrint(silent boolean default false,  closeWindow boolean default false);
 
---
--- Sample codes.
---
-procedure helloworld;
-procedure testImg;
-procedure test(pdest varchar2 default 'D');
-procedure MyRepetitiveHeader(param1 varchar2, param2 varchar2);
-procedure MyRepetitiveFooter;
-procedure testHeader;
+function get_output return blob;
 
-
-
-END;
+END pl_fpdf;
 /
