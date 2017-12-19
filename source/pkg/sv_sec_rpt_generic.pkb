@@ -234,7 +234,7 @@ LOOP
   l_sql := l_sql || x.column_name || ',';
   l_search := l_search || x.column_name || '||';
 END LOOP;
-
+l_sql := l_sql || 'EXCEPTION,NOTATION,';
 SELECT view_name INTO l_view_name 
   FROM sv_sec_attributes WHERE attribute_id = p_attribute_id;
 
@@ -306,6 +306,7 @@ FOR x IN
       AND prc.application_id = p_sert_app_id
       AND prc.page_id = p_page_id
       AND prc.display_text_as != 'HIDDEN'
+      AND prc.column_alias != 'EDIT'
     ) a,
     (
     SELECT
@@ -407,6 +408,7 @@ PROCEDURE print
   p_app_user                 IN VARCHAR2 DEFAULT v('APP_USER')
   )
 IS
+  l_application_id           NUMBER := p_application_id;
   l_application_name         VARCHAR2(1000);
   l_blob                     BLOB;
   l_sql                      CLOB;
@@ -435,6 +437,8 @@ IS
   l_col_alias                arr_t;
   l_title                    VARCHAR2(1000);
   l_calc_header              BOOLEAN := FALSE;
+  l_category_name            VARCHAR2(255);
+  l_dummy_vc                 VARCHAR2(100);
 BEGIN
 
 -- Get the title of the page from the APEX view, if one was not provided
@@ -442,17 +446,17 @@ IF p_title IS NULL THEN
   SELECT page_name INTO l_title FROM apex_application_pages WHERE application_id = p_sert_app_id AND page_id = p_page_id;
 END IF;
 
-IF p_application_id IS NOT NULL THEN
+IF l_application_id IS NOT NULL THEN
 
   -- Get the Application Name
   SELECT application_name INTO l_application_name FROM apex_applications
-    WHERE application_id = p_application_id;
+    WHERE application_id = l_application_id;
 
   IF p_init = TRUE THEN
     -- Initialize the report
     sv_sec_rpt_util.init
       (
-      p_header => l_title || ' - ' || p_application_id || ': ' || l_application_name 
+      p_header => l_title || ' - ' || l_application_id || ': ' || l_application_name 
         || CASE WHEN p_result IS NOT NULL THEN ' - ' || p_result END,
       p_orientation => p_orientation
       );
@@ -463,7 +467,7 @@ IF p_application_id IS NOT NULL THEN
     sv_sec_rpt_util.cover_page
       (
       p_title => l_title,
-      p_sub_title => p_application_id || ': ' || l_application_name,
+      p_sub_title => l_application_id || ': ' || l_application_name,
       p_sub_title2 => CASE WHEN p_result = '%' THEN NULL ELSE p_result END)
       ;
   END IF;
@@ -506,6 +510,23 @@ IF p_sql IS NULL THEN
 ELSE
     l_sql := p_sql || p_order_by;
 END IF;
+
+-- Get a more detailed header if it is SQLi
+FOR x IN 
+  (
+  SELECT 
+    a.attribute_name
+  FROM 
+    sv_sec_attributes a, sv_sec_categories c, sv_sec_classifications cl 
+  WHERE 
+    a.attribute_id = p_attribute_id 
+    AND a.category_id = c.category_id 
+    AND c.classification_id = cl.classification_id 
+    AND cl.classification_key = 'SQL_INJECTION'
+  )
+LOOP
+  l_region_name := x.attribute_name;
+END LOOP;
 
 -- Get the proper order of the columns and use append them to the query
 l_sql := 
@@ -561,21 +582,9 @@ END LOOP;
 -- Set the color for alternating rows
 pl_fpdf.SetFillColor(230,230,230);
 
--- Determine the value and generate the row
-WHILE (dbms_sql.fetch_rows(l_cursor) > 0)
-LOOP
-  
-  -- Set the fill background, alternating rows  
-  l_fill := CASE WHEN mod(l_row,2) =1 then '1' else '0' END;
-  
-  z := 1;
-    
-  IF l_header = FALSE THEN
-      
-    -- Set the report heading font
-    -- Set Header Font
-    sv_sec_rpt_util.set_font
-      (
+-- Print the report header
+sv_sec_rpt_util.set_font
+  (
       p_family => g_rpt_header_font,
       p_size   => 14,
       p_style  => 'B'
@@ -591,6 +600,36 @@ LOOP
       palign => 'L',
       pborder => '0'
       ); 
+
+-- Determine the value and generate the row
+WHILE (dbms_sql.fetch_rows(l_cursor) > 0)
+LOOP
+  
+  -- Set the fill background, alternating rows  
+  l_fill := CASE WHEN mod(l_row,2) =1 then '1' else '0' END;
+  
+  z := 1;
+    
+  IF l_header = FALSE THEN
+      
+    -- Set Header Font
+    sv_sec_rpt_util.set_font
+      (
+      p_family => g_rpt_header_font,
+      p_size   => g_rpt_header_font_size,
+      p_style  => 'B'
+      );
+
+    -- Print the Dashboard Region
+    l_dummy_vc := sv_sec.dashboard
+      (
+      p_attribute_set_id         => nv('P0_ATTRIBUTE_SET_ID'),
+      p_application_id           => l_application_id,
+      p_app_user                 => p_app_user,
+      p_app_session              => p_app_session,
+      p_page_id                  => p_page_id,
+      p_format                   => 'PDF'
+      );
 
     -- Set Header Font
     sv_sec_rpt_util.set_font
@@ -629,6 +668,7 @@ LOOP
           AND prc.application_id = p_sert_app_id
           AND prc.page_id = p_page_id
           AND prc.display_text_as != 'HIDDEN'
+          AND prc.column_alias != 'EDIT'
         ) a,
         (
         SELECT
@@ -663,7 +703,11 @@ LOOP
     END IF;
 
     -- Move cursor down
-    pl_fpdf.setXY(10,25);
+    pl_fpdf.setXY(10,30);
+    
+    -- Reset the border
+    pl_fpdf.setLineWidth(.25);
+    pl_fpdf.setDrawColor(0,0,0);
 
     -- Loop through the row and print it
     FOR y IN 1..l_heading_label.COUNT
@@ -678,14 +722,14 @@ LOOP
           ph => 5,
           ptxt => l_heading_label(y),
           palign => SUBSTR(l_heading_align(y),1,1),
-          pborder => '0'
+          pborder => 'B'
          ); 
 
       END IF;
     END LOOP;
 
     -- Leave space for the header
-    pl_fpdf.setXY(10,30);
+    pl_fpdf.setXY(10,35);
   
     -- Set the header flag to TRUE so that it is not re-printed
     l_header := TRUE;
@@ -745,16 +789,29 @@ END LOOP;
 
 -- Print the row count or No Data Found message
 pl_fpdf.setY(pl_fpdf.getY+5);
-pl_fpdf.Cell
-  ( 
-  pw => CASE WHEN p_orientation = 'P' THEN g_p_width ELSE g_l_width END,
-  ph => 5,
-  ptxt => CASE 
-    WHEN l_row = 0 THEN 'There is no data for this report that matches your criteria' 
-    WHEN l_row = 1 THEN '1 Row Printed' 
-    ELSE l_row || ' Rows Printed' END,
-  palign => 'R'
-  ); 
+
+CASE WHEN l_row > 0 THEN
+  pl_fpdf.Cell
+    ( 
+    pw => CASE WHEN p_orientation = 'P' THEN g_p_width ELSE g_l_width END,
+    ph => 5,
+    ptxt => CASE 
+      WHEN l_row = 1 THEN '1 Row Printed' 
+      ELSE l_row || ' Rows Printed' END,
+    palign => 'R'
+    ); 
+ELSE
+
+  pl_fpdf.setXY(10,100);
+  pl_fpdf.Cell
+    ( 
+    pw => CASE WHEN p_orientation = 'P' THEN g_p_width ELSE g_l_width END,
+    ph => 5,
+    ptxt => 'There is no data for this report that matches your criteria',
+    palign => 'C'
+    ); 
+
+END CASE;
 
 -- Close the cursor
 dbms_sql.close_cursor(l_cursor);
@@ -763,7 +820,7 @@ dbms_sql.close_cursor(l_cursor);
 IF p_print = TRUE THEN
   sv_sec_rpt_util.send_pdf
     (
-    p_filename => CASE WHEN l_application_name IS NOT NULL THEN l_application_name || ' - ' ELSE NULL END 
+    p_filename => 'App ' || l_application_id || ' - '
       || l_title || ' - ' || TO_CHAR(SYSDATE,'DD-MON-YYYY HH.MIPM')
     );
 END IF;
