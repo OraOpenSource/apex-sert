@@ -117,7 +117,7 @@ sv_sec_rpt_generic.print
   p_print                    => p_print,
   p_app_user                 => p_app_user,
   p_static_id                => 'rpt',
-  p_orientation => 'L'
+  p_orientation              => 'L'
   );
 
 EXCEPTION
@@ -218,7 +218,8 @@ sv_sec_rpt_generic.print
   p_init                     => FALSE,
   p_print                    => p_print,
   p_application_id           => p_application_id,
-  p_static_id                => 'rpt'
+  p_static_id                => 'rpt',
+  p_orientation              => 'L'
   );
 
 EXCEPTION 
