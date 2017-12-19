@@ -10,19 +10,20 @@ PROCEDURE print_clob
 IS
 BEGIN
 
+NULL;
 -- Break for spacing
-plpdf.lineBreak(p_line_break);
+--plpdf.lineBreak(p_line_break);
 
 -- Set the font and print the title
 sv_sec_rpt_util.set_font(p_style => 'B', p_size => 9);
-plpdf.printCell(100,6,p_title);
+--plpdf.printCell(100,6,p_title);
 
 -- Break for spacing
-plpdf.lineBreak(5);
+--plpdf.lineBreak(5);
 
 -- Set the font and print the body
-sv_sec_rpt_util.set_font(p_size => 7);
-plpdf.printMultiLineCell(195,5,SUBSTR(p_clob,2),1); -- SUBSTR is needed to remove the first CHR(10)
+--sv_sec_rpt_util.set_font(p_size => 7);
+--plpdf.printMultiLineCell(195,5,SUBSTR(p_clob,2),1); -- SUBSTR is needed to remove the first CHR(10)
 
 END print_clob;
 
@@ -73,7 +74,7 @@ ELSE
 
 END IF;
 
--- Initialize PLPDF
+-- Initialize
 IF p_init = TRUE THEN
   sv_sec_rpt_util.init
     (
@@ -303,7 +304,7 @@ LOOP
 END LOOP;
 l_where_sql := SUBSTR(l_where_sql, 1, (LENGTH(l_where_sql)-1));
 
--- Initialize PLPDF
+-- Initialize
 sv_sec_rpt_util.init
   (
   p_header                   => p_application_id || ': ' || l_application_name 
@@ -339,6 +340,7 @@ LOOP
     p_app_session        => p_app_session
     );
  
+  /*
   -- Print a single set of SQL Injection recommendations vs. one per page
   IF l_classifications(x) = 'SQL_INJECTION' THEN
   
@@ -392,6 +394,7 @@ LOOP
 
   
   END IF;
+  */
   
   -- Loop through all categories for a classification
   FOR y IN (SELECT * FROM sv_sec_categories WHERE classification_id = 
