@@ -403,26 +403,6 @@ IS
   l_filename                 VARCHAR2(1000) := p_filename || '.pdf';
 BEGIN
 
--- Print the table of content, if requested
-IF p_toc = TRUE THEN
-  NULL;
-    /*
-    plpdf.AddTOC(
-      p_item_height       => 7,
-      p_title_font_family => 'Arial',
-      p_title_font_style  => 'BU',
-      p_title_font_size   => 14,
-      p_title_height      => 15,
-      p_title_text        => 'Table of Contents',
-      p_title_body_gap    => 5,
-      p_item_font_size    => 9,
-      p_separator         => '.',
-      p_move_to           => 2,
-      p_level_indent      => 10
-      );
-    */
-END IF;
-
 -- Send the contents of the PDF document to l_blob and Print it
 IF p_print = TRUE THEN
 

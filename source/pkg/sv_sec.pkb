@@ -562,8 +562,9 @@ AS
   l_severity_level           NUMBER;
   l_severity                 VARCHAR2(1000);
   l_time_to_fix              NUMBER;
+  l_classification_key       sv_sec_classifications.classification_key%TYPE;
 BEGIN
-
+  
 -- Get the current collection ID
 l_collection_id := sv_sec_util.get_collection_id(
   p_app_user       => p_app_user,
@@ -578,6 +579,20 @@ l_score_label_arr(3) := 'Raw';
 -- Produce the dashboard region for the specific page
 FOR x IN (SELECT * FROM sv_sec_attributes WHERE display_page_id = p_page_id)
 LOOP
+
+  -- Get the classification key
+  SELECT 
+    cl.classification_key 
+  INTO 
+    l_classification_key 
+  FROM 
+    sv_sec_classifications cl, 
+    sv_sec_categories c, 
+    sv_sec_attributes a
+  WHERE
+    cl.classification_id = c.classification_id
+    AND c.category_id = a.category_id
+    AND a.attribute_id = x.attribute_id;
 
   -- Calculate the total time to fix
   SELECT
@@ -600,12 +615,24 @@ LOOP
 
   IF p_format = 'HTML' THEN
     l_html := '<div>Approximate Time to Fix: ' || l_time_to_fix || ' hours</div><ul class="t-Cards t-Cards--compact t-Cards--displayInitials t-Cards--3cols t-Cards--desc-2ln">';
-      
   ELSE
-
-    -- PRINT PLACEHOLDER
-    NULL;
-    
+    IF l_classification_key != 'SETTINGS' THEN
+      pl_fpdf.setXY(10,15);
+      sv_sec_rpt_util.set_font
+        (
+        p_family => 'Arial',
+        p_size   => 10,
+        p_style  => NULL
+        ); 
+      pl_fpdf.Cell
+        ( 
+        pw => 100,
+        ph => 20,
+        ptxt => 'Approximate Time to Fix: ' || l_time_to_fix || ' hours',
+        palign => 'L',
+        pborder => '0'
+        ); 
+    END IF;
   END IF;
   
   -- Determine if the attribute is in the current attribute set
@@ -715,23 +742,100 @@ LOOP
              </li>';
 
         ELSE
-          -- PRINT PLACEHOLDER
-          NULL;
+          
+          -- Only print if NOT settings
+          IF l_classification_key != 'SETTINGS' THEN
+        
+            -- Move the cursor
+            pl_fpdf.setXY(135 + (x*35),17);
+  
+            -- Set the header font  
+            sv_sec_rpt_util.set_font
+              (
+              p_family => 'Arial',
+              p_size   => 10,
+              p_style  => 'B',
+              p_r      => 0,
+              p_g      => 0,
+              p_b      => 0
+              ); 
 
+            -- Print the header
+            pl_fpdf.Cell
+              (
+              pw      => 7,
+              ph      => 5,
+              ptxt    => l_score_label_arr(x),
+              palign  => 'L',
+              pborder => '0'
+              ); 
+  
+            -- Drop the cursor
+            pl_fpdf.setXY(135 + (x*35),21);
+            
+            -- Set the detail font
+            sv_sec_rpt_util.set_font
+              (
+              p_family => 'Arial',
+              p_size   => 9,
+              p_style  => NULL
+              ); 
+                      
+            -- Print the details
+            pl_fpdf.Cell
+              (
+              pw      => 50,
+              ph      => 5,
+              ptxt    => l_score_arr(x) || ' out of ' || l_possible_score,
+              palign  => 'L',
+              pborder => '0'
+              );      
+
+            --Set the percentage font color
+            sv_sec_rpt_class_summary.set_color(p_pct_score => (l_score_arr(x)/l_possible_score)*100, p_possible_score => l_possible_score);
+
+            -- Move the cursor
+            pl_fpdf.setXY(135 + (x*35)+20,15);
+
+            -- Set the detail font
+            sv_sec_rpt_util.set_font
+              (
+              p_family => 'Arial',
+              p_size   => 12,
+              p_style  => 'B',
+              p_r      => 255,
+              p_g      => 255,
+              p_b      => 255
+              ); 
+
+            -- Print the percentage
+            pl_fpdf.Cell
+              (
+              pw      => 12,
+              ph      => 10,
+              ptxt    => ROUND(((l_score_arr(x) /l_possible_score)*100),0) || '%',
+              palign  => 'C',
+              pfill => 1
+              ); 
+
+          END IF;
         END IF;
 
+        -- Reset the alternating row color
+        pl_fpdf.SetFillColor(230,230,230);
+        
       END LOOP;
     END IF;
   END IF;
-
 END LOOP;
+
 
 IF p_format = 'HTML' THEN
 -- Close the region
   l_html := l_html || '</ul>';
   RETURN l_html;
 ELSE
-  NULL;
+  RETURN 'x';
 END IF;
 
 EXCEPTION
@@ -1084,7 +1188,7 @@ THEN
 
   -- Add the HTML for FAILed attributes
   UPDATE sv_sec_collection_data 
-    SET exception = '<i class="fa fa-lg fa-plus-circle" style="color:green;" title="Add Exception"></i>',
+    SET exception = '<i class="fa fa-plus-circle" style="color:green;" title="Add Exception"></i>',
         exception_url = 'f?p=' || p_sert_app_id || ':10:' || p_app_session || ':::10:P10_EXCEPTION_PK:' || 'IND|' || attribute_id || '|' || page_id || '|' || component_id || '|' || column_id
     WHERE 
       result = 'FAIL' 

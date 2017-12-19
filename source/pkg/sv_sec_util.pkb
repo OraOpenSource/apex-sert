@@ -357,19 +357,19 @@ END IF;
 CASE 
   WHEN p_pct_score <= l_pref_failure_tolerance THEN 
     l_color := '#ff0000';
-    l_color_rgb := '255:0:0';
+    l_color_rgb := 'red';
 
   WHEN p_pct_score >= l_pref_accept_tolerance THEN 
     l_color := '#66cc33';
-    l_color_rgb := '102:204:51';
+    l_color_rgb := 'green';
 
   WHEN p_possible_score = 0 THEN 
     l_color := '#66cc33';
-    l_color_rgb := '102:204:51';
+    l_color_rgb := 'green';
 
   ELSE 
     l_color := '#FFCE00';
-    l_color_rgb := '255:215:0';
+    l_color_rgb := 'yellow';
 
 END CASE;
  
@@ -792,7 +792,7 @@ LOOP
     IF p_banner = FALSE THEN
       IF p_print = FALSE THEN
         -- Store the HTML in a temporary table so that it can be sorted and printed later based on score
-        INSERT INTO sv_sec_html_temp (html, seq) VALUES (
+        INSERT INTO sv_sec_html_temp (html, seq, cat) VALUES (
              '<li class="t-Cards-item">'
           || '  <div class="t-Card">'
           || '  <a href="' || apex_util.prepare_url('f?p=' || p_sert_app_id || ':' || x.display_page || ':' || p_app_session || ':::RP') || '" class="t-Card-wrap">'
@@ -809,7 +809,7 @@ LOOP
           || '  </div>'
           || '  </a>'
           || '  </div>'
-          || '</li>', l_pct_score);
+          || '</li>', l_pct_score, x.category_name);
 
       ELSE
         
@@ -835,7 +835,7 @@ IF p_banner = FALSE THEN
     
     htp.prn('<ul class="t-Cards   t-Cards--compact t-Cards--displayInitials t-Cards--cols t-Cards--desc-2ln">');
   
-    FOR x IN (SELECT * FROM sv_sec_html_temp ORDER BY seq)
+    FOR x IN (SELECT * FROM sv_sec_html_temp ORDER BY seq, cat)
     LOOP
       htp.prn(x.html);
     END LOOP;
@@ -2626,7 +2626,7 @@ BEGIN
 
 -- Update all attributes with a Add Notation link
 UPDATE sv_sec_collection_data 
-  SET notation = '<i class="fa fa-lg fa-comment" style="color:#999;"></i>',
+  SET notation = '<i class="fa fa-comment" style="color:#999;"></i>',
       notation_url = 'f?p=' || p_sert_app_id || ':20:' || p_app_session || ':::20:P20_NOTATION_PK:' || attribute_id || '|' || CASE WHEN page_id = -1 THEN NULL ELSE page_id END || '|' || component_id || '|' || column_id
   WHERE notation IS NULL AND collection_id = p_collection_id;
         
@@ -2639,7 +2639,7 @@ LOOP
 
   UPDATE sv_sec_collection_data 
     SET notation = 
-        '<i class="fa fa-lg fa-comments" style="color:#999;padding-left:3px;" title="' || x.c || ' Comments"></i>',
+        '<i class="fa fa-comments" style="color:#999;padding-left:3px;" title="' || x.c || ' Comments"></i>',
         notation_url = 'f?p=' || p_sert_app_id || ':20:' || p_app_session || ':::20:P20_NOTATION_PK:' || attribute_id || '|' || CASE WHEN page_id = -1 THEN NULL ELSE page_id END || '|' || component_id || '|' || column_id-- Note Edit
     WHERE collection_id = p_collection_id
     AND
@@ -2720,7 +2720,7 @@ SELECT
   n.CREATED_ON comment_date,
   CASE 
     WHEN n.created_by = v(''APP_USER'') AND au.workspace_name = (SELECT workspace_name FROM apex_workspaces WHERE workspace_id = nv(''G_WORKSPACE_ID'')) THEN
-      ''<a href="#" id="'' || n.notation_id || ''" class="removeNotation"><i class="fa fa-lg fa-trash"></i></a>''
+      ''<a href="#" id="'' || n.notation_id || ''" class="removeNotation"><i class="fa fa-trash"></i></a>''
     ELSE NULL 
   END actions,
   NULL attribute_1,
@@ -3082,7 +3082,7 @@ IF p_button_key LIKE 'SEV%' THEN
   END IF;
 
 ELSIF p_button_key LIKE '%MULT' THEN
-  IF l_app_page_id IN (300,400,500,600,700,450,570,705,710,715,720,725,730,735,740,745,750,755,760,765,770,775,780,785) THEN
+  IF l_app_page_id IN (300,400,500,600,700,450,570,701,705,710,715,720,725,730,735,740,745,750,755,760,765,770,775,780,785) THEN
     RETURN FALSE;
   ELSE
     RETURN TRUE;
@@ -3097,7 +3097,7 @@ ELSIF p_button_key = 'HELP' THEN
   END IF;
 
 ELSIF p_button_key = 'FIX' THEN
-  IF l_app_page_id IN (300,400,500,600,700,450,570,705,710,715,720,725,730,735,740,745,750,755,760,765,770,775,780,785) THEN
+  IF l_app_page_id IN (300,400,500,600,700,450,570,701,705,710,715,720,725,730,735,740,745,750,755,760,765,770,775,780,785) THEN
     RETURN FALSE;
   ELSE
     RETURN TRUE;

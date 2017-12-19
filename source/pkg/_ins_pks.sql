@@ -112,3 +112,14 @@ PROMPT == SV_SEC_RPT_GENERIC
 SHOW ERRORS
 /
 
+PROMPT == SV_SEC_RPT_CLASS_SUMMARY
+@pkg/sv_sec_rpt_class_summary.pks
+/
+SHOW ERRORS
+/
+
+PROMPT == SV_SEC_RPT_MOAR
+@pkg/sv_sec_rpt_moar.pks
+/
+SHOW ERRORS
+/
