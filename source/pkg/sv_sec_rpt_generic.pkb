@@ -439,6 +439,7 @@ IS
   l_calc_header              BOOLEAN := FALSE;
   l_category_name            VARCHAR2(255);
   l_dummy_vc                 VARCHAR2(100);
+  l_dashboard                BOOLEAN := FALSE;
 BEGIN
 
 -- Get the title of the page from the APEX view, if one was not provided
@@ -499,8 +500,6 @@ IF p_init = TRUE THEN
   -- Create a new page
   sv_sec_rpt_util.new_page(p_orientation => p_orientation);
 END IF;
-
-logger.log('page_id:' || p_page_id);
 
 -- Either get the SQL from a report or use the SQL passed to the procedure
 IF p_sql IS NULL THEN
@@ -613,7 +612,7 @@ LOOP
   z := 1;
     
   IF l_header = FALSE THEN
-      
+
     -- Set Header Font
     sv_sec_rpt_util.set_font
       (
@@ -622,16 +621,19 @@ LOOP
       p_style  => 'B'
       );
 
-    -- Print the Dashboard Region
-    l_dummy_vc := sv_sec.dashboard
-      (
-      p_attribute_set_id         => nv('P0_ATTRIBUTE_SET_ID'),
-      p_application_id           => l_application_id,
-      p_app_user                 => p_app_user,
-      p_app_session              => p_app_session,
-      p_page_id                  => p_page_id,
-      p_format                   => 'PDF'
-      );
+    -- Print the Dashboard Region on the first page
+    IF l_dashboard = FALSE THEN
+      l_dummy_vc := sv_sec.dashboard
+        (
+        p_attribute_set_id         => nv('P0_ATTRIBUTE_SET_ID'),
+        p_application_id           => l_application_id,
+        p_app_user                 => p_app_user,
+        p_app_session              => p_app_session,
+        p_page_id                  => p_page_id,
+        p_format                   => 'PDF'
+        );
+      l_dashboard := TRUE;
+    END IF;
 
     -- Set Header Font
     sv_sec_rpt_util.set_font
@@ -781,7 +783,7 @@ LOOP
 
     -- Create a new page
     pl_fpdf.AddPage(); 
-    
+
     -- Reset the Header flag
     l_header := FALSE;
 

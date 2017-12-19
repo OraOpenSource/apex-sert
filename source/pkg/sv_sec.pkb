@@ -763,15 +763,15 @@ LOOP
             -- Print the header
             pl_fpdf.Cell
               (
-              pw      => 7,
+              pw      => 20,
               ph      => 5,
               ptxt    => l_score_label_arr(x),
-              palign  => 'L',
+              palign  => 'R',
               pborder => '0'
               ); 
   
             -- Drop the cursor
-            pl_fpdf.setXY(135 + (x*35),21);
+            pl_fpdf.setXY(132 + (x*35),21);
             
             -- Set the detail font
             sv_sec_rpt_util.set_font
@@ -784,10 +784,10 @@ LOOP
             -- Print the details
             pl_fpdf.Cell
               (
-              pw      => 50,
+              pw      => 23,
               ph      => 5,
               ptxt    => l_score_arr(x) || ' out of ' || l_possible_score,
-              palign  => 'L',
+              palign  => 'R',
               pborder => '0'
               );      
 

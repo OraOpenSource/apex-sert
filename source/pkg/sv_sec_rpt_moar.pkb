@@ -15,14 +15,14 @@ NULL;
 --plpdf.lineBreak(p_line_break);
 
 -- Set the font and print the title
---sv_sec_rpt_util.set_font(p_style => 'B', p_size => 9);
+sv_sec_rpt_util.set_font(p_style => 'B', p_size => 9);
 --plpdf.printCell(100,6,p_title);
 
 -- Break for spacing
 --plpdf.lineBreak(5);
 
 -- Set the font and print the body
----sv_sec_rpt_util.set_font(p_size => 7);
+--sv_sec_rpt_util.set_font(p_size => 7);
 --plpdf.printMultiLineCell(195,5,SUBSTR(p_clob,2),1); -- SUBSTR is needed to remove the first CHR(10)
 
 END print_clob;
@@ -74,7 +74,7 @@ ELSE
 
 END IF;
 
--- Initialize 
+-- Initialize
 IF p_init = TRUE THEN
   sv_sec_rpt_util.init
     (
@@ -117,7 +117,7 @@ sv_sec_rpt_generic.print
   p_print                    => p_print,
   p_app_user                 => p_app_user,
   p_static_id                => 'rpt',
-  p_orientation => 'L'
+  p_orientation              => 'L'
   );
 
 EXCEPTION
@@ -170,8 +170,6 @@ END IF;
 SELECT classification_id INTO l_classification_id FROM sv_sec_categories
   WHERE category_id = l_cat.category_id;
 
-logger.log('attribute_key: ' || l_cat.rpt_attribute_key);
-
 -- Fetch the attribute that stores the report definitions
 SELECT attribute_id INTO l_attribute_id FROM sv_sec_attributes
   WHERE attribute_key = l_cat.rpt_attribute_key;
@@ -220,7 +218,8 @@ sv_sec_rpt_generic.print
   p_init                     => FALSE,
   p_print                    => p_print,
   p_application_id           => p_application_id,
-  p_static_id                => 'rpt'
+  p_static_id                => 'rpt',
+  p_orientation              => 'L'
   );
 
 EXCEPTION 
@@ -306,7 +305,7 @@ LOOP
 END LOOP;
 l_where_sql := SUBSTR(l_where_sql, 1, (LENGTH(l_where_sql)-1));
 
--- Initialize 
+-- Initialize
 sv_sec_rpt_util.init
   (
   p_header                   => p_application_id || ': ' || l_application_name 
@@ -342,7 +341,7 @@ LOOP
     p_app_session        => p_app_session
     );
  
- /*
+  /*
   -- Print a single set of SQL Injection recommendations vs. one per page
   IF l_classifications(x) = 'SQL_INJECTION' THEN
   
@@ -429,10 +428,6 @@ LOOP
       FOR z IN (SELECT * FROM sv_sec_attributes WHERE category_id = y.category_id ORDER BY attribute_name)
       LOOP
   
-  
-  logger.log('Attribute Key: ' ||z.attribute_key);
-  logger.log('Page ID: ' || z.display_page_id);  
-
         sv_sec_rpt_moar.print_attribute
           (
           p_page_id          => z.display_page_id,
