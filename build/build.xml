@@ -59,7 +59,7 @@
     <target name="co" description="Checks out the most recent source to the working direcotry" depends="setup">
         <echo message="Checking out the SERT Repository to the local working directory" />
         <exec executable="svn" dir="${wd}">
-            <arg line="co https://github.com/OraOpenSource/apex-sert/${full_path}"></arg>
+            <arg line="co https://github.com/OraOpenSource/apex-sert/${full_path} ${svn_release}"></arg>
         </exec>
     </target>
     
@@ -238,4 +238,3 @@
         <echo message="     ant -f build_sert release -Dsv_version=020100 -Dsvn_root=RELEASES -Dsvn_release=2.1.0 " />
     </target>
 </project>
-

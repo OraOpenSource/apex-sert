@@ -1419,7 +1419,7 @@ procedure p_putpages is
    rect txt;
     l number;
     h number;
-   kids txt;
+   kids bigtext;
    v_0 varchar2(255);
    v_1 varchar2(255);
    v_2 varchar2(255);

@@ -453,7 +453,7 @@ END LOOP;
 -- Print the Report
 sv_sec_rpt_util.send_pdf
   (
-  p_filename                 => p_application_id || ' - ' || l_application_name 
+  p_filename                 => 'App ' || p_application_id 
     || ' - Attribute Set ' || l_attribute_set_name,
   p_toc                      => TRUE,
   p_print                    => p_print,
