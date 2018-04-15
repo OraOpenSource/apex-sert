@@ -1,6 +1,6 @@
 # Releases
 ### APEX 5.1
-APEX-SERT is currently in beta for APEX 5.1 and can be downloaded from here.  
+APEX-SERT for APEX 5.1 is now production and can be downloaded from here.  
 
 ### APEX 5.0
 For version 5.0, please switch to the [5.0 branch](https://github.com/OraOpenSource/apex-sert/tree/5.0.1/releases) 
