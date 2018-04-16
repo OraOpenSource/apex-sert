@@ -6,7 +6,7 @@ APEX-SERT is an APEX application that evaluates your APEX applications for secur
 Currently, APEX-SERT supports both APEX 4.2 & 5.0.  Download it and give it a try and if you find any issues, report them here.  
 
 ### Documentation
-At this point, all APEX-SERT documentation is included with the build as PDF files.  Starting with APEX-SERT 5, documentation will move to Markdown format.
+All APEX-SERT documentation is available under the [`docs`](/docs) directory as PDF files.
 
 ### Download
 APEX-SERT can be downloaded from GitHub. Under the [`releases`](/releases) directory, simply unzip the corresponding version and then refer to the Installation Guide found there.
