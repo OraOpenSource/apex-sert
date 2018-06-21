@@ -27,7 +27,7 @@ prompt APPLICATION 100 - APEX-SERT
 -- Application Export:
 --   Application:     100
 --   Name:            APEX-SERT
---   Date and Time:   22:38 Monday December 18, 2017
+--   Date and Time:   10:02 Wednesday June 13, 2018
 --   Exported By:     ADMIN
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -97,7 +97,7 @@ wwv_flow_api.create_flow(
 ,p_alias=>nvl(wwv_flow_application_install.get_application_alias,'SERT')
 ,p_page_view_logging=>'YES'
 ,p_page_protection_enabled_y_n=>'Y'
-,p_checksum_salt_last_reset=>'20171218212031'
+,p_checksum_salt_last_reset=>'20180613095922'
 ,p_bookmark_checksum_function=>'MD5'
 ,p_max_session_length_sec=>9999
 ,p_max_session_idle_sec=>1999
@@ -135,7 +135,7 @@ wwv_flow_api.create_flow(
 ,p_csv_encoding=>'Y'
 ,p_auto_time_zone=>'N'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20171218212031'
+,p_last_upd_yyyymmddhh24miss=>'20180613095922'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>30
 ,p_ui_type_name => null
@@ -20323,7 +20323,7 @@ wwv_flow_api.create_page(
 ,p_protection_level=>'C'
 ,p_cache_mode=>'NOCACHE'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20171218103249'
+,p_last_upd_yyyymmddhh24miss=>'20171220123109'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(36739858891122526)
@@ -20523,7 +20523,7 @@ wwv_flow_api.create_report_region(
 'SELECT card_icon, card_title, card_text, card_subtext, card_link, color, seq FROM ',
 '(',
 'SELECT ',
-'  ''fa-plus'' card_icon, ',
+'  ''fa fa-plus'' card_icon, ',
 '  COUNT(*) card_title,',
 '  ''Pending Exceptions'' card_text, ',
 '  NULL card_subtext, ',
@@ -20546,7 +20546,7 @@ wwv_flow_api.create_report_region(
 ') UNION',
 '(',
 'SELECT ',
-'  ''fa-check'' card_icon, ',
+'  ''fa fa-check'' card_icon, ',
 '  COUNT(*) card_title,',
 '  ''Awaiting Approval'' card_text, ',
 '  NULL card_subtext, ',
@@ -20568,7 +20568,7 @@ wwv_flow_api.create_report_region(
 ') UNION',
 '(',
 'SELECT ',
-'  ''fa-times'' card_icon, ',
+'  ''fa fa-times'' card_icon, ',
 '  COUNT(*) card_title,',
 '  ''Rejected Exceptions'' card_text, ',
 '  NULL card_subtext, ',
@@ -20591,7 +20591,7 @@ wwv_flow_api.create_report_region(
 ') UNION',
 '(',
 'SELECT ',
-'  ''fa-info'' card_icon, ',
+'  ''fa fa-info'' card_icon, ',
 '  COUNT(*) card_title,',
 '  ''Stale Exceptions'' card_text, ',
 '  NULL card_subtext, ',
@@ -27648,15 +27648,16 @@ wwv_flow_api.create_page(
 ,p_first_item=>'NO_FIRST_ITEM'
 ,p_autocomplete_on_off=>'ON'
 ,p_page_template_options=>'#DEFAULT#'
-,p_dialog_height=>'800'
-,p_dialog_width=>'900'
+,p_dialog_height=>'900'
+,p_dialog_width=>'800'
+,p_dialog_max_width=>'900'
 ,p_dialog_chained=>'Y'
 ,p_overwrite_navigation_list=>'N'
 ,p_page_is_public_y_n=>'N'
 ,p_cache_mode=>'NOCACHE'
 ,p_help_text=>'No help is available for this page.'
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20171218103156'
+,p_last_upd_yyyymmddhh24miss=>'20180103104507'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(90776155634788228)
@@ -45266,7 +45267,7 @@ wwv_flow_api.create_page(
 ,p_cache_mode=>'NOCACHE'
 ,p_cache_timeout_seconds=>21600
 ,p_last_updated_by=>'ADMIN'
-,p_last_upd_yyyymmddhh24miss=>'20170925165151'
+,p_last_upd_yyyymmddhh24miss=>'20180613095922'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(549110234936559497)
@@ -45290,8 +45291,6 @@ wwv_flow_api.create_page_plug(
 '  created_by,',
 '  edit,',
 '  region_name,',
-'  col,',
-'  html_expression,',
 '  link_page,',
 '  updated_by,',
 '  updated_on,',
@@ -45304,7 +45303,7 @@ wwv_flow_api.create_page_plug(
 '  exception_url,',
 '  notation_url',
 'FROM',
-'  sv_sec_col_xss_col_html_expr_v'))
+'  sv_sec_col_xss_region_titles_v'))
 ,p_plug_source_type=>'NATIVE_IR'
 ,p_plug_query_row_template=>1
 ,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
@@ -45604,22 +45603,6 @@ wwv_flow_api.create_worksheet_column(
 ,p_column_type=>'STRING'
 ,p_display_text_as=>'HIDDEN'
 );
-wwv_flow_api.create_worksheet_column(
- p_id=>wwv_flow_api.id(91748961198279082)
-,p_db_column_name=>'COL'
-,p_display_order=>63
-,p_column_identifier=>'AJ'
-,p_column_label=>'Col'
-,p_column_type=>'STRING'
-);
-wwv_flow_api.create_worksheet_column(
- p_id=>wwv_flow_api.id(91749036127279083)
-,p_db_column_name=>'HTML_EXPRESSION'
-,p_display_order=>73
-,p_column_identifier=>'AK'
-,p_column_label=>'HTML Expression'
-,p_column_type=>'STRING'
-);
 wwv_flow_api.create_worksheet_rpt(
  p_id=>wwv_flow_api.id(549112620124559502)
 ,p_application_user=>'APXWS_DEFAULT'
@@ -45629,7 +45612,7 @@ wwv_flow_api.create_worksheet_rpt(
 ,p_status=>'PUBLIC'
 ,p_is_default=>'Y'
 ,p_display_rows=>15
-,p_report_columns=>'EDIT:PAGE_ID:REGION_NAME:HTML_EXPRESSION:UPDATED_BY:UPDATED_ON:RESULT:EXCEPTION:NOTATION:'
+,p_report_columns=>'EDIT:PAGE_ID:REGION_NAME:UPDATED_BY:UPDATED_ON:RESULT:EXCEPTION:NOTATION'
 ,p_sort_column_1=>'PAGE_ID'
 ,p_sort_direction_1=>'ASC'
 ,p_sort_column_2=>'PAGE_NAME'
