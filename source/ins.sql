@@ -451,7 +451,7 @@ PROMPT  == R E C O M P I L E   C O R E   S C H E M A
 PROMPT  =============================================================================
 
 BEGIN 
-  dbms_utility.compile_schema(schema => 'sv_sert_@SV_VERSION@');
+  dbms_utility.compile_schema(schema => 'SV_SERT_@SV_VERSION@');
 END;
 /
 
