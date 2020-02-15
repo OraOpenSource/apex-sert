@@ -1,4 +1,7 @@
 # Releases
+### APEX 19.1
+APEX-SERT for APEX 19.1 is now production and can be downloaded from here.  
+
 ### APEX 5.1
 APEX-SERT for APEX 5.1 is now production and can be downloaded from here.  
 

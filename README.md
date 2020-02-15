@@ -3,7 +3,7 @@ Security Evaluation and Recommendation Tool for Oracle Application Express
 
 APEX-SERT is an APEX application that evaluates your APEX applications for security vulnerabilities.  It installs into an instance of APEX and is immediately available for all developers using their existing credentials.
 
-Currently, APEX-SERT supports APEX 4.2, 5.0 & 5.1.  Download it and give it a try and if you find any issues, report them here.  
+Currently, APEX-SERT supports APEX 4.2, 5.0, 5.1 & 19.1.  Download it and give it a try and if you find any issues, report them here.  
 
 ### Documentation
 All APEX-SERT documentation is available under the [`doc`](/doc) directory as PDF files.
