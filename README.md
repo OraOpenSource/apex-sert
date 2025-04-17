@@ -1,3 +1,7 @@
+# THIS VERSION OF APEX-SERT IS NO LONGER MAINTAINED #
+The product will soon be relaunched under Oracle's Open Source repository and will be maintained there. 
+
+
 # APEX-SERT
 Security Evaluation and Recommendation Tool for Oracle Application Express
 
